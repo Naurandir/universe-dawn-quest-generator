@@ -1,0 +1,11 @@
+<abbr [innerHTML]="headerField.label"></abbr><br *ngIf="!isMobileView">
+<ng-container *ngIf="!headerField.sortable && !headerField.filterable">
+  <div style="height: 32px;">-</div>
+</ng-container>
+
+<ng-container *ngIf="headerField.sortable">
+  <p-sortIcon [field]="headerField.field"></p-sortIcon>
+</ng-container>
+<ng-container *ngIf="headerField.filterable">
+  <p-columnFilter [type]="headerField.filterType == null ? 'text' : headerField.filterType" [field]="headerField.field" display="menu"></p-columnFilter>
+</ng-container>

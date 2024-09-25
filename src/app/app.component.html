@@ -1,0 +1,46 @@
+<div class="h-100">
+  <ng-container *ngIf="isFinished">
+
+    <!-- Navbar-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark text-light bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="nav-link">
+          <img src="/assets/sr-avatar.jpg" class="img-fluid" alt="SR" class="rounded me-2" style="width: 32px; height: 32px;">
+        </a>
+        <a class="navbar-brand">
+          Quest Generator Tool
+        </a>
+      </div>
+    </nav>
+
+    <!--Content -->
+    <div class="d-flex container align-middle aling-items-center justify-content-center px-3 pt-4 pb-5">
+      <app-quest-generator></app-quest-generator>
+    </div>
+  </ng-container>
+
+  <!-- Footer -->
+  <footer *ngIf="isFinished" class="footer fixed-bottom bg-body-tertiary border-top">
+    <div class="d-flex flex-wrap justify-content-between align-items-center">
+      <div class="px-2">
+        © 2024 Darki
+      </div>
+      <div class="px-2">
+        <a href="https://universe-dawn.com/game/alliance/0203a8dc-2006-4a83-880a-77b2082f78c3" target="_blank">Seraphim Rage</a>
+      </div>
+    </div>
+</footer>
+
+  <!-- Loading Animation -->
+  <ng-container *ngIf="!isFinished">
+    <div class="sr-tool-loading-page-wide">
+      <div class="sr-tool-loading-animation-style"></div>
+    </div>
+  </ng-container>
+
+  <!-- Toaster Global -->
+  <app-toaster></app-toaster>
+
+  <!-- Action Loading Used by Components -->
+  <app-loading-action></app-loading-action>
+</div>

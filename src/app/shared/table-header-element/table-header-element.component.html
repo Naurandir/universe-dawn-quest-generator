@@ -1,0 +1,16 @@
+<ng-container *ngIf="!headerField.range && !headerField.dropdown && !headerField.arrow">
+  <app-table-header-element-default [headerField]="headerField"></app-table-header-element-default>
+</ng-container>
+
+<ng-container *ngIf="headerField.dropdown">
+  <app-table-header-element-dropdown [headerField]="headerField"></app-table-header-element-dropdown>
+</ng-container>
+
+<ng-container *ngIf="headerField.range">
+  <app-table-header-element-range [headerField]="headerField"></app-table-header-element-range>
+</ng-container>
+
+
+<ng-container *ngIf="headerField.arrow">
+  <app-table-header-element-arrow></app-table-header-element-arrow>
+</ng-container>

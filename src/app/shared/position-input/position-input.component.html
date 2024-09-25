@@ -1,0 +1,12 @@
+<ng-container
+  *ngIf="(inputForm != undefined && inputForm != null); then positionFormInput; else positionNgModelInput">
+</ng-container>
+
+<ng-template #positionFormInput>
+  <p-inputMask mask="999-999-999" [formControl]="getFormControl()" (paste)="onPasteCoordinates($event)"
+    placeholder="xxx-yyy-zzz" [autoClear]="false" [style]="style"/>
+</ng-template>
+<ng-template #positionNgModelInput>
+  <p-inputMask mask="999-999-999" [(ngModel)]="value" (paste)="onPasteCoordinates($event)"
+    placeholder="xxx-yyy-zzz" [autoClear]="false" [style]="style"/>
+</ng-template>

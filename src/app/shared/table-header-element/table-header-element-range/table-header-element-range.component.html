@@ -1,0 +1,21 @@
+<abbr [innerHTML]="headerField.label"></abbr><br *ngIf="!isMobileView">
+<ng-container *ngIf="!headerField.sortable && !headerField.filterable">
+  -
+</ng-container>
+
+<ng-container *ngIf="headerField.sortable">
+  <p-sortIcon [field]="headerField.field"></p-sortIcon>
+</ng-container>
+
+<ng-container *ngIf="headerField.filterable">
+  <p-columnFilter [field]="headerField.field" matchMode="between" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
+    <ng-template pTemplate="filter" let-filter="filterCallback">
+      <p-slider [(ngModel)]="headerField.rangeValueSelected" [range]="true" (onSlideEnd)="filter($event.values)" styleClass="m-3"
+                min="0" [max]="headerField.rangeValueConfig![1]" />
+      <div class="flex align-items-center px-2">
+        <span>{{ headerField.rangeValueSelected![0] | number | europeanNumberFormat }}</span> -
+        <span>{{ headerField.rangeValueSelected![1] | number | europeanNumberFormat }}</span>
+      </div>
+    </ng-template>
+  </p-columnFilter>
+</ng-container>

@@ -1,0 +1,8 @@
+<div [ngStyle]="{width: '100vw', height: '100vh', 'z-index': '99999', position:'fixed', bottom: 0, right: 0, 'align-content':'center'}" *ngIf="visbility">
+  <div [ngStyle]="{ width: width, height: height, margin: 'auto' }">
+    <div class="sr-tool-loading-action">
+        <div class="sr-tool-loading-animation-style-action"></div>
+        <div class="sr-tool-loading-action-text" *ngIf="message != null"><b>{{ message }}</b></div>
+    </div>
+  </div>
+</div>

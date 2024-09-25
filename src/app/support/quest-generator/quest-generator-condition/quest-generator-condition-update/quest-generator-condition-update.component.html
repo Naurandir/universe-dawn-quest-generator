@@ -1,0 +1,75 @@
+<p-dialog header="Condition" [modal]="true" [(visible)]="visible" [style]="{ 'max-width': '30rem' }">
+  <form [formGroup]="conditionForm" (submit)="updateCondition()">
+    <div class="d-flex justify-content-center pt-2">
+      <div class="form-group pb-3">
+        <label class="form-label"><i class="bi bi-clipboard2-check"></i> Type</label><br>
+        <p-dropdown appendTo="body" [options]="conditionTypes | keyvalue" optionLabel="value" formControlName="questConditionType"
+        placeholder="Select a Condition Type" [style]="{ 'min-width': '250px'}" />
+      </div>
+    </div>
+
+    <!-- Jobs -->
+    <div class="d-flex justify-content-center pt-2" *ngIf="conditionForm.value.questConditionType.value == 'job'">
+      <div class="form-group pb-3">
+        <label class="form-label"><i class="bi bi-person-lines-fill"></i> Required Job</label><br>
+        <p-dropdown appendTo="body" [options]="allowedJobs | keyvalue" optionLabel="value" formControlName="questConditionJob"
+        placeholder="Select a Job" [style]="{ 'min-width': '250px'}" />
+      </div>
+    </div>
+
+    <!-- Points -->
+    <div class="d-flex justify-content-center pt-2" *ngIf="conditionForm.value.questConditionType.value == 'points'">
+      <div class="form-group pb-3">
+        <label class="form-label"><i class="bi bi-dice-6-fill"></i> Minimum Points</label><br>
+        <p-inputNumber inputId="points" placeholder="0" min="0" max="999999" formControlName="questConditionPoints" [style]="{ 'min-width': '250px'}"/>
+      </div>
+    </div>
+
+    <!-- Modules Researched -->
+    <div class="d-flex justify-content-center pt-2" *ngIf="conditionForm.value.questConditionType.value == 'moduleResearched'">
+      <div class="form-group pb-3">
+        <label class="form-label"><i class="bi bi-sim-fill"></i> Module researched</label><br>
+        <p-dropdown appendTo="body" [options]="modules | enumToArray" optionLabel="value" formControlName="questConditionModuleResearched"
+        placeholder="Select a Module" [style]="{ 'min-width': '250px'}" />
+      </div>
+    </div>
+
+    <!-- Chassis Researched -->
+    <div class="d-flex justify-content-center pt-2" *ngIf="conditionForm.value.questConditionType.value == 'chassisResearched'">
+      <div class="form-group pb-3">
+        <label class="form-label"><i class="bi bi-airplane-engines-fill"></i> Chassis researched</label><br>
+        <p-dropdown appendTo="body" [options]="chassis | enumToArray" optionLabel="value" formControlName="questConditionChassisResearched"
+        placeholder="Select a Chassis" [style]="{ 'min-width': '250px'}" />
+      </div>
+    </div>
+
+    <!-- Chassis Built -->
+    <div class="d-flex justify-content-center pt-2" *ngIf="conditionForm.value.questConditionType.value == 'chassisBuilt'">
+      <div class="form-group pb-3">
+        <label class="form-label"><i class="bi bi-airplane-engines-fill"></i> Chassis built</label><br>
+        <p-dropdown appendTo="body" [options]="chassis | enumToArray" optionLabel="value" formControlName="questConditionChassisBuilt"
+        placeholder="Select a Chassis" [style]="{ 'min-width': '250px'}" />
+      </div>
+    </div>
+
+    <!-- Building -->
+    <div class="d-flex justify-content-center pt-2" *ngIf="conditionForm.value.questConditionType.value == 'building'">
+      <div class="form-group pb-3">
+        <label class="form-label"><i class="bi bi-building-fill"></i> Building</label><br>
+        <p-dropdown appendTo="body" [options]="buildings | keyvalue" optionLabel="value" formControlName="questConditionBuildingType"
+        placeholder="Select a Building" [style]="{ 'min-width': '250px'}" />
+      </div>
+    </div>
+    <div class="d-flex justify-content-center pt-1" *ngIf="conditionForm.value.questConditionType.value == 'building'">
+      <div class="form-group pb-3">
+        <label class="form-label"><i class="bi bi-box-arrow-up"></i> Building Level</label><br>
+        <p-inputNumber inputId="buildingLevel" placeholder="0" min="0" max="100" formControlName="questConditionBuildingLevel" [style]="{ 'min-width': '250px'}"/>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="d-flex justify-content-center pt-2">
+      <input type="submit" [value]="isAdd ? 'Add Condition' : 'Update Condition'" class="btn btn-outline-light" [disabled]="!conditionForm.valid">
+    </div>
+  </form>
+</p-dialog>

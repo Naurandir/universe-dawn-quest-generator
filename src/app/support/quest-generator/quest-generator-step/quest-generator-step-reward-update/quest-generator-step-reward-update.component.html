@@ -1,0 +1,120 @@
+<p-dialog header="Reward" [modal]="true" (onHide)="scrollIntoViewOfAddButton()" [(visible)]="visible" [style]="{ 'max-width': '30rem' }">
+  <form [formGroup]="rewardForm" (submit)="updateReward()">
+
+    <div class="d-flex justify-content-center pt-2">
+      <div class="form-group pb-3">
+        <label class="form-label"><i class="bi bi-clipboard2-check"></i> Type</label><br>
+        <p-dropdown appendTo="body" [options]="['resources', 'license']" formControlName="rewardType"
+        placeholder="Select a Reward Type" [style]="{ 'min-width': '250px'}" />
+      </div>
+    </div>
+
+    <!-- Resources -->
+    <ng-container *ngIf="rewardForm.value.rewardType == 'resources'">
+      <div class="d-flex justify-content-center pt-2">
+        <div class="form-group pb-3">
+          <label class="form-label">Titan</label><br>
+          <p-inputNumber inputId="integeronly" placeholder="0" formControlName="titan"/>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center pt-2" style="background: #1c2532">
+        <div class="form-group pb-3">
+          <label class="form-label">Silicium</label><br>
+          <p-inputNumber inputId="integeronly" placeholder="0" formControlName="silicium"/>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center pt-2">
+        <div class="form-group pb-3">
+          <label class="form-label">Helium</label><br>
+          <p-inputNumber inputId="integeronly" placeholder="0" formControlName="helium"/>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center pt-2" style="background: #1c2532">
+        <div class="form-group pb-3">
+          <label class="form-label">Food</label><br>
+          <p-inputNumber inputId="integeronly" placeholder="0" formControlName="food"/>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center pt-2">
+        <div class="form-group pb-3">
+          <label class="form-label">Water</label><br>
+          <p-inputNumber inputId="integeronly" placeholder="0" formControlName="water"/>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center pt-2" style="background: #1c2532">
+        <div class="form-group pb-3">
+          <label class="form-label">Bauxit</label><br>
+          <p-inputNumber inputId="integeronly" placeholder="0" formControlName="bauxit"/>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center pt-2">
+        <div class="form-group pb-3">
+          <label class="form-label">Aluminium</label><br>
+          <p-inputNumber inputId="integeronly" placeholder="0" formControlName="aluminium"/>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center pt-2" style="background: #1c2532">
+        <div class="form-group pb-3">
+          <label class="form-label">Uranium</label><br>
+          <p-inputNumber inputId="integeronly" placeholder="0" formControlName="uranium"/>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center pt-2">
+        <div class="form-group pb-3">
+          <label class="form-label">Plutonium</label><br>
+          <p-inputNumber inputId="integeronly" placeholder="0" formControlName="plutonium"/>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center pt-2" style="background: #1c2532">
+        <div class="form-group pb-3">
+          <label class="form-label">Hydrogen</label><br>
+          <p-inputNumber inputId="integeronly" placeholder="0" formControlName="hydrogen"/>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center pt-2">
+        <div class="form-group pb-3">
+          <label class="form-label">Credits</label><br>
+          <p-inputNumber inputId="integeronly" placeholder="0" formControlName="credits"/>
+        </div>
+      </div>
+    </ng-container>
+
+    <!--License -->
+    <ng-container *ngIf="rewardForm.value.rewardType == 'license'">
+      <div class="d-flex justify-content-center pt-2">
+        <div class="form-group pb-3">
+          <label class="form-label"><i class="bi bi-clipboard2-check"></i> Component Type</label><br>
+          <p-dropdown appendTo="body" [options]="['chassis', 'module']" formControlName="componentType"
+          placeholder="Select a Component Type" [style]="{ 'min-width': '250px'}" />
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-center pt-2" *ngIf="rewardForm.value.componentType == 'chassis'">
+        <div class="form-group pb-3">
+          <label class="form-label"><i class="bi bi-sim-fill"></i> Chassis</label><br>
+          <p-dropdown appendTo="body" [options]="chassis | enumToArray" optionLabel="value" formControlName="chassis"
+          placeholder="Select a Module" [style]="{ 'min-width': '250px'}" />
+        </div>
+      </div>
+      <div class="d-flex justify-content-center pt-2" *ngIf="rewardForm.value.componentType == 'module'">
+        <div class="form-group pb-3">
+          <label class="form-label"><i class="bi bi-sim-fill"></i> Module</label><br>
+          <p-dropdown appendTo="body" [options]="modules | enumToArray" optionLabel="value" formControlName="module"
+          placeholder="Select a Module" [style]="{ 'min-width': '250px'}" />
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-center pt-2">
+        <div class="form-group pb-3">
+          <label class="form-label">Number of Licenses</label><br>
+          <p-inputNumber inputId="integeronly" placeholder="0" formControlName="numberOfLicenses"/>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Submit -->
+    <div class="d-flex justify-content-center pt-2">
+      <input type="submit" [value]="isAdd ? 'Add Reward' : 'Update Reward'" class="btn btn-outline-light" [disabled]="!rewardForm.valid">
+    </div>
+  </form>
+</p-dialog>

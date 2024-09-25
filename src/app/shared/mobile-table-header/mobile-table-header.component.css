@@ -1,0 +1,11 @@
+.table-header-mobile {
+  display: block;
+}
+
+.table-header-mobile.p-datatable-thead.p-panel {
+  margin-bottom: 0px !important;
+}
+
+.table-header-element-mobile {
+  padding: 10px;
+}

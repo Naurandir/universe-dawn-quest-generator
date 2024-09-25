@@ -1,0 +1,4 @@
+<div (click)="copyCoordinates() " role="button" class="d-flex flex-column align-items-center">
+  <div *ngIf="planetName != null">{{ planetName }}</div>
+  <div><i> {{ position | coordinatesNormalised }}</i></div>
+</div>

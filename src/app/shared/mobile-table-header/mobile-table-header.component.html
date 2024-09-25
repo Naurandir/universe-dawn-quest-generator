@@ -1,0 +1,28 @@
+<!--Mobile Header -->
+<p-panel class="table-header-mobile" header="Header" [toggleable]="true" [collapsed]="true" *ngIf="visible">
+  <ng-template pTemplate="header">
+    <div class="flex align-items-center p-2">
+      <i class="bi bi-binoculars"></i>
+    </div>
+  </ng-template>
+  <ng-container *ngFor="let header of headerModel.headers">
+    <div class="table-header-element-mobile" [pSortableColumn]="header.field" *ngIf="!header.desktopOnly">
+      <ng-container *ngIf="!header.range && !header.dropdown && !header.arrow">
+        <app-table-header-element-default [headerField]="header" [isMobileView]="true"></app-table-header-element-default>
+      </ng-container>
+
+      <ng-container *ngIf="header.dropdown">
+        <app-table-header-element-dropdown [headerField]="header" [isMobileView]="true"></app-table-header-element-dropdown>
+      </ng-container>
+
+      <ng-container *ngIf="header.range">
+        <app-table-header-element-range [headerField]="header" [isMobileView]="true"></app-table-header-element-range>
+      </ng-container>
+
+
+      <ng-container *ngIf="header.arrow">
+        <app-table-header-element-arrow></app-table-header-element-arrow>
+      </ng-container>
+    </div>
+  </ng-container>
+</p-panel>

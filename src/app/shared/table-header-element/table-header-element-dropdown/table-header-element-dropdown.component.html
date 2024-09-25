@@ -1,0 +1,13 @@
+<abbr [innerHTML]="headerField.label"></abbr><br *ngIf="!isMobileView">
+<ng-container *ngIf="headerField.sortable">
+  <p-sortIcon [field]="headerField.field"></p-sortIcon>
+</ng-container>
+<p-columnFilter type="text" [field]="headerField.field" display="menu" matchMode="equals">
+<ng-template pTemplate="filter" let-value let-filter="filterCallback">
+  <p-dropdown [options]="getDropdownOptions()" [placeholder]="'Select ' + headerField.label" (onChange)="filter($event.value)">
+    <ng-template let-option pTemplate="item">
+      <p-tag [value]="option" [severity]="headerField.dropdownTags!.get(option)" />
+    </ng-template>
+  </p-dropdown>
+</ng-template>
+</p-columnFilter>

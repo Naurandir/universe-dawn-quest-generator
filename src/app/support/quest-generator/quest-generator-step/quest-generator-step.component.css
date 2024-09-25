@@ -1,0 +1,9 @@
+:host {
+  ::ng-deep .tablerow-success {
+    background-color: var(--bs-success-bg-subtle);
+  }
+
+  ::ng-deep .tablerow-success-odd {
+    background-color: #082b1b;
+  }
+}

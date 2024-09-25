@@ -1,0 +1,15 @@
+export { WormHoleControllerService } from './services/worm-hole-controller.service';
+export { WarControllerService } from './services/war-controller.service';
+export { WarRaidControllerService } from './services/war-raid-controller.service';
+export { WarEnemyControllerService } from './services/war-enemy-controller.service';
+export { WarBattleControllerService } from './services/war-battle-controller.service';
+export { AdminControllerService } from './services/admin-controller.service';
+export { UserControllerService } from './services/user-controller.service';
+export { TechTreeControllerService } from './services/tech-tree-controller.service';
+export { RoutingControllerService } from './services/routing-controller.service';
+export { PlanetControllerService } from './services/planet-controller.service';
+export { OrderControllerService } from './services/order-controller.service';
+export { GvgControllerService } from './services/gvg-controller.service';
+export { CreepControllerService } from './services/creep-controller.service';
+export { ChassisControllerService } from './services/chassis-controller.service';
+export { AtomicClockControllerService } from './services/atomic-clock-controller.service';

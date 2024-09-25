@@ -1,0 +1,25 @@
+<p-panel [header]="title" [toggleable]="false" styleClass="m-2">
+  <ng-template pTemplate="header">
+    <div class="flex align-items-center p-2">
+      <i [class]="titleIcon"></i>
+    </div>
+  </ng-template>
+  <div class="container text-center">
+    <ng-container *ngFor="let value of values; let i = index; let even = even">
+      <ng-container *ngIf="even">
+        <div [class]="i == 0 ? 'row' : 'row pt-3'">
+          <div class="col-6 px-2">
+            <div class="sr-panel-dashboard-item">
+              <b><small [innerHtml]="headers[i]"></small></b><h5 class="pt-1">{{ values[i] | universeDawnNumberFormat }}</h5>
+            </div>
+          </div>
+          <div class="col-6 px-2">
+            <div class="sr-panel-dashboard-item">
+              <b><small [innerHtml]="headers[i+1]"></small></b><h5 class="pt-1">{{ values[i+1] | universeDawnNumberFormat }}</h5>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</p-panel>

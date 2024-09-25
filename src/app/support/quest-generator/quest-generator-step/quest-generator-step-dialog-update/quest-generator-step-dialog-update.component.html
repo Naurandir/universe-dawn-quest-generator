@@ -1,0 +1,51 @@
+<p-dialog header="Quest Step Dialog" [modal]="true" [(visible)]="visible" [style]="{ 'max-width': '30rem' }">
+  <form [formGroup]="stepDialogForm" (submit)="updateStepDialog()">
+    <!-- Language Selection -->
+    <div class="d-flex justify-content-center pt-2">
+      <div class="form-group pb-3">
+        <div *ngIf="isAdd || selectedLanguage == 'DE'" [class]="'btn ' + (selectedLanguage == 'DE' ? 'disabled btn-outline-light' : 'btn-outline-secondary')" (click)="switchLanguage('DE')">DE</div>
+        <div *ngIf="isAdd || selectedLanguage == 'EN'" [class]="'btn ' + (selectedLanguage == 'EN' ? 'disabled btn-outline-light' : 'btn-outline-secondary')" (click)="switchLanguage('EN')">EN</div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-center pt-2">
+      <div class="form-group pb-3">
+        <label class="form-label"><i class="bi bi-incognito"></i> Keyword ({{ selectedLanguage }})</label><br>
+        <input type="text" name="key" class="form-control" formControlName="keyDe" [class]="'p-element p-inputwrapper p-inputtext ' + 'd-' + (selectedLanguage == 'DE' ? 'inline' : 'none')" [style]="{ 'min-width': '250px'}" />
+        <input type="text" name="key" class="form-control" formControlName="keyEn" [class]="'p-element p-inputwrapper p-inputtext ' + 'd-' + (selectedLanguage == 'EN' ? 'inline' : 'none')" [style]="{ 'min-width': '250px'}" />
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-center pt-2">
+      <div class="form-group pb-3" >
+        <label class="form-label"><i class="bi bi-journal-plus"></i> Answer ({{ selectedLanguage }}) <i class="bi bi-question-circle-fill mx-1 h5" ngbTooltip="Markdown can be used for formatting."></i></label>
+      </div>
+    </div>
+    <div class="d-flex justify-content-center pt-2">
+      <div class="form-group pb-3" class="d-inline">
+        <textarea rows="8"cols="28" pInputTextarea name="answer" formControlName="answerDe"
+        [class]="'p-element p-inputwrapper p-inputtext ' + 'd-' + (selectedLanguage == 'DE' ? 'inline' : 'none')" maxlength="500"></textarea>
+        <textarea rows="8"cols="28" pInputTextarea name="answer" formControlName="answerEn"
+        [class]="'p-element p-inputwrapper p-inputtext ' + 'd-' + (selectedLanguage == 'EN' ? 'inline' : 'none')" maxlength="500"></textarea>
+      </div>
+    </div>
+    <p-divider />
+
+    <div class="d-flex justify-content-center pt-2">
+      <label class="form-label"><i class="bi bi-camera-fill"></i> Preview ({{ selectedLanguage }}) <i class="bi bi-question-circle-fill mx-1 h5" ngbTooltip="Styles can be a bit different in Universe Dawn, be aware of that."></i></label><br>
+    </div>
+    <div class="d-flex justify-content-center pt-1" [class]="'d-' + (selectedLanguage == 'DE' ? 'inline' : 'none')">
+      <markdown class="sr-markdown" [data]="stepDialogForm.value.answerDe" ></markdown>
+    </div>
+    <div class="d-flex justify-content-center pt-1" [class]="'d-' + (selectedLanguage == 'EN' ? 'inline' : 'none')">
+      <markdown class="sr-markdown" [data]="stepDialogForm.value.answerEn"></markdown>
+    </div>
+
+    <p-divider />
+
+    <!-- Submit -->
+    <div class="d-flex justify-content-center pt-2">
+      <input type="submit" [value]="isAdd ? 'Add Dialog Option' : 'Update Dialog Option'" class="btn btn-outline-light" [disabled]="!isFormValid()">
+    </div>
+  </form>
+</p-dialog>

@@ -1,0 +1,5 @@
+.sr-toast {
+  overflow-wrap: break-word;
+  width: 25rem;
+  hyphens: auto;
+}
