@@ -1,0 +1,50 @@
+<p-panel *ngIf="selectedQuest != undefined">
+  <ng-template pTemplate="header">
+    <div class="flex align-items-center p-2">
+      <i class="bi bi-person-circle"></i> NPC's for Quest
+    </div>
+  </ng-template>
+  <ng-template pTemplate="content">
+    <p-table [value]="selectedQuest.prepareNpcs" styleClass="p-datatable-striped p-datatable-sm"
+    responsiveLayout="stack" [responsive]="true" [breakpoint]="'900px'">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Name</th>
+          <th>Race</th>
+          <th>Planet</th>
+          <th>Action</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-npc>
+        <tr>
+          <td><span class="p-column-title">Name</span>{{ npc.rulerName }}</td>
+          <td><span class="p-column-title">Race</span>{{ npc.race.key }}</td>
+          <td>
+            <span class="p-column-title">Planet</span>
+            <app-coordinates-with-copy *ngIf="npc.planet != null && npc.planet != undefined" [position]="getPosition(npc.planet.coordinates)" [planetName]="npc.planet.planetName" />
+            <ng-container *ngIf="npc.planet == null || npc.planet == undefined">
+              No Planet
+            </ng-container>
+          </td>
+          <td>
+            <span class="p-column-title">Action</span>
+            <button class="btn btn-outline-light mx-2" (click)="updateNpc(selectedQuest, npc)"><i class="bi bi-pencil"></i></button>
+            <button class="btn btn-outline-light" (click)="deleteNpc(npc)"><i class="bi bi-trash-fill"></i></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <div class="d-flex justify-content-center pt-2" *ngIf="selectedQuest.prepareNpcs.length == 0">
+      No NCP's prepared currently. Please prepare NPCs for usage in Quest Steps.
+    </div>
+    <div class="d-flex justify-content-center pt-2">
+      NPC's are required for quest steps, without NPC's no Ruler exists to transfer Credits or to fly to for a dialogue!<br>
+      NPC's with Dialog option require a planet, for Credit Transaction only Name and Race is Required.
+    </div>
+    <div class="d-flex justify-content-center pt-2">
+      <button class="btn btn-outline-light" (click)="updateNpc(selectedQuest, null)">Add NPC</button>
+    </div>
+  </ng-template>
+</p-panel>
+
+<app-quest-generator-npc-update #questGeneratorNpcUpdateComponent (afterUpdateFunction)="afterUpdateNpc($event)" />

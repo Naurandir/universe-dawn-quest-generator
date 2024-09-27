@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Position } from '../backend/models';
+import { ICoordinates } from '../quest-generator/quest-ud.model';
 
 @Pipe({
   name: 'coordinatesNormalised',
@@ -7,15 +7,15 @@ import { Position } from '../backend/models';
 })
 export class CoordinatesNormalisedPipe implements PipeTransform {
 
-  transform(value: Position | string | null): string {
+  transform(value: ICoordinates | string | null): string {
     if (value == null) {
       return "000-000-000";
     }
 
-    if (typeof value === "string") {
+    if (value instanceof String) {
       return this.transformString(value as string);
     } else {
-      return this.transformPosition(value as Position);
+      return this.transformPosition(value as ICoordinates);
     }
   }
 
@@ -32,7 +32,7 @@ export class CoordinatesNormalisedPipe implements PipeTransform {
     return this.getNormalizedPosition(x) + "-" + this.getNormalizedPosition(y) + "-" + this.getNormalizedPosition(z);
   }
 
-  private transformPosition(value: Position): string {
+  private transformPosition(value: ICoordinates): string {
     return this.getNormalizedPosition(value.x!) + "-" + this.getNormalizedPosition(value.y!) + "-" + this.getNormalizedPosition(value.z!);
   }
 
@@ -45,8 +45,8 @@ export class CoordinatesNormalisedPipe implements PipeTransform {
     return "" + pos;
   }
 
-  transformToPosition(value: string | null): Position {
-    let position: Position = {
+  transformToPosition(value: string | null): ICoordinates {
+    let position: ICoordinates = {
       x: 0,
       y: 0,
       z: 0

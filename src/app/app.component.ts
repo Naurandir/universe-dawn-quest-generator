@@ -2,15 +2,13 @@ import { LoadingActionService } from './shared/loading-action/loading-action.ser
 import { ToasterService } from './shared/toaster/toaster.service';
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToasterComponent } from "./shared/toaster/toaster.component";
 
-import { environment } from './../environments/environment';
 import { CoordinatesNormalisedPipe } from './shared/coordinates-normalised.pipe';
 import { LoadingActionComponent } from "./shared/loading-action/loading-action.component";
-import { QuestGeneratorComponent } from "./support/quest-generator/quest-generator.component";
+import { QuestGeneratorComponent } from "./quest-generator/quest-generator.component";
 
 @Component({
     selector: 'app-root',

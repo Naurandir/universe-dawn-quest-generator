@@ -1,0 +1,49 @@
+<p-dialog header="NPC" [modal]="true" [(visible)]="visible" [style]="{ 'max-width': '30rem' }">
+  <form [formGroup]="npcForm" (submit)="updateNpc()">
+    <!-- Name -->
+    <div class="d-flex justify-content-center pt-2">
+      <div class="form-group pb-3">
+        <label class="form-label"><i class="bi bi bi-person-circle"></i> Name </label><br>
+        <input type="text" name="npcName" class="form-control" formControlName="npcName" class="p-element p-inputwrapper p-inputtext" [style]="{ 'min-width': '250px'}" />
+      </div>
+    </div>
+
+    <!--Race -->
+    <div class="d-flex justify-content-center pt-2">
+      <div class="form-group pb-3">
+        <label class="form-label"><i class="bi bi-android"></i> Race</label><br>
+        <p-dropdown appendTo="body" [options]="races | enumToArray" optionLabel="value" formControlName="npcRace"
+        placeholder="Select a Race" [style]="{ 'min-width': '250px'}" />
+      </div>
+    </div>
+
+    <p-divider />
+
+    <div class="d-flex justify-content-center pt-2">
+      <div class="form-group pb-3">
+        If you would like to use this NPC for dialogs a planet with name and coordinates is required.
+      </div>
+    </div>
+
+    <!-- Planet Name -->
+    <div class="d-flex justify-content-center pt-2">
+      <div class="form-group pb-3">
+        <label class="form-label"><i class="bi bi-globe-asia-australia"></i> Planet Name </label><br>
+        <input type="text" name="name" class="form-control" formControlName="npcPlanetName" class="p-element p-inputwrapper p-inputtext" [style]="{ 'min-width': '250px'}" />
+      </div>
+    </div>
+
+    <!--Position -->
+    <div class="d-flex justify-content-center pt-2">
+      <div class="form-group pb-3">
+        <label class="form-label"><i class="bi bi-globe-asia-australia"></i> Planet Coordinates</label><br>
+        <app-position-input inputControlName="npcPlanetCoordinates" [inputForm]="npcForm" [style]="{ 'min-width': '250px'}"/>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="d-flex justify-content-center pt-2">
+      <input type="submit" [value]="isAdd ? 'Add NPC' : 'Update NPC'" class="btn btn-outline-light" [disabled]="!isFormValid()">
+    </div>
+  </form>
+</p-dialog>
