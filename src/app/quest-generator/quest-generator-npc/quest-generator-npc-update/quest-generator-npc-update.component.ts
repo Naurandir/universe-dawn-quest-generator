@@ -65,8 +65,7 @@ export class QuestGeneratorNpcUpdateComponent {
       if (npc.planet != null && npc.planet != undefined) {
         this.npcForm.patchValue({
           npcPlanetName: npc.planet.planetName,
-          npcPlanetCoordinates: this.coordinatesNormalisedPipe.transform(
-            npc.planet.coordinates.x + "-" + npc.planet.coordinates.y + "-" + npc.planet.coordinates.z)
+          npcPlanetCoordinates: this.coordinatesNormalisedPipe.transform(npc.planet.coordinates)
         });
       }
     }

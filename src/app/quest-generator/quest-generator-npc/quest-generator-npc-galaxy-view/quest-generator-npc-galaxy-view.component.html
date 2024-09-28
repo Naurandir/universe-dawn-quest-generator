@@ -1,0 +1,7 @@
+<p-dialog header="Galaxy View" [modal]="true" [(visible)]="visible" [style]="{ 'max-width': '30rem' }">
+  <app-galaxy-view *ngIf="visible == true" [(data)]="data"></app-galaxy-view>
+  <div class="d-flex justify-content-center pt-2">
+    NPCs are shown in green color.<br>
+    For better feeling of the distribution of NPC's the GVG's are shown in gold color.
+  </div>
+</p-dialog>

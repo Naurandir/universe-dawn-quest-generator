@@ -44,7 +44,22 @@
     <div class="d-flex justify-content-center pt-2">
       <button class="btn btn-outline-light" (click)="updateNpc(selectedQuest, null)">Add NPC</button>
     </div>
+
+    <p-divider />
+
+    <div class="d-flex justify-content-center">
+      <b>Galaxy View</b>
+    </div>
+    <div class="d-flex justify-content-center pt-2">
+      See how your NPC's are distributed over the universe.
+    </div>
+    <div class="d-flex justify-content-center pt-2">
+      <button class="btn btn-outline-light" (click)="showGalaxy(selectedQuest)">Show Galaxy View</button>
+    </div>
+
   </ng-template>
 </p-panel>
 
 <app-quest-generator-npc-update #questGeneratorNpcUpdateComponent (afterUpdateFunction)="afterUpdateNpc($event)" />
+<app-quest-generator-npc-galaxy-view #questGeneratorNpcGalaxyViewComponent></app-quest-generator-npc-galaxy-view>
+
