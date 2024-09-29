@@ -14,6 +14,8 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { DividerModule } from 'primeng/divider';
 
 import { ToasterService } from '../../shared//toaster/toaster.service';
+import { TranslationService } from '../../shared/translation/translation.service';
+import { LoadingActionService } from '../../shared/loading-action/loading-action.service';
 
 @Component({
   selector: 'app-quest-generator-general-update',
@@ -49,7 +51,8 @@ export class QuestGeneratorGeneralUpdateComponent {
     questConditionBuildingLevel: new FormControl(0)
   });
 
-  constructor(private toasterService: ToasterService) {
+  constructor(private translateranslationService: TranslationService,
+    private toasterService: ToasterService, private loadingActionService: LoadingActionService) {
 
   }
 
@@ -98,5 +101,38 @@ export class QuestGeneratorGeneralUpdateComponent {
     this.toasterService.success("Update Quest", `General Information of Quest '${this.currentQuest?.name}' was successfully updated.`);
 
     this.generalUpdateForm.reset();
+  }
+
+  translateNotificationToCurrentLanguage() {
+    let currentLanguage = this.selectedLanguage;
+    let notificationText = currentLanguage == 'DE' ? this.generalUpdateForm.value.notificationEn : this.generalUpdateForm.value.notificationDe;
+    let languageFrom: 'de' | 'en' = currentLanguage == 'DE' ? 'en' : 'de';
+    let languageTo: 'de' | 'en' = currentLanguage == 'DE' ? 'de' : 'en'
+
+    if (notificationText == null) {
+      this.toasterService.warn("Translation","Translation requires non empty input.");
+      return;
+    }
+
+    this.loadingActionService.showLoadingActionWithMessage("translation ongoing...");
+    this.translateranslationService.translate(languageFrom, languageTo, notificationText).subscribe({
+      next: (response) => {
+        if (currentLanguage == 'DE') {
+          this.generalUpdateForm.patchValue({
+            notificationDe: response,
+          });
+        } else {
+          this.generalUpdateForm.patchValue({
+            notificationEn: response,
+          });
+        }
+        this.toasterService.success("Translation",`Translation to ${languageTo} worked.`);
+        this.loadingActionService.hideLoadingAction();
+      },
+      error: (error) => {
+        this.toasterService.error("Translation",`Translation to ${languageTo} failed. Reason: ${error}`);
+        this.loadingActionService.hideLoadingAction();
+      }
+    });
   }
 }

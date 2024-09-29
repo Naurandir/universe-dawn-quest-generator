@@ -117,6 +117,14 @@ body, .dropdown-menu, .btn, .p-component, .p-inputtext {
   color: rgba(255, 255, 255, 0.75);
 }
 
+.udq-big-button {
+  min-width: 225px;
+}
+
+.udq-language-button {
+  max-width: 45px;
+}
+
 .sr-panel-distance {
   margin-bottom: 15px;
 }

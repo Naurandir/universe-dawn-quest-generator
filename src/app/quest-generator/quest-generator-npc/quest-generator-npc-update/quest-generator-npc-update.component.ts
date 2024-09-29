@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { ERace, IQuest, IQuestPrepareNpcs } from '../../quest-ud.model';
 
@@ -17,7 +18,7 @@ import { DividerModule } from 'primeng/divider';
 @Component({
   selector: 'app-quest-generator-npc-update',
   standalone: true,
-  imports: [ FormsModule, ReactiveFormsModule, DialogModule, DropdownModule, DividerModule, PositionInputComponent, EnumToArrayPipe ],
+  imports: [ CommonModule, FormsModule, ReactiveFormsModule, DialogModule, DropdownModule, DividerModule, PositionInputComponent, EnumToArrayPipe ],
   templateUrl: './quest-generator-npc-update.component.html',
   styleUrl: './quest-generator-npc-update.component.css'
 })
