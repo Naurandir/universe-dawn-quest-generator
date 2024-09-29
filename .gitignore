@@ -42,5 +42,5 @@ testem.log
 Thumbs.db
 
 # Production Environment Code
-/src/environments/environment.production.ts
-/src/environments/environment.local.ts
+src/environments/environment.production.ts
+src/environments/environment.local.ts
