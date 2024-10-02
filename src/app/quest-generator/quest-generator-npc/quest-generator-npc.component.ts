@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { ICoordinates, IQuest, IQuestPrepareNpcs } from '../quest-ud.model';
 import { CommonModule } from '@angular/common';
 
@@ -17,7 +17,8 @@ import { LoadingActionService } from '../../shared/loading-action/loading-action
   imports: [ CommonModule, PanelModule, TableModule, DividerModule,
              CoordinatesWithCopyComponent, QuestGeneratorNpcUpdateComponent, QuestGeneratorNpcGalaxyViewComponent],
   templateUrl: './quest-generator-npc.component.html',
-  styleUrl: './quest-generator-npc.component.css'
+  styleUrl: './quest-generator-npc.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuestGeneratorNpcComponent {
 
@@ -27,7 +28,7 @@ export class QuestGeneratorNpcComponent {
   @ViewChild('questGeneratorNpcUpdateComponent') questGeneratorNpcUpdateComponent?: QuestGeneratorNpcUpdateComponent;
   @ViewChild('questGeneratorNpcGalaxyViewComponent') questGeneratorNpcGalaxyViewComponent?: QuestGeneratorNpcGalaxyViewComponent;
 
-  constructor(private loadingActionService: LoadingActionService) {
+  constructor(private loadingActionService: LoadingActionService, private changeDedector: ChangeDetectorRef) {
 
   }
 
@@ -44,6 +45,7 @@ export class QuestGeneratorNpcComponent {
   updateNpc(quest: IQuest, npc: IQuestPrepareNpcs | null) {
     this.questGeneratorNpcUpdateComponent!.setNpc(quest, npc);
     this.questGeneratorNpcUpdateComponent!.showUpdateDialog();
+    this.changeDedector.detectChanges();
   }
 
   afterUpdateNpc(npc: IQuestPrepareNpcs) {
@@ -53,12 +55,14 @@ export class QuestGeneratorNpcComponent {
       this.selectedQuest?.prepareNpcs.push(npc);
     }
 
+    this.changeDedector.detectChanges();
     this.afterChangeFunction.emit();
   }
 
   deleteNpc(npc: IQuestPrepareNpcs) {
     this.selectedQuest!.prepareNpcs = this.selectedQuest!.prepareNpcs.filter(n => n != npc);
 
+    this.changeDedector.detectChanges();
     this.afterChangeFunction.emit();
   }
 

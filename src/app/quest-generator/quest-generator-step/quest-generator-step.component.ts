@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
-import { EChassisId, EModuleId, IQuest, IQuestStep, IQuestTaskDialogue, IReturnRewardGiveLicense, IReturnRewardGiveResources, TReturnReward } from '../quest-ud.model';
+import { EChassisId, EModuleId, ICoordinates, IQuest, IQuestPrepareNpcs, IQuestStep, IQuestTaskDialogue, IReturnRewardGiveLicense, IReturnRewardGiveResources, TReturnReward } from '../quest-ud.model';
 
 import { CommonModule } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
@@ -28,7 +28,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     MarkdownModule, NgbModule,
     QuestStepsArrayPipe, UniverseDawnNumberFormatPipe, QuestGeneratorStepUpdateComponent, QuestGeneratorStepDialogUpdateComponent, QuestGeneratorStepRewardUpdateComponent, CoordinatesNormalisedPipe],
   templateUrl: './quest-generator-step.component.html',
-  styleUrl: './quest-generator-step.component.css'
+  styleUrl: './quest-generator-step.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuestGeneratorStepComponent {
 
@@ -46,13 +47,14 @@ export class QuestGeneratorStepComponent {
   chassis = EChassisId;
   modules = EModuleId;
 
-  constructor(private questGeneratorService: QuestGeneratorService, private confirmationService: ConfirmationService, private toasterService: ToasterService) {
-
+  constructor(private questGeneratorService: QuestGeneratorService, private confirmationService: ConfirmationService, private toasterService: ToasterService,
+    private coordinatesNormalisedPipe: CoordinatesNormalisedPipe, private changeDedector: ChangeDetectorRef) {
   }
 
   updateStep(quest: IQuest, step: IQuestStep | null) {
     this.questGeneratorStepUpdateDialog!.setStep(quest, step);
     this.questGeneratorStepUpdateDialog!.showUpdateDialog();
+    this.changeDedector.detectChanges();
   }
 
   afterUpdateStep(step: IQuestStep) {
@@ -71,6 +73,7 @@ export class QuestGeneratorStepComponent {
       this.questGeneratorService.addStep(step, this.selectedQuest!);
     }
 
+    this.changeDedector.detectChanges();
     this.afterChangeFunction.emit();
   }
 
@@ -90,18 +93,21 @@ export class QuestGeneratorStepComponent {
 
   deleteStepConfirmed(step: IQuestStep) {
     this.questGeneratorService.deleteStep(step, this.selectedQuest!);
+    this.changeDedector.detectChanges();
 
     this.afterChangeFunction.emit();
   }
 
   moveStepUp(step: IQuestStep) {
     this.questGeneratorService.moveStepUp(step, this.selectedQuest!);
+    this.changeDedector.detectChanges();
 
     this.afterChangeFunction.emit();
   }
 
   moveStepDown(step: IQuestStep) {
     this.questGeneratorService.moveStepDown(step, this.selectedQuest!);
+    this.changeDedector.detectChanges();
 
     this.afterChangeFunction.emit();
   }
@@ -110,6 +116,7 @@ export class QuestGeneratorStepComponent {
   updateStepDialog(key: string | null, answer: string | null, task: IQuestTaskDialogue) {
     this.questGeneratorStepDialogUpdateDialog!.setStepDialog(key, answer, this.selectedLanguage, task);
     this.questGeneratorStepDialogUpdateDialog!.showUpdateStepDialog();
+    this.changeDedector.detectChanges();
   }
 
   deleteStepDialog(key: string, questTask: IQuestTaskDialogue) {
@@ -128,6 +135,8 @@ export class QuestGeneratorStepComponent {
 
   deleteStepDialogConfirm(key: string, questTask: IQuestTaskDialogue) {
     this.questGeneratorService.deleteQuestDialog(key, this.selectedLanguage, questTask);
+    this.changeDedector.detectChanges();
+
     this.afterChangeFunction.emit();
   }
 
@@ -147,6 +156,7 @@ export class QuestGeneratorStepComponent {
   updateStepReward(reward: TReturnReward | null, questStep: IQuestStep) {
     this.questGeneratorStepRewardUpdateComponent!.setReward(reward, questStep);
     this.questGeneratorStepRewardUpdateComponent!.showUpdateStepDialog();
+    this.changeDedector.detectChanges();
   }
 
   deleteStepReward(reward: TReturnReward, questStep: IQuestStep) {
@@ -165,6 +175,8 @@ export class QuestGeneratorStepComponent {
 
   deleteStepRewardConfirm(reward: TReturnReward, questStep: IQuestStep) {
     this.questGeneratorService.deleteStepReward(reward, questStep);
+    this.changeDedector.detectChanges();
+
     this.afterChangeFunction.emit();
   }
 
@@ -190,8 +202,35 @@ export class QuestGeneratorStepComponent {
     }
   }
 
+  getNpcInfoByCoordinates(coordinates: ICoordinates) {
+    let foundNpc: IQuestPrepareNpcs[] = this.selectedQuest!.prepareNpcs.filter(npc => npc.planet != undefined &&
+        npc.planet.coordinates.x == coordinates.x && npc.planet.coordinates.y == coordinates.y && npc.planet.coordinates.z == coordinates.z);
+    return this.getNpcInfo(foundNpc);
+  }
+
+  getNpcInfoByRulerName(rulerName: string): string {
+    let foundNpc: IQuestPrepareNpcs[] = this.selectedQuest!.prepareNpcs.filter(npc => npc.rulerName == rulerName);
+    return this.getNpcInfo(foundNpc);
+  }
+
+  private getNpcInfo(foundNpc: IQuestPrepareNpcs[]) {
+    if(foundNpc.length == 0) {
+      return "Unknown";
+    }
+
+    if(foundNpc[0].planet == undefined) {
+      return `${foundNpc[0].rulerName} (No Planet)`;
+    }
+
+    let normalizedCoordinates: string = this.coordinatesNormalisedPipe.transform(foundNpc[0].planet.coordinates);
+
+    return `${foundNpc[0].rulerName} - ${foundNpc[0].planet.planetName} (${normalizedCoordinates})`;
+  }
+
   switchLanguage(language: 'DE' | 'EN') {
     this.selectedLanguage = language;
+
+    this.changeDedector.detectChanges();
     this.selectedLanguageChange.emit(language);
   }
 }

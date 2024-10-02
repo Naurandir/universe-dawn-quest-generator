@@ -18,7 +18,7 @@
       <ng-template pTemplate="body" let-npc>
         <tr>
           <td><span class="p-column-title">Name</span>{{ npc.rulerName }}</td>
-          <td><span class="p-column-title">Race</span>{{ npc.race.key }}</td>
+          <td><span class="p-column-title">Race</span>{{ npc.race }}</td>
           <td>
             <span class="p-column-title">Planet</span>
             <app-coordinates-with-copy *ngIf="npc.planet != null && npc.planet != undefined" [position]="getPosition(npc.planet.coordinates)" [planetName]="npc.planet.planetName" />

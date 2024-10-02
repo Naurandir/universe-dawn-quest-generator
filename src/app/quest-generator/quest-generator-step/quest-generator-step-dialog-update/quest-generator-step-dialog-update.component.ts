@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { IQuestTaskDialogue } from '../../quest-ud.model';
@@ -13,13 +13,17 @@ import { DividerModule } from 'primeng/divider';
 
 import { QuestGeneratorService } from '../../quest-generator.service';
 import { ToasterService } from '../../../shared/toaster/toaster.service';
+import { TranslationService } from '../../../shared/translation/translation.service';
+import { LoadingActionService } from '../../../shared/loading-action/loading-action.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-quest-generator-step-dialog-update',
   standalone: true,
   imports: [CommonModule, NgbModule, MarkdownModule, FormsModule, ReactiveFormsModule, DialogModule, DividerModule ],
   templateUrl: './quest-generator-step-dialog-update.component.html',
-  styleUrl: './quest-generator-step-dialog-update.component.css'
+  styleUrl: './quest-generator-step-dialog-update.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuestGeneratorStepDialogUpdateComponent {
 
@@ -41,7 +45,8 @@ export class QuestGeneratorStepDialogUpdateComponent {
     answerEn: new FormControl("", [])
   });
 
-  constructor(private questGeneratorService: QuestGeneratorService, private toasterService: ToasterService) {
+  constructor(private questGeneratorService: QuestGeneratorService, private translationService: TranslationService,
+    private toasterService: ToasterService, private loadingActionService: LoadingActionService, private changeDedector: ChangeDetectorRef) {
 
   }
 
@@ -61,10 +66,12 @@ export class QuestGeneratorStepDialogUpdateComponent {
 
     this.isAdd = key == null;
     this.selectedLanguage = selectedLanguage;
+    this.changeDedector.detectChanges();
   }
 
   showUpdateStepDialog() {
     this.visible = true;
+    this.changeDedector.detectChanges();
   }
 
   isFormValid() {
@@ -132,6 +139,7 @@ export class QuestGeneratorStepDialogUpdateComponent {
     this.afterUpdateFunction.emit();
 
     this.stepDialogForm.reset();
+    this.changeDedector.detectChanges();
   }
 
   private isKeyAlreadyInUse(): boolean {
@@ -168,5 +176,49 @@ export class QuestGeneratorStepDialogUpdateComponent {
 
   switchLanguage(language: 'DE' | 'EN') {
     this.selectedLanguage = language;
+    this.changeDedector.detectChanges();
+  }
+
+  translateToCurrentLanguage() {
+    let currentLanguage = this.selectedLanguage;
+    let keywordText = currentLanguage == 'DE' ? this.stepDialogForm.value.keyEn : this.stepDialogForm.value.keyDe;
+    let answerText = currentLanguage == 'DE' ? this.stepDialogForm.value.answerEn : this.stepDialogForm.value.answerDe;
+    let languageFrom: 'de' | 'en' = currentLanguage == 'DE' ? 'en' : 'de';
+    let languageTo: 'de' | 'en' = currentLanguage == 'DE' ? 'de' : 'en'
+
+    if (answerText == null || answerText == "" || keywordText == null || keywordText == "") {
+      this.toasterService.warn("Translation","Translation requires non empty input for keyword and answer.");
+      return;
+    }
+
+    this.loadingActionService.showLoadingActionWithMessage("translation ongoing...");
+    let calls = [
+      this.translationService.translate(languageFrom, languageTo, keywordText),
+      this.translationService.translate(languageFrom, languageTo, answerText)
+    ];
+
+    forkJoin(calls).subscribe({
+      next: (response) => {
+        if (currentLanguage == 'DE') {
+          this.stepDialogForm.patchValue({
+            keyDe: response[0],
+            answerDe: response[1]
+          });
+        } else {
+          this.stepDialogForm.patchValue({
+            keyEn: response[0],
+            answerEn: response[1]
+          });
+        }
+        this.toasterService.success("Translation",`Translation to ${languageTo.toUpperCase()} worked.`);
+        this.loadingActionService.hideLoadingAction();
+        this.changeDedector.detectChanges();
+      },
+      error: (error) => {
+        this.toasterService.error("Translation",`Translation to ${languageTo.toUpperCase()} failed. Reason: ${error}`);
+        this.loadingActionService.hideLoadingAction();
+        this.changeDedector.detectChanges();
+      }
+    });
   }
 }

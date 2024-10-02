@@ -27,10 +27,10 @@
               <td>
                 <span class="p-column-title">Ruler / Location</span>
                 <ng-container *ngIf="currentStep.task.type == 'transactCredits'">
-                  {{ currentStep.task.rulerName }}
+                  {{ getNpcInfoByRulerName(currentStep.task.rulerName) }}
                 </ng-container>
                 <ng-container *ngIf="currentStep.task.type == 'dialogue'">
-                  {{ currentStep.task.coordinates | coordinatesNormalised }}
+                  {{ getNpcInfoByCoordinates(currentStep.task.coordinates) }}
                 </ng-container>
               </td>
               <td>
@@ -61,10 +61,10 @@
       <div class="flex align-items-center p-2">
         <i class="bi bi-person-walking"></i> Step - {{ currentStep.id }} -
         <ng-container *ngIf="currentStep.task.type == 'transactCredits'">
-          credits to <b>{{ currentStep.task.rulerName }}</b>
+          credits to <b>{{ getNpcInfoByRulerName(currentStep.task.rulerName) }}</b>
         </ng-container>
         <ng-container *ngIf="currentStep.task.type == 'dialogue'">
-          dialogue at <b>{{ currentStep.task.coordinates | coordinatesNormalised }}</b>
+          dialogue at <b>{{ getNpcInfoByCoordinates(currentStep.task.coordinates) }}</b>
         </ng-container>
       </div>
     </ng-template>
@@ -93,6 +93,10 @@
           </div>
           <div class="d-flex justify-content-center">
             <b>{{ currentStep.task.amount | universeDawnNumberFormat }}</b>
+          </div>
+
+          <div class="d-flex justify-content-center pt-2">
+            <button class="btn btn-outline-light" (click)="updateStep(selectedQuest, currentStep)">Update Step</button>
           </div>
         </ng-container>
 

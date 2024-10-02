@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { TranslationService } from './../../../shared/translation/translation.service';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ELocalisation, ICoordinates, IQuest, IQuestPrepareNpcs, IQuestStep, IQuestSteps } from '../../quest-ud.model';
+import { ELocalisation, IQuest, IQuestPrepareNpcs, IQuestStep, IQuestSteps, IQuestTaskDialogue, IQuestTaskTransactCredits } from '../../quest-ud.model';
 
 import { MarkdownModule } from 'ngx-markdown';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -16,6 +17,8 @@ import { DividerModule } from 'primeng/divider';
 import { ToasterService } from '../../../shared/toaster/toaster.service';
 import { QuestGeneratorService } from '../../quest-generator.service';
 import { PositionInputComponent } from "../../../shared/position-input/position-input.component";
+import { forkJoin } from 'rxjs';
+import { LoadingActionService } from '../../../shared/loading-action/loading-action.service';
 
 @Component({
   selector: 'app-quest-generator-step-update',
@@ -23,7 +26,8 @@ import { PositionInputComponent } from "../../../shared/position-input/position-
   imports: [ CommonModule, NgbModule, MarkdownModule, FormsModule, ReactiveFormsModule, DialogModule, DropdownModule,
              InputNumberModule, DividerModule, PositionInputComponent ],
   templateUrl: './quest-generator-step-update.component.html',
-  styleUrl: './quest-generator-step-update.component.css'
+  styleUrl: './quest-generator-step-update.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuestGeneratorStepUpdateComponent {
 
@@ -51,7 +55,8 @@ export class QuestGeneratorStepUpdateComponent {
     stepDialogCorrectWordEn: new FormControl(""),
   });
 
-  constructor(private questGeneratorService: QuestGeneratorService, private toasterService: ToasterService) {
+  constructor(private questGeneratorService: QuestGeneratorService, private toasterService: ToasterService,
+    private loadingActionService: LoadingActionService, private translationService: TranslationService, private changeDedector: ChangeDetectorRef) {
 
   }
 
@@ -81,11 +86,13 @@ export class QuestGeneratorStepUpdateComponent {
         stepDialogCorrectWordEn: step.task.correctDialogueWord[ELocalisation.en]
       });
     }
+    this.changeDedector.detectChanges();
   }
 
   showUpdateDialog() {
     this.visible = true;
     this.selectedLanguage = 'DE';
+    this.changeDedector.detectChanges();
   }
 
   isFormCombinationAllowed() {
@@ -100,11 +107,26 @@ export class QuestGeneratorStepUpdateComponent {
   }
 
   updateStep() {
-    let questType = this.stepForm.value.stepType;
+    let questType: string = this.stepForm.value.stepType;
     let normalizedStepId = this.getNormalizedStepId(this.currentQuestStep, this.currentQuest!.steps);
 
-    if (this.currentQuestStep == null && questType == "transactCredits") {
-      let newStep: IQuestStep = this.questGeneratorService.createStep(
+    if(this.currentQuestStep == null) {
+      this.currentQuestStep = this.createStep(normalizedStepId, questType);
+    } else {
+      this.updateExistingStep(this.currentQuestStep!, questType);
+    }
+
+    this.visible = false;
+    this.afterUpdateFunction.emit(this.currentQuestStep!);
+    this.toasterService.success("Step Update","Step succesfully updated");
+    this.resetForm();
+    this.changeDedector.detectChanges();
+  }
+
+  private createStep(normalizedStepId: string, type: string): IQuestStep {
+    let newStep: IQuestStep | null = null;
+    if (type == "transactCredits") {
+      newStep = this.questGeneratorService.createStep(
         normalizedStepId,
         this.stepForm.value.stepType,
         this.stepForm.value.stepNotificationDe,
@@ -116,8 +138,8 @@ export class QuestGeneratorStepUpdateComponent {
         null
       );
       this.currentQuestStep = newStep;
-    } else if (this.currentQuestStep == null && questType == "dialogue") {
-      let newStep: IQuestStep = this.questGeneratorService.createStep(
+    } else {
+      newStep = this.questGeneratorService.createStep(
         normalizedStepId,
         this.stepForm.value.stepType,
         this.stepForm.value.stepNotificationDe,
@@ -128,41 +150,61 @@ export class QuestGeneratorStepUpdateComponent {
         this.stepForm.value.stepDialogCorrectWordDe.toLowerCase(),
         this.stepForm.value.stepDialogCorrectWordEn.toLowerCase()
       );
-      this.currentQuestStep = newStep;
     }
 
-    if (this.currentQuestStep != null) {
-      this.currentQuestStep.notification = {
-        de: {
-          customText: this.stepForm.value.stepNotificationDe,
-          variables: {}
-        }
-      };
-      if (this.stepForm.value.stepNotificationEn != null) {
-        this.currentQuestStep.notification.en = {
-          customText: this.stepForm.value.stepNotificationEn,
-          variables: {}
-        };
+    return newStep!;
+  }
+
+  private updateExistingStep(questStep: IQuestStep, questType: string) {
+    // general data
+    questStep.notification = {
+      de: {
+        customText: this.stepForm.value.stepNotificationDe,
+        variables: {}
       }
+    };
+    if (this.stepForm.value.stepNotificationEn != null) {
+      questStep.notification.en = {
+        customText: this.stepForm.value.stepNotificationEn,
+        variables: {}
+      };
     }
 
-    if (this.currentQuestStep != null && questType == "transactCredits") {
-      this.currentQuestStep.task = this.questGeneratorService.createQuestTaskTransactCredits(
+    // type switch
+    if(questType == "transactCredits" && questStep.task.type != "transactCredits") {
+      questStep.task = this.questGeneratorService.createQuestTaskTransactCredits(
         this.stepForm.value.stepTransactCreditsAmount,
         this.stepForm.value.stepChosendNpc.rulerName
       );
-    } else if (this.currentQuestStep != null && questType == "dialogue") {
-      this.currentQuestStep.task = this.questGeneratorService.createQuestTaskDialog(
+      return;
+    } else if (questType == "dialogue" && questStep.task.type != "dialogue") {
+      questStep.task = this.questGeneratorService.createQuestTaskDialog(
         this.stepForm.value.stepChosendNpc.planet.coordinates.x + "-" + this.stepForm.value.stepChosendNpc.planet.coordinates.y + "-" + this.stepForm.value.stepChosendNpc.planet.coordinates.z,
         this.stepForm.value.stepDialogCorrectWordDe.toLowerCase(),
         this.stepForm.value.stepDialogCorrectWordEn.toLowerCase()
       );
+      return;
     }
 
-    this.visible = false;
-    this.afterUpdateFunction.emit(this.currentQuestStep!);
-    this.toasterService.success("Step Update","Step succesfully updated");
-    this.resetForm();
+    // type stayed, only update
+    if(questType == "transactCredits" && questStep.task.type == "transactCredits") {
+      let task: IQuestTaskTransactCredits = questStep.task;
+
+      task.amount = this.stepForm.value.stepTransactCreditsAmount as number;
+      task.rulerName = this.stepForm.value.stepChosendNpc.rulerName;
+    } else if (questType == "dialogue" && questStep.task.type == "dialogue") {
+      let task: IQuestTaskDialogue = questStep.task;
+
+      task.correctDialogueWord = {
+        [ELocalisation.de]: this.stepForm.value.stepDialogCorrectWordDe.toLowerCase(),
+        [ELocalisation.en]: this.stepForm.value.stepDialogCorrectWordEn.toLowerCase()
+      };
+      task.coordinates = {
+        x: this.stepForm.value.stepChosendNpc.planet.coordinates.x,
+        y: this.stepForm.value.stepChosendNpc.planet.coordinates.y,
+        z: this.stepForm.value.stepChosendNpc.planet.coordinates.z
+      };
+    }
   }
 
   private getNormalizedStepId(questStep: IQuestStep | null, steps: IQuestSteps): string {
@@ -194,6 +236,61 @@ export class QuestGeneratorStepUpdateComponent {
 
   switchLanguage(language: 'DE' | 'EN') {
     this.selectedLanguage = language;
+  }
+
+  translateToCurrentLanguage() {
+    let currentLanguage = this.selectedLanguage;
+    let type = this.stepForm.value.stepType;
+    let keywordText = currentLanguage == 'DE' ? this.stepForm.value.stepDialogCorrectWordEn : this.stepForm.value.stepDialogCorrectWordDe;
+    let notificationText = currentLanguage == 'DE' ? this.stepForm.value.stepNotificationEn : this.stepForm.value.stepNotificationDe;
+    let languageFrom: 'de' | 'en' = currentLanguage == 'DE' ? 'en' : 'de';
+    let languageTo: 'de' | 'en' = currentLanguage == 'DE' ? 'de' : 'en'
+
+    if (notificationText == null || notificationText == "" || type == "dialogue" && (keywordText == null || keywordText == "")) {
+      this.toasterService.warn("Translation","Translation requires non empty input for title and notification.");
+      return;
+    }
+
+    let calls = [
+      this.translationService.translate(languageFrom, languageTo, notificationText)
+    ];
+
+    if (type == "dialogue") {
+      calls.push(this.translationService.translate(languageFrom, languageTo, keywordText));
+    }
+
+    this.loadingActionService.showLoadingActionWithMessage("translation ongoing...");
+    forkJoin(calls).subscribe({
+      next: (response) => {
+        if (currentLanguage == 'DE') {
+          this.stepForm.patchValue({
+            stepNotificationDe: response[0]
+          });
+        } else {
+          this.stepForm.patchValue({
+            stepNotificationEn: response[0]
+          });
+        }
+
+        if (type == "dialogue" && currentLanguage == 'DE') {
+          this.stepForm.patchValue({
+            stepDialogCorrectWordDe: response[1]
+          });
+        } else if (type == "dialogue" && currentLanguage == 'EN') {
+          this.stepForm.patchValue({
+            stepDialogCorrectWordEn: response[1]
+          });
+        }
+        this.toasterService.success("Translation",`Translation to ${languageTo.toUpperCase()} worked.`);
+        this.loadingActionService.hideLoadingAction();
+        this.changeDedector.detectChanges();
+      },
+      error: (error) => {
+        this.toasterService.error("Translation",`Translation to ${languageTo.toUpperCase()} failed. Reason: ${error}`);
+        this.loadingActionService.hideLoadingAction();
+        this.changeDedector.detectChanges();
+      }
+    });
   }
 
   resetForm() {

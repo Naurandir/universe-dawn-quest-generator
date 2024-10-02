@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ELocalisation, IQuest, IQuestNotification, IQuestNotificationAllLang } from '../quest-ud.model';
@@ -16,13 +16,15 @@ import { DividerModule } from 'primeng/divider';
 import { ToasterService } from '../../shared//toaster/toaster.service';
 import { TranslationService } from '../../shared/translation/translation.service';
 import { LoadingActionService } from '../../shared/loading-action/loading-action.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-quest-generator-general-update',
   standalone: true,
   imports: [ CommonModule, NgbModule, MarkdownModule, FormsModule, ReactiveFormsModule, DialogModule, DropdownModule, InputTextareaModule, DividerModule ],
   templateUrl: './quest-generator-general-update.component.html',
-  styleUrl: './quest-generator-general-update.component.css'
+  styleUrl: './quest-generator-general-update.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuestGeneratorGeneralUpdateComponent {
 
@@ -51,8 +53,8 @@ export class QuestGeneratorGeneralUpdateComponent {
     questConditionBuildingLevel: new FormControl(0)
   });
 
-  constructor(private translateranslationService: TranslationService,
-    private toasterService: ToasterService, private loadingActionService: LoadingActionService) {
+  constructor(private translationService: TranslationService,
+    private toasterService: ToasterService, private loadingActionService: LoadingActionService, private changeDedector: ChangeDetectorRef) {
 
   }
 
@@ -66,15 +68,18 @@ export class QuestGeneratorGeneralUpdateComponent {
       notificationDe: quest.notification.de.customText,
       notificationEn: quest.notification.en?.customText
     });
+    this.changeDedector.detectChanges();
   }
 
   showUpdateDialog() {
     this.visible = true;
     this.selectedLanguage = 'DE';
+    this.changeDedector.detectChanges();
   }
 
   switchLanguage(language: 'DE' | 'EN') {
     this.selectedLanguage = language;
+    this.changeDedector.detectChanges();
   }
 
   updateQuest() {
@@ -101,37 +106,48 @@ export class QuestGeneratorGeneralUpdateComponent {
     this.toasterService.success("Update Quest", `General Information of Quest '${this.currentQuest?.name}' was successfully updated.`);
 
     this.generalUpdateForm.reset();
+    this.changeDedector.detectChanges();
   }
 
-  translateNotificationToCurrentLanguage() {
+  translateToCurrentLanguage() {
     let currentLanguage = this.selectedLanguage;
+    let titleText = currentLanguage == 'DE' ? this.generalUpdateForm.value.nameEn : this.generalUpdateForm.value.nameDe;
     let notificationText = currentLanguage == 'DE' ? this.generalUpdateForm.value.notificationEn : this.generalUpdateForm.value.notificationDe;
     let languageFrom: 'de' | 'en' = currentLanguage == 'DE' ? 'en' : 'de';
     let languageTo: 'de' | 'en' = currentLanguage == 'DE' ? 'de' : 'en'
 
-    if (notificationText == null) {
-      this.toasterService.warn("Translation","Translation requires non empty input.");
+    if (notificationText == null || notificationText == "" || titleText == null || titleText == "") {
+      this.toasterService.warn("Translation","Translation requires non empty input for title and notification.");
       return;
     }
 
     this.loadingActionService.showLoadingActionWithMessage("translation ongoing...");
-    this.translateranslationService.translate(languageFrom, languageTo, notificationText).subscribe({
+    let calls = [
+      this.translationService.translate(languageFrom, languageTo, titleText),
+      this.translationService.translate(languageFrom, languageTo, notificationText)
+    ];
+
+    forkJoin(calls).subscribe({
       next: (response) => {
         if (currentLanguage == 'DE') {
           this.generalUpdateForm.patchValue({
-            notificationDe: response,
+            nameDe: response[0],
+            notificationDe: response[1]
           });
         } else {
           this.generalUpdateForm.patchValue({
-            notificationEn: response,
+            nameEn: response[0],
+            notificationEn: response[1]
           });
         }
-        this.toasterService.success("Translation",`Translation to ${languageTo} worked.`);
+        this.toasterService.success("Translation",`Translation to ${languageTo.toUpperCase()} worked.`);
         this.loadingActionService.hideLoadingAction();
+        this.changeDedector.detectChanges();
       },
       error: (error) => {
-        this.toasterService.error("Translation",`Translation to ${languageTo} failed. Reason: ${error}`);
+        this.toasterService.error("Translation",`Translation to ${languageTo.toUpperCase()} failed. Reason: ${error}`);
         this.loadingActionService.hideLoadingAction();
+        this.changeDedector.detectChanges();
       }
     });
   }

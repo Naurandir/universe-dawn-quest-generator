@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ERace, IQuest, IQuestPrepareNpcs } from '../../quest-ud.model';
+import { ERace, ETaskType, ICoordinates, IQuest, IQuestPrepareNpcs, IQuestStep, IQuestTaskDialogue, IQuestTaskTransactCredits } from '../../quest-ud.model';
 
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -20,7 +20,8 @@ import { DividerModule } from 'primeng/divider';
   standalone: true,
   imports: [ CommonModule, FormsModule, ReactiveFormsModule, DialogModule, DropdownModule, DividerModule, PositionInputComponent, EnumToArrayPipe ],
   templateUrl: './quest-generator-npc-update.component.html',
-  styleUrl: './quest-generator-npc-update.component.css'
+  styleUrl: './quest-generator-npc-update.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuestGeneratorNpcUpdateComponent {
 
@@ -41,12 +42,13 @@ export class QuestGeneratorNpcUpdateComponent {
     npcPlanetCoordinates: new FormControl("")
   });
 
-  constructor(private toasterService: ToasterService, private coordinatesNormalisedPipe: CoordinatesNormalisedPipe) {
+  constructor(private toasterService: ToasterService, private coordinatesNormalisedPipe: CoordinatesNormalisedPipe, private changeDedector: ChangeDetectorRef) {
 
   }
 
   showUpdateDialog() {
     this.visible = true;
+    this.changeDedector.detectChanges();
   }
 
   public setNpc(quest: IQuest, npc: IQuestPrepareNpcs | null) {
@@ -60,7 +62,7 @@ export class QuestGeneratorNpcUpdateComponent {
     if (npc != null) {
       this.npcForm.patchValue({
         npcName: npc.rulerName,
-        npcRace: npc.race
+        npcRace: { "key": npc.race, "value": npc.race }
       });
 
       if (npc.planet != null && npc.planet != undefined) {
@@ -70,24 +72,31 @@ export class QuestGeneratorNpcUpdateComponent {
         });
       }
     }
+    this.changeDedector.detectChanges();
   }
 
   updateNpc() {
-    if(this.currentNpc == null) {
+    let oldRulerName = null;
+    let oldNpcPlanetCoordinates = null;
+
+    if(this.isAdd) {
       let newNpc: IQuestPrepareNpcs = {
         rulerName: this.npcForm.value.npcName,
-        race: this.npcForm.value.npcRace
+        race: this.npcForm.value.npcRace.value
       };
       this.currentNpc = newNpc;
     } else {
-      this.currentNpc.rulerName = this.npcForm.value.npcName;
-      this.currentNpc.race = this.npcForm.value.npcRace.value;
+      oldRulerName = this.currentNpc!.rulerName;
+      oldNpcPlanetCoordinates = this.currentNpc!.planet != undefined ? this.currentNpc!.planet!.coordinates : null;
+
+      this.currentNpc!.rulerName = this.npcForm.value.npcName;
+      this.currentNpc!.race = this.npcForm.value.npcRace.value;
     }
 
     // Planet
     if (this.npcForm.value.npcPlanetName != "" && this.npcForm.value.npcPlanetName != null && testCoordinates(this.npcForm.value.npcPlanetCoordinates)) {
       let coordinatesSplit: string[] = this.npcForm.value.npcPlanetCoordinates.split("-");
-      this.currentNpc.planet = {
+      this.currentNpc!.planet = {
         planetName: this.npcForm.value.npcPlanetName,
         coordinates: {
           x: Number(coordinatesSplit[0]),
@@ -96,13 +105,53 @@ export class QuestGeneratorNpcUpdateComponent {
         }
       };
     } else {
-      this.currentNpc.planet = undefined;
+      this.currentNpc!.planet = undefined;
+    }
+
+    if(!this.isAdd) {
+      this.updateNpcRelations(oldRulerName, oldNpcPlanetCoordinates);
     }
 
     this.visible = false;
     this.afterUpdateFunction.emit(this.currentNpc!);
     this.toasterService.success("Update NPC", `NPC was successfully updated.`);
     this.npcForm.reset();
+    this.changeDedector.detectChanges();
+  }
+
+  private updateNpcRelations(oldRulerName: string | null, oldNpcPlanetCoordinates: ICoordinates | null) {
+    if(oldRulerName == null && oldNpcPlanetCoordinates == null) {
+      console.warn("everything null, nothing to update");
+      return;
+    }
+
+    let stepKeys: string[] = Object.keys(this.currentQuest!.steps);
+
+    for(let i=0; i< stepKeys.length; i++) {
+      let currentStep: IQuestStep = this.currentQuest!.steps[stepKeys[i]];
+
+      if(currentStep.task.type == ETaskType.dialogue) {
+        let currentTask: IQuestTaskDialogue = currentStep.task;
+        let oldCoordinatesNormalized: string = this.coordinatesNormalisedPipe.transform(oldNpcPlanetCoordinates);
+        let currentCoordiantesNormalized: string = this.coordinatesNormalisedPipe.transform(currentTask.coordinates);
+
+        if(currentCoordiantesNormalized == oldCoordinatesNormalized) {
+          let newCoordinatesPosition: ICoordinates = this.coordinatesNormalisedPipe.transformToPosition(this.npcForm.value.npcPlanetCoordinates);
+          currentTask.coordinates = {
+            x: newCoordinatesPosition.x,
+            y: newCoordinatesPosition.y,
+            z: newCoordinatesPosition.z,
+          }
+        }
+      } else if (currentStep.task.type == ETaskType.transactCredits) {
+        let currentTask: IQuestTaskTransactCredits = currentStep.task;
+
+        if(currentTask.rulerName == oldRulerName) {
+          currentTask.rulerName = this.npcForm.value.npcName;
+        }
+      }
+    }
+    this.changeDedector.detectChanges();
   }
 
   isFormValid(): boolean {

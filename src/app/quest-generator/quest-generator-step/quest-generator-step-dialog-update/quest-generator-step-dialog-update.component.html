@@ -8,6 +8,18 @@
       </div>
     </div>
 
+    <!-- Translation -->
+    <div class="d-flex justify-content-center pt-2">
+      Current language is not well known to you?
+    </div>
+    <div class="d-flex justify-content-center ">
+      Use our free Translation! <i class="bi bi-exclamation-circle-fill mx-1 h5" ngbTooltip="Note as a free service it can happen that we run out of free calls. if thats the case try again later or in some days or feel free to use google translate :)"></i>
+    </div>
+    <div class="d-flex justify-content-center pt-2">
+      <input [value]="selectedLanguage == 'DE' ? 'Translate from English' : 'Translate from German'" class="btn btn-outline-light"
+        (click)="translateToCurrentLanguage()">
+    </div>
+
     <!-- Keyword -->
     <div class="d-flex justify-content-center pt-2">
       <div class="form-group pb-3" translate="no">
@@ -36,9 +48,9 @@
     <div class="d-flex justify-content-center pt-2">
       <div class="form-group pb-3" class="d-inline">
         <textarea rows="8"cols="28" pInputTextarea name="answer" formControlName="answerDe"
-        [class]="'p-element p-inputwrapper p-inputtext ' + 'd-' + (selectedLanguage == 'DE' ? 'inline' : 'none')" maxlength="500"></textarea>
+        [class]="'p-element p-inputwrapper p-inputtext ' + 'd-' + (selectedLanguage == 'DE' ? 'inline' : 'none')" maxlength="5000"></textarea>
         <textarea rows="8"cols="28" pInputTextarea name="answer" formControlName="answerEn"
-        [class]="'p-element p-inputwrapper p-inputtext ' + 'd-' + (selectedLanguage == 'EN' ? 'inline' : 'none')" maxlength="500"></textarea>
+        [class]="'p-element p-inputwrapper p-inputtext ' + 'd-' + (selectedLanguage == 'EN' ? 'inline' : 'none')" maxlength="5000"></textarea>
       </div>
     </div>
     <p-divider />

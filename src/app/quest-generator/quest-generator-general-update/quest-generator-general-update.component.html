@@ -8,6 +8,18 @@
       </div>
     </div>
 
+    <!-- Translation -->
+    <div class="d-flex justify-content-center pt-2">
+      Current language is not well known to you?
+    </div>
+    <div class="d-flex justify-content-center ">
+      Use our free Translation! <i class="bi bi-exclamation-circle-fill mx-1 h5" ngbTooltip="Note as a free service it can happen that we run out of free calls. if thats the case try again later or in some days or feel free to use google translate :)"></i>
+    </div>
+    <div class="d-flex justify-content-center pt-2">
+      <input [value]="selectedLanguage == 'DE' ? 'Translate from English' : 'Translate from German'" class="btn btn-outline-light"
+        (click)="translateToCurrentLanguage()">
+    </div>
+
     <!-- Name -->
     <div class="d-flex justify-content-center pt-2">
       <div class="form-group pb-3" translate="no">
@@ -26,17 +38,12 @@
     <div class="d-flex justify-content-center pt-2">
       <div class="form-group pb-3" [class]="'d-' + (selectedLanguage == 'DE' ? 'inline' : 'none')">
         <textarea rows="8"cols="28" pInputTextarea name="notificationDe" formControlName="notificationDe"
-        class="p-element p-inputwrapper p-inputtext" maxlength="500"></textarea>
+        class="p-element p-inputwrapper p-inputtext" maxlength="5000"></textarea>
       </div>
       <div class="form-group pb-3" [class]="'d-' + (selectedLanguage == 'EN' ? 'inline' : 'none')">
         <textarea rows="8"cols="28" pInputTextarea name="notificationEn" formControlName="notificationEn"
-        class="p-element p-inputwrapper p-inputtext" maxlength="500"></textarea>
+        class="p-element p-inputwrapper p-inputtext" maxlength="5000"></textarea>
       </div>
-    </div>
-
-    <div class="d-flex justify-content-center pt-2">
-      <input [value]="selectedLanguage == 'DE' ? 'Translate EN into DE' : 'Translate DE into EN'" class="btn btn-outline-light"
-        (click)="translateNotificationToCurrentLanguage()">
     </div>
 
     <!-- Preview -->
