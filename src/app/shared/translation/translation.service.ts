@@ -13,8 +13,8 @@ import translate from "translate";
 export class TranslationService {
 
   constructor(private toasterService: ToasterService, private loadingActionService: LoadingActionService) {
-    translate.engine = "deepl";
-    translate.key = environment.apiKey;
+    translate.engine = environment.translationType as ("google" | "deepl" | "libre" | "yandex");
+    translate.key = environment.translationApiKey;
   }
 
   translate(languageFrom: 'de' | 'en', languageTo: 'de' | 'en', text: string): Observable<string> {

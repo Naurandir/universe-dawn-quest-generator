@@ -1,4 +1,5 @@
 export const environment = {
   production: false,
-  apiKey: 'dummy'
+  translationType: 'google',
+  translationApiKey: 'dummy'
 };
