@@ -27,12 +27,12 @@
         placeholder="Select a Job" [style]="{ 'min-width': '250px'}">
         <ng-template pTemplate="selectedItem" translate="no">
           <div class="flex align-items-center gap-2" *ngIf="conditionForm.value.questConditionJob" translate="no">
-            {{ conditionForm.value.questConditionJob.value }}
+            <img [src]="questGeneratorService.getJobImage(conditionForm.value.questConditionJob.value)" class="udq-select-images"> {{ conditionForm.value.questConditionJob.value }}
           </div>
           </ng-template>
         <ng-template pTemplate="item" let-item translate="no">
           <div translate="no">
-            {{ item.value }}
+            <img [src]="questGeneratorService.getJobImage(item.value)" class="udq-select-images"> {{ item.value }}
           </div>
         </ng-template>
         </p-dropdown>
@@ -55,12 +55,12 @@
         placeholder="Select a Module" [style]="{ 'min-width': '250px'}">
         <ng-template pTemplate="selectedItem" translate="no">
           <div class="flex align-items-center gap-2" *ngIf="conditionForm.value.questConditionModuleResearched" translate="no">
-            {{ conditionForm.value.questConditionModuleResearched.value }}
+            <img [src]="questGeneratorService.getModuleImage(conditionForm.value.questConditionModuleResearched.value)" class="udq-select-images"> {{ conditionForm.value.questConditionModuleResearched.value }}
           </div>
           </ng-template>
         <ng-template pTemplate="item" let-item translate="no">
           <div translate="no">
-            {{ item.value }}
+            <img [src]="questGeneratorService.getModuleImage(item.value)" class="udq-select-images"> {{ item.value }}
           </div>
         </ng-template>
         </p-dropdown>
@@ -75,12 +75,12 @@
         placeholder="Select a Chassis" [style]="{ 'min-width': '250px'}">
         <ng-template pTemplate="selectedItem" translate="no">
           <div class="flex align-items-center gap-2" *ngIf="conditionForm.value.questConditionChassisResearched" translate="no">
-            {{ conditionForm.value.questConditionChassisResearched.value }}
+            <img [src]="questGeneratorService.getChassisImage(conditionForm.value.questConditionChassisResearched.value)" class="udq-select-images"> {{ conditionForm.value.questConditionChassisResearched.value }}
           </div>
         </ng-template>
         <ng-template pTemplate="item" let-item translate="no">
           <div translate="no">
-            {{ item.value }}
+            <img [src]="questGeneratorService.getChassisImage(item.value)" class="udq-select-images"> {{ item.value }}
           </div>
         </ng-template>
         </p-dropdown>
@@ -95,12 +95,12 @@
         placeholder="Select a Chassis" [style]="{ 'min-width': '250px'}">
         <ng-template pTemplate="selectedItem" translate="no">
           <div class="flex align-items-center gap-2" *ngIf="conditionForm.value.questConditionChassisBuilt" translate="no">
-            {{ conditionForm.value.questConditionChassisBuilt.value }}
+            <img [src]="questGeneratorService.getChassisImage(conditionForm.value.questConditionChassisBuilt.value)" class="udq-select-images"> {{ conditionForm.value.questConditionChassisBuilt.value }}
           </div>
         </ng-template>
         <ng-template pTemplate="item" let-item translate="no">
           <div translate="no">
-            {{ item.value }}
+            <img [src]="questGeneratorService.getChassisImage(item.value)" class="udq-select-images"> {{ item.value }}
           </div>
         </ng-template>
         </p-dropdown>
@@ -115,12 +115,12 @@
         placeholder="Select a Building" [style]="{ 'min-width': '250px'}">
         <ng-template pTemplate="selectedItem" translate="no">
           <div class="flex align-items-center gap-2" *ngIf="conditionForm.value.questConditionBuildingType" translate="no">
-            {{ conditionForm.value.questConditionBuildingType.value }}
+            <img [src]="questGeneratorService.getBuildingImage(conditionForm.value.questConditionBuildingType.value)" class="udq-select-images"> {{ conditionForm.value.questConditionBuildingType.value }}
           </div>
         </ng-template>
         <ng-template pTemplate="item" let-item translate="no">
           <div translate="no">
-            {{ item.value }}
+            <img [src]="questGeneratorService.getBuildingImage(item.value)" class="udq-select-images"> {{ item.value }}
           </div>
         </ng-template>
         </p-dropdown>

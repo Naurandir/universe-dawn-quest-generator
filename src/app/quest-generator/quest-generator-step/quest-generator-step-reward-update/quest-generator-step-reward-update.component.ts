@@ -54,7 +54,7 @@ export class QuestGeneratorStepRewardUpdateComponent {
     credits: new FormControl("")
   });
 
-  constructor(private toasterService: ToasterService, private questGeneratorService: QuestGeneratorService, private enumToArrayPipe: EnumToArrayPipe) {
+  constructor(private toasterService: ToasterService, public questGeneratorService: QuestGeneratorService, private enumToArrayPipe: EnumToArrayPipe) {
 
   }
 

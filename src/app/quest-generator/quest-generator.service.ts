@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { EComponentType, ELocalisation, EReturnReward, ETaskType, ICoordinates, IQuest, IQuestPrepareNpcs, IQuestStep, IQuestSteps, IQuestTaskDialogue, IQuestTaskTransactCredits, IReturnRewardGiveLicense, IReturnRewardGiveResources, TQuestCondition, TQuestTask, TResources, TReturnReward } from './quest-ud.model';
+import { Dictionary, EChassisId, EComponentType, ELocalisation, EModuleId, EReturnReward, ETaskType, ICoordinates, IQuest, IQuestPrepareNpcs, IQuestStep, IQuestSteps, IQuestTaskDialogue, IQuestTaskTransactCredits, IReturnRewardGiveLicense, IReturnRewardGiveResources, TQuestCondition, TQuestTask, TResources, TReturnReward } from './quest-ud.model';
 
 @Injectable({
   providedIn: 'root'
@@ -187,9 +187,9 @@ export class QuestGeneratorService {
     let coordinatesSplit: string[] = coordinates.split("-");
     let questTask: IQuestTaskDialogue = {
       coordinates: {
-        x: new Number(coordinatesSplit[0]) as number,
-        y: new Number(coordinatesSplit[1]) as number,
-        z: new Number(coordinatesSplit[2]) as number
+        x: new Number(coordinatesSplit[0]).valueOf(),
+        y: new Number(coordinatesSplit[1]).valueOf(),
+        z: new Number(coordinatesSplit[2]).valueOf()
       },
       correctDialogueWord: {
         [ELocalisation.de]: dialogCorrectWordDe,
@@ -279,5 +279,58 @@ export class QuestGeneratorService {
     }
 
     return foundNpcs[0];
+  }
+
+  private raceImages: Dictionary<String> =
+  {
+    "mensch": "https://universe-dawn.com/_next/static/images/human-421d75471c1f4693f7691222a473acb6.jpg",
+    "mosoraner": "https://universe-dawn.com/_next/static/images/mosoraner-df879e29f3d05123f2d696492a298df2.jpg",
+    "plentrop": "https://universe-dawn.com/_next/static/images/plentrop-33b63dbd2a45c0aa7fb8fb4c9f8fd7a9.jpg",
+    "zuup": "https://universe-dawn.com/_next/static/images/zuup-aa543a0e54d4a107cb8e017bf0ff1de9.jpg",
+    "jamozoid": "https://universe-dawn.com/_next/static/images/jamozoid-fb1b7dce73e7839f6a848502cd52e68f.jpg",
+    "wegoner": "https://universe-dawn.com/_next/static/images/wegoner-ddd39a9b187cfa85ec7e468193ba586e.jpg",
+    "morricaner": "https://universe-dawn.com/_next/static/images/morricaner-e9f66d81695e8a9054117d376013ffdc.jpg",
+    "magumer": "https://universe-dawn.com/_next/static/images/magumer-f6ba6d77ae35dc8d9b87c589704c24b9.jpg",
+    "ozoid": "https://universe-dawn.com/_next/static/images/ozoid-560248c8d4af70bbc533108606f19737.jpg"
+  };
+
+  getRaceImage(race: any) {
+    return this.raceImages[race];
+  }
+
+  getModuleImage(module: any) {
+    return "https://universe-dawn.com/universe-dawn/tech-items/modules/" + EModuleId[module] + ".jpg";
+  }
+
+  getChassisImage(chassis: any) {
+    return "https://universe-dawn.com/universe-dawn/tech-items/chassi/" + EChassisId[chassis] + ".jpg";
+  }
+
+  private buildingImages: Dictionary<String> =
+  {
+    "hq": "https://universe-dawn.com/_next/static/images/building-hq-4d8cc327b30b53ad91ca61671af7b30e.jpg",
+    "shipyard": "https://universe-dawn.com/_next/static/images/building-shipyard-607f5627993ee0623a36e9371abc18d7.jpg",
+    "tech": "https://universe-dawn.com/_next/static/images/building-tech-7db46cdc61f67d82e9242277720cc8ac.jpg",
+    "academy": "https://universe-dawn.com/_next/static/images/building-academy-74dc3dc1cfb83038065d717cc74e68cb.jpg",
+    "comm": "https://universe-dawn.com/_next/static/images/building-comm-db437c56344082bf16831a3a040b7510.jpg",
+    "dock": "https://universe-dawn.com/_next/static/images/building-dock-1ac41c6aefbd348d59a775cdb3bed6d1.jpg",
+    "gov": "https://universe-dawn.com/_next/static/images/building-gov-f92c78195a2095cbb18555d4ee969ed7.jpg",
+    "bunker": "https://universe-dawn.com/_next/static/images/building-bunker-e32d58abb06ca6b0416571a28018bd83.jpg",
+    "def": "https://universe-dawn.com/_next/static/images/building-def-3af04afc33a96c595e2b144703840025.jpg"
+  };
+
+  getBuildingImage(building: any) {
+    return this.buildingImages[building];
+  }
+
+  private jobImages: Dictionary<String> =
+  {
+    "warlord": "https://universe-dawn.com/_next/image?url=%2F_next%2Fstatic%2Fimages%2Fcommandship-fbfef9f0a3dbf7b3adb4a1b28230b260.webp&w=1920&q=75",
+    "trader": "https://universe-dawn.com/_next/image?url=%2F_next%2Fstatic%2Fimages%2Fraumstation-green-2-367da7015ffd537014cb385dc2b4fa70.webp&w=1920&q=75",
+    "freelancer": "https://universe-dawn.com/_next/image?url=%2F_next%2Fstatic%2Fimages%2Fx-303-su-9a8fabea7cfddec36e9db96138714eb4.webp&w=1920&q=75"
+  };
+
+  getJobImage(job: any) {
+    return this.jobImages[job];
   }
 }

@@ -376,3 +376,7 @@ export enum ELocalisation {
 }
 
 export interface ILocaleStringMap extends ILocalizedData<string> {}
+
+export interface Dictionary<T> {
+  [key: string]: T
+}

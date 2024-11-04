@@ -40,6 +40,7 @@ export class QuestGeneratorStepUpdateComponent {
   isAdd: boolean = false;
   selectedLanguage: 'DE' | 'EN' = 'DE';
   stepTypes: string[] = ['transactCredits', 'dialogue'];
+  stepNpcTypes: string[] = ['fullNpc', 'coordinatesOnly'];
 
   stepForm: FormGroup = new FormGroup({
     stepType: new FormControl("", [Validators.required]),
@@ -47,7 +48,9 @@ export class QuestGeneratorStepUpdateComponent {
     stepNotificationDe: new FormControl("", [Validators.required]),
     stepNotificationEn: new FormControl(""),
 
-    stepChosendNpc: new FormControl("", [Validators.required]),
+    stepNpcType: new FormControl("fullNpc"),
+    stepChosendNpc: new FormControl(""),
+    stepCoordinates: new FormControl(""),
 
     stepTransactCreditsAmount: new FormControl(0),
 
@@ -77,14 +80,27 @@ export class QuestGeneratorStepUpdateComponent {
         stepTransactCreditsAmount: step.task.amount,
       });
     } else if (step != null && step.task.type == "dialogue") {
+      let setpNpc = this.questGeneratorService.getNpcByCoordinates(this.currentQuest.prepareNpcs, step.task.coordinates);
       this.stepForm.patchValue({
         stepType: "dialogue",
         stepNotificationDe: step.notification.de.customText,
         stepNotificationEn: step.notification.en?.customText,
-        stepChosendNpc: this.questGeneratorService.getNpcByCoordinates(this.currentQuest.prepareNpcs, step.task.coordinates),
+        stepNpcType: setpNpc != null ? "fullNpc" : "coordinatesOnly",
+        stepChosendNpc: setpNpc,
+        stepCoordinates: step.task.coordinates.x + "-" + step.task.coordinates.y + "-" + step.task.coordinates.z,
         stepDialogCorrectWordDe: step.task.correctDialogueWord[ELocalisation.de],
         stepDialogCorrectWordEn: step.task.correctDialogueWord[ELocalisation.en]
       });
+
+      if(this.stepForm.value.stepChosendNpc != null) {
+        this.stepForm.patchValue({
+          stepNcpType: "fullNpc"
+        });
+      } else {
+        this.stepForm.patchValue({
+          stepNcpType: "coordinatesOnly"
+        });
+      }
     }
     this.changeDedector.detectChanges();
   }
@@ -96,14 +112,29 @@ export class QuestGeneratorStepUpdateComponent {
   }
 
   isFormCombinationAllowed() {
-    return (this.stepForm.value.stepType == 'transactCredits' &&
-            this.stepForm.value.stepChosendNpc != null &&
-            this.stepForm.value.stepTransactCreditsAmount > 0)
-           ||
-           (this.stepForm.value.stepType == 'dialogue' &&
-            this.stepForm.value.stepChosendNpc != null &&
-            this.stepForm.value.stepDialogCorrectWordDe != "" &&
-            this.stepForm.value.stepDialogCorrectWordEn != "");
+    let isValidTransactCredits: boolean = this.stepForm.value.stepType == 'transactCredits' &&
+      this.stepForm.value.stepChosendNpc != null &&
+      this.stepForm.value.stepTransactCreditsAmount > 0;
+
+    if (isValidTransactCredits) {
+      return true;
+    }
+
+    let isValidFullNpcDialog: boolean = this.stepForm.value.stepType == 'dialogue' &&
+      this.stepForm.value.stepChosendNpc != null &&
+      this.stepForm.value.stepDialogCorrectWordDe != "" &&
+      this.stepForm.value.stepDialogCorrectWordEn != "";
+
+    if(isValidFullNpcDialog) {
+      return true;
+    }
+
+    let isValidCoordinatesNpcDialog: boolean = this.stepForm.value.stepType == 'dialogue' &&
+      this.stepForm.value.stepCoordinates != "" &&
+      this.stepForm.value.stepDialogCorrectWordDe != "" &&
+      this.stepForm.value.stepDialogCorrectWordEn != "";
+
+    return isValidCoordinatesNpcDialog;
   }
 
   updateStep() {
@@ -139,6 +170,9 @@ export class QuestGeneratorStepUpdateComponent {
       );
       this.currentQuestStep = newStep;
     } else {
+      let coordinates: string = this.stepForm.value.stepChosendNpc != null && this.stepForm.value.stepNpcType == 'fullNpc' ?
+        this.stepForm.value.stepChosendNpc.planet.coordinates.x + "-" + this.stepForm.value.stepChosendNpc.planet.coordinates.y + "-" + this.stepForm.value.stepChosendNpc.planet.coordinates.z :
+        this.stepForm.value.stepCoordinates;
       newStep = this.questGeneratorService.createStep(
         normalizedStepId,
         this.stepForm.value.stepType,
@@ -146,7 +180,7 @@ export class QuestGeneratorStepUpdateComponent {
         this.stepForm.value.stepNotificationEn,
         null,
         null,
-        this.stepForm.value.stepChosendNpc.planet.coordinates.x + "-" + this.stepForm.value.stepChosendNpc.planet.coordinates.y + "-" + this.stepForm.value.stepChosendNpc.planet.coordinates.z,
+        coordinates,
         this.stepForm.value.stepDialogCorrectWordDe.toLowerCase(),
         this.stepForm.value.stepDialogCorrectWordEn.toLowerCase()
       );
@@ -199,11 +233,21 @@ export class QuestGeneratorStepUpdateComponent {
         [ELocalisation.de]: this.stepForm.value.stepDialogCorrectWordDe.toLowerCase(),
         [ELocalisation.en]: this.stepForm.value.stepDialogCorrectWordEn.toLowerCase()
       };
-      task.coordinates = {
-        x: this.stepForm.value.stepChosendNpc.planet.coordinates.x,
-        y: this.stepForm.value.stepChosendNpc.planet.coordinates.y,
-        z: this.stepForm.value.stepChosendNpc.planet.coordinates.z
-      };
+
+      if (this.stepForm.value.stepNpcType == "fullNpc") {
+        task.coordinates = {
+          x: new Number(this.stepForm.value.stepChosendNpc.planet.coordinates.x).valueOf(),
+          y: new Number(this.stepForm.value.stepChosendNpc.planet.coordinates.y).valueOf(),
+          z: new Number(this.stepForm.value.stepChosendNpc.planet.coordinates.z).valueOf()
+        };
+      } else {
+        let coordinatesSplit = this.stepForm.value.stepCoordinates.split("-");
+        task.coordinates = {
+          x: new Number(coordinatesSplit[0]).valueOf(),
+          y: new Number(coordinatesSplit[1]).valueOf(),
+          z: new Number(coordinatesSplit[2]).valueOf()
+        };
+      }
     }
   }
 
@@ -296,10 +340,12 @@ export class QuestGeneratorStepUpdateComponent {
   resetForm() {
     this.stepForm.patchValue({
       stepType: "",
+      stepNpcType: "fullNpc",
       stepNotificationDe: "",
       stepNotificationEn: "",
       stepTransactCreditsAmount: 0,
       stepChosendNpc: null,
+      stepCoordinates: "",
       stepDialogCorrectWordDe: "",
       stepDialogCorrectWordEn: ""
     });

@@ -1,3 +1,4 @@
+import { QuestGeneratorService } from './../../quest-generator.service';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -42,7 +43,7 @@ export class QuestGeneratorNpcUpdateComponent {
     npcPlanetCoordinates: new FormControl("")
   });
 
-  constructor(private toasterService: ToasterService, private coordinatesNormalisedPipe: CoordinatesNormalisedPipe, private changeDedector: ChangeDetectorRef) {
+  constructor(public questGeneratorService: QuestGeneratorService, private toasterService: ToasterService, private coordinatesNormalisedPipe: CoordinatesNormalisedPipe, private changeDedector: ChangeDetectorRef) {
 
   }
 

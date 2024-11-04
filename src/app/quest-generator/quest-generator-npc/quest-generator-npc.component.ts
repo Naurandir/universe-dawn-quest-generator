@@ -10,6 +10,7 @@ import { CoordinatesWithCopyComponent } from '../../shared/coordinates-with-copy
 import { QuestGeneratorNpcUpdateComponent } from "./quest-generator-npc-update/quest-generator-npc-update.component";
 import { QuestGeneratorNpcGalaxyViewComponent } from './quest-generator-npc-galaxy-view/quest-generator-npc-galaxy-view.component';
 import { LoadingActionService } from '../../shared/loading-action/loading-action.service';
+import { QuestGeneratorService } from '../quest-generator.service';
 
 @Component({
   selector: 'app-quest-generator-npc',
@@ -28,7 +29,7 @@ export class QuestGeneratorNpcComponent {
   @ViewChild('questGeneratorNpcUpdateComponent') questGeneratorNpcUpdateComponent?: QuestGeneratorNpcUpdateComponent;
   @ViewChild('questGeneratorNpcGalaxyViewComponent') questGeneratorNpcGalaxyViewComponent?: QuestGeneratorNpcGalaxyViewComponent;
 
-  constructor(private loadingActionService: LoadingActionService, private changeDedector: ChangeDetectorRef) {
+  constructor(public questGeneratorService: QuestGeneratorService, private loadingActionService: LoadingActionService, private changeDedector: ChangeDetectorRef) {
 
   }
 

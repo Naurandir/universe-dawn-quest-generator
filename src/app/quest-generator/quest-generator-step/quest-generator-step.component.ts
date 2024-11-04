@@ -48,7 +48,7 @@ export class QuestGeneratorStepComponent {
   modules = EModuleId;
 
   constructor(private questGeneratorService: QuestGeneratorService, private confirmationService: ConfirmationService, private toasterService: ToasterService,
-    private coordinatesNormalisedPipe: CoordinatesNormalisedPipe, private changeDedector: ChangeDetectorRef) {
+    public coordinatesNormalisedPipe: CoordinatesNormalisedPipe, private changeDedector: ChangeDetectorRef) {
   }
 
   updateStep(quest: IQuest, step: IQuestStep | null) {
@@ -192,6 +192,16 @@ export class QuestGeneratorStepComponent {
     return reward.cost.currencies[0];
   }
 
+  getComponentImage(reward: IReturnRewardGiveLicense) {
+    if (reward.componentType == 'chassis') {
+      return this.questGeneratorService.getChassisImage(this.chassis[Number(reward.licenseId)].toString());
+    } else if (reward.componentType == 'module') {
+      return this.questGeneratorService.getModuleImage(this.modules[Number(reward.licenseId)].toString())
+    } else {
+      throw new Error("Unknown Component Type!")
+    }
+  }
+
   getComponentName(reward: IReturnRewardGiveLicense) {
     if (reward.componentType == 'chassis') {
       return this.chassis[Number(reward.licenseId)].toString();
@@ -222,9 +232,7 @@ export class QuestGeneratorStepComponent {
       return `${foundNpc[0].rulerName} (No Planet)`;
     }
 
-    let normalizedCoordinates: string = this.coordinatesNormalisedPipe.transform(foundNpc[0].planet.coordinates);
-
-    return `${foundNpc[0].rulerName} - ${foundNpc[0].planet.planetName} (${normalizedCoordinates})`;
+    return `${foundNpc[0].rulerName} - ${foundNpc[0].planet.planetName}`;
   }
 
   switchLanguage(language: 'DE' | 'EN') {

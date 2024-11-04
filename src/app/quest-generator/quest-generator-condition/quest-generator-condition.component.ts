@@ -8,6 +8,7 @@ import { EChassisId, EModuleId, IQuest, TQuestCondition } from '../quest-ud.mode
 
 import { EuropeanNumberFormatPipe } from "../../shared//european-number-format.pipe";
 import { QuestGeneratorConditionUpdateComponent } from './quest-generator-condition-update/quest-generator-condition-update.component';
+import { QuestGeneratorService } from '../quest-generator.service';
 
 @Component({
   selector: 'app-quest-generator-condition',
@@ -25,6 +26,10 @@ export class QuestGeneratorConditionComponent {
 
   chassis = EChassisId;
   modules = EModuleId;
+
+  constructor(public questGeneratorService: QuestGeneratorService) {
+
+  }
 
   updateCondition(quest: IQuest, condition: TQuestCondition | null) {
     this.questGeneratorConditionUpdateDialog!.setCondition(quest, condition);

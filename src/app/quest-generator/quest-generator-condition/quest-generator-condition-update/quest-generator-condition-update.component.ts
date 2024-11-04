@@ -1,3 +1,4 @@
+import { QuestGeneratorService } from './../../quest-generator.service';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -44,7 +45,7 @@ export class QuestGeneratorConditionUpdateComponent {
     questConditionBuildingLevel: new FormControl(0)
   });
 
-  constructor(private toasterService: ToasterService) {
+  constructor(public readonly questGeneratorService: QuestGeneratorService, private toasterService: ToasterService) {
 
   }
 

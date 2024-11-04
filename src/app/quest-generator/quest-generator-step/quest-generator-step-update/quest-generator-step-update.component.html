@@ -40,25 +40,46 @@
       </div>
     </div>
 
-    <!-- Prepared NPC -->
-    <div class="d-flex justify-content-center pt-2" *ngIf="stepForm.value.stepType != '' && stepForm.value.stepType != null">
-      <div class="form-group pb-3">
-        <label class="form-label"><i class="bi bi-airplane-engines-fill"></i> NPC</label><br>
-        <p-dropdown appendTo="body" [options]="getNpcList(currentQuest!.prepareNpcs, stepForm.value.stepType)" optionLabel="rulerName" formControlName="stepChosendNpc"
-        placeholder="Select NPC" [style]="{ 'min-width': '250px'}">
-        <ng-template pTemplate="selectedItem" translate="no">
-          <div class="flex align-items-center gap-2" *ngIf="stepForm.value.stepChosendNpc" translate="no">
-            {{ stepForm.value.stepChosendNpc.rulerName }}
-          </div>
-        </ng-template>
-        <ng-template pTemplate="item" let-item translate="no">
-          <div translate="no">
-            {{ item.rulerName }}
-          </div>
-        </ng-template>
-        </p-dropdown>
+    <!-- Prepared NPC / Coordinates -->
+    <ng-container *ngIf="stepForm.value.stepType != '' && stepForm.value.stepType != null">
+      <!-- Choose if Coordinates only -->
+      <div class="d-flex justify-content-center pt-2" *ngIf="stepForm.value.stepType == 'dialogue'">
+        <div class="form-group pb-3">
+          <label class="form-label"><i class="bi bi-airplane-engines-fill"></i> NPC Type</label><br>
+          <p-dropdown appendTo="body" [options]="stepNpcTypes" formControlName="stepNpcType"
+          placeholder="Select NPC Type" [style]="{ 'min-width': '250px'}" />
+        </div>
       </div>
-    </div>
+
+      <!--NPC with Coordinates -->
+      <div class="d-flex justify-content-center pt-2" *ngIf="stepForm.value.stepNpcType == 'fullNpc' || stepForm.value.stepType == 'transactCredits'">
+        <div class="form-group pb-3">
+          <label class="form-label"><i class="bi bi bi-person-circle"></i> NPC</label><br>
+          <p-dropdown appendTo="body" [options]="getNpcList(currentQuest!.prepareNpcs, stepForm.value.stepType)" optionLabel="rulerName" formControlName="stepChosendNpc"
+          placeholder="Select NPC" [style]="{ 'min-width': '250px'}">
+          <ng-template pTemplate="selectedItem" translate="no">
+            <div class="flex align-items-center gap-2" *ngIf="stepForm.value.stepChosendNpc" translate="no">
+              {{ stepForm.value.stepChosendNpc.rulerName }}
+            </div>
+          </ng-template>
+          <ng-template pTemplate="item" let-item translate="no">
+            <div translate="no">
+              {{ item.rulerName }}
+            </div>
+          </ng-template>
+          </p-dropdown>
+        </div>
+      </div>
+
+      <!--Coordinates only -->
+      <div class="d-flex justify-content-center pt-2" *ngIf="stepForm.value.stepNpcType == 'coordinatesOnly'">
+        <div class="form-group pb-3">
+          <label class="form-label"><i class="bi bi-airplane-engines-fill"></i> Coordinates</label><br>
+          <app-position-input inputControlName="stepCoordinates" [inputForm]="stepForm" [style]="{ 'min-width': '250px'}"/>
+        </div>
+      </div>
+    </ng-container>
+
 
     <!--Transact Credits Type -->
     <div class="d-flex justify-content-center pt-1" *ngIf="stepForm.value.stepType == 'transactCredits'">

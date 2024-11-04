@@ -16,12 +16,12 @@
         placeholder="Select race for NPC" [style]="{ 'min-width': '250px'}" translate="no">
           <ng-template pTemplate="selectedItem" translate="no">
             <div class="flex align-items-center gap-2" *ngIf="npcForm.value.npcRace" translate="no">
-              {{ npcForm.value.npcRace.value }}
+              <img [src]="questGeneratorService.getRaceImage(npcForm.value.npcRace.value)" class="udq-select-images"> {{ npcForm.value.npcRace.value }}
             </div>
           </ng-template>
           <ng-template pTemplate="item" let-item translate="no">
             <div translate="no">
-              {{ item.value }}
+              <img [src]="questGeneratorService.getRaceImage(item.value)" class="udq-select-images"> {{ item.value }}
             </div>
           </ng-template>
         </p-dropdown>

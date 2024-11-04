@@ -23,23 +23,23 @@
             </ng-container>
 
             <ng-container *ngIf="condition.type == 'job'">
-              <b>Required Job</b><br>{{ condition.value }}
+              <b>Required Job</b><br><img [src]="questGeneratorService.getJobImage(condition.value)" class="udq-select-images"> {{ condition.value }}
             </ng-container>
 
             <ng-container *ngIf="condition.type == 'moduleResearched'">
-              <b>Module Researched</b><br>{{ modules[condition.value] }}
+              <b>Module Researched</b><br><img [src]="questGeneratorService.getModuleImage(modules[condition.value])" class="udq-select-images">  {{ modules[condition.value] }}
             </ng-container>
 
             <ng-container *ngIf="condition.type == 'chassisResearched'">
-              <b>Chassis Researched</b><br>{{ chassis[condition.value] }}
+              <b>Chassis Researched</b><br><img [src]="questGeneratorService.getChassisImage(chassis[condition.value])" class="udq-select-images"> {{ chassis[condition.value] }}
             </ng-container>
 
             <ng-container *ngIf="condition.type == 'chassisBuilt'">
-              <b>Chassis Built</b><br>{{ chassis[condition.value] }}
+              <b>Chassis Built</b><br><img [src]="questGeneratorService.getChassisImage(chassis[condition.value])" class="udq-select-images"> {{ chassis[condition.value] }}
             </ng-container>
 
             <ng-container *ngIf="condition.type == 'building'">
-              <b>Bulding</b><br>{{ condition.value }}<br>
+              <b>Bulding</b><br><img [src]="questGeneratorService.getBuildingImage(condition.value)" class="udq-select-images"> {{ condition.value }}<br>
               <b>Level</b><br>{{ condition.amount }}
             </ng-container>
           </div>

@@ -111,6 +111,7 @@
         </div>
       </div>
 
+      <!-- Chassis -->
       <div class="d-flex justify-content-center pt-2" *ngIf="rewardForm.value.componentType == 'chassis'">
         <div class="form-group pb-3">
           <label class="form-label"><i class="bi bi-sim-fill"></i> Chassis</label><br>
@@ -118,17 +119,18 @@
           placeholder="Select a Chassis" [style]="{ 'min-width': '250px'}">
           <ng-template pTemplate="selectedItem" translate="no">
             <div class="flex align-items-center gap-2" *ngIf="rewardForm.value.chassis" translate="no">
-              {{ rewardForm.value.chassis.value }}
+              <img [src]="questGeneratorService.getChassisImage(rewardForm.value.chassis.value)" class="udq-select-images"> {{ rewardForm.value.chassis.value }}
             </div>
           </ng-template>
           <ng-template pTemplate="item" let-item translate="no">
             <div translate="no">
-              {{ item.value }}
+              <img [src]="questGeneratorService.getChassisImage(item.value)" class="udq-select-images"> {{ item.value }}
             </div>
           </ng-template>
           </p-dropdown>
         </div>
       </div>
+      <!-- Module -->
       <div class="d-flex justify-content-center pt-2" *ngIf="rewardForm.value.componentType == 'module'">
         <div class="form-group pb-3">
           <label class="form-label"><i class="bi bi-sim-fill"></i> Module</label><br>
@@ -136,12 +138,12 @@
           placeholder="Select a Module" [style]="{ 'min-width': '250px'}">
           <ng-template pTemplate="selectedItem" translate="no">
             <div class="flex align-items-center gap-2" *ngIf="rewardForm.value.module" translate="no">
-              {{ rewardForm.value.module.value }}
+              <img [src]="questGeneratorService.getModuleImage(rewardForm.value.module.value)" class="udq-select-images"> {{ rewardForm.value.module.value }}
             </div>
           </ng-template>
           <ng-template pTemplate="item" let-item translate="no">
             <div translate="no">
-              {{ item.value }}
+              <img [src]="questGeneratorService.getModuleImage(item.value)" class="udq-select-images"> {{ item.value }}
             </div>
           </ng-template>
           </p-dropdown>

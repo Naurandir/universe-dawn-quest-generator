@@ -125,6 +125,13 @@ body, .dropdown-menu, .btn, .p-component, .p-inputtext {
   max-width: 45px;
 }
 
+.udq-select-images {
+  height: 35px;
+  width: 35px;
+  padding-right: 3px;
+  border-radius: 25%;
+}
+
 .sr-panel-distance {
   margin-bottom: 15px;
 }
