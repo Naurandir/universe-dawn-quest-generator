@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { IQuestTaskDialogue } from '../../quest-ud.model';
+import { IQuestStep, IQuestTaskDialogue } from '../../quest-ud.model';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MarkdownModule } from 'ngx-markdown';
@@ -27,8 +27,9 @@ import { forkJoin } from 'rxjs';
 })
 export class QuestGeneratorStepDialogUpdateComponent {
 
-  @Output("afterUpdateFunction") afterUpdateFunction: EventEmitter<VoidFunction> = new EventEmitter();
+  @Output("afterUpdateFunction") afterUpdateFunction: EventEmitter<IQuestStep> = new EventEmitter();
 
+  currentQuestStep?: IQuestStep;
   currentQuestStepTask?: IQuestTaskDialogue;
   originalKeyDe: string | null = "";
   originalKeyEn: string | null = "";
@@ -50,7 +51,8 @@ export class QuestGeneratorStepDialogUpdateComponent {
 
   }
 
-  setStepDialog(key: string | null, answer: string | null, selectedLanguage: 'DE' | 'EN', task: IQuestTaskDialogue) {
+  setStepDialog(key: string | null, answer: string | null, selectedLanguage: 'DE' | 'EN', task: IQuestTaskDialogue, step: IQuestStep) {
+    this.currentQuestStep = step;
     this.currentQuestStepTask = task;
     this.originalKeyDe = selectedLanguage == 'DE' ? key : null;
     this.originalKeyEn = selectedLanguage == 'EN' ? key : null;
@@ -136,7 +138,7 @@ export class QuestGeneratorStepDialogUpdateComponent {
     this.visible = false;
     this.toasterService.success("Update Dialog Option","Dialog Option Succesfully Updated");
 
-    this.afterUpdateFunction.emit();
+    this.afterUpdateFunction.emit(this.currentQuestStep!);
 
     this.stepDialogForm.reset();
     this.changeDedector.detectChanges();

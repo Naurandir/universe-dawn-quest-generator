@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild, ViewContainerRef } from '@angular/core';
 import { ICoordinates, IQuest, IQuestPrepareNpcs } from '../quest-ud.model';
 import { CommonModule } from '@angular/common';
 
@@ -16,7 +16,7 @@ import { QuestGeneratorService } from '../quest-generator.service';
   selector: 'app-quest-generator-npc',
   standalone: true,
   imports: [ CommonModule, PanelModule, TableModule, DividerModule,
-             CoordinatesWithCopyComponent, QuestGeneratorNpcUpdateComponent, QuestGeneratorNpcGalaxyViewComponent],
+             CoordinatesWithCopyComponent, QuestGeneratorNpcUpdateComponent],
   templateUrl: './quest-generator-npc.component.html',
   styleUrl: './quest-generator-npc.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -27,7 +27,7 @@ export class QuestGeneratorNpcComponent {
   @Output("afterChangeFunction") afterChangeFunction: EventEmitter<VoidFunction> = new EventEmitter();
 
   @ViewChild('questGeneratorNpcUpdateComponent') questGeneratorNpcUpdateComponent?: QuestGeneratorNpcUpdateComponent;
-  @ViewChild('questGeneratorNpcGalaxyViewComponent') questGeneratorNpcGalaxyViewComponent?: QuestGeneratorNpcGalaxyViewComponent;
+  @ViewChild('questGeneratorNpcGalacyViewContainer', { read: ViewContainerRef }) questGeneratorNpcGalacyViewContainer!: ViewContainerRef;
 
   constructor(public questGeneratorService: QuestGeneratorService, private loadingActionService: LoadingActionService, private changeDedector: ChangeDetectorRef) {
 
@@ -67,11 +67,18 @@ export class QuestGeneratorNpcComponent {
     this.afterChangeFunction.emit();
   }
 
-  showGalaxy(quest: IQuest) {
-    this.questGeneratorNpcGalaxyViewComponent?.setCurrentNpcs(quest.prepareNpcs);
+  async showGalaxy(quest: IQuest) {
     this.loadingActionService.showLoadingActionWithMessage("Init View");
+    this.questGeneratorNpcGalacyViewContainer.clear();
+
+    let { QuestGeneratorNpcGalaxyViewComponent } = await import('./quest-generator-npc-galaxy-view/quest-generator-npc-galaxy-view.component');
+    let componentRef = this.questGeneratorNpcGalacyViewContainer.createComponent(QuestGeneratorNpcGalaxyViewComponent);
+
+    componentRef.instance.setCurrentNpcs(quest.prepareNpcs);
+    componentRef.instance.showGalaxyView()
+
     setTimeout(() => {
-      this.questGeneratorNpcGalaxyViewComponent?.showGalaxyView();
+      componentRef.instance.showGalaxyView();
     }, 100); // to let the action spinner be shown
   }
 }

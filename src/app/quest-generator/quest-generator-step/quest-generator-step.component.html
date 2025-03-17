@@ -1,70 +1,14 @@
-<!-- Steps Overview -->
-<p-panel [styleClass]="'mb-2'">
-  <ng-template pTemplate="header">
-    <div class="flex align-items-center p-2">
-      <i class="bi bi-train-front-fill"></i> Steps Overview
-    </div>
-  </ng-template>
-  <ng-template pTemplate="content">
-    <p-table [value]="selectedQuest.steps | questStepsArray" styleClass="p-datatable-striped p-datatable-sm"
-    responsiveLayout="stack" [responsive]="true" [breakpoint]="'600px'">
-      <ng-template pTemplate="header">
-          <tr>
-              <th>Id</th>
-              <th>Type</th>
-              <th>Ruler / Location</th>
-              <th>Action</th>
-          </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-currentStep>
-          <tr>
-              <td><span class="p-column-title">Id</span> {{ currentStep.id }}</td>
-              <td><span class="p-column-title">Type</span>
-                <i class="bi bi-cash" *ngIf="currentStep.task.type == 'transactCredits'"></i>
-                <i class="bi bi-chat-dots" *ngIf="currentStep.task.type == 'dialogue'"></i>
-                {{ currentStep.task.type }}
-              </td>
-              <td>
-                <span class="p-column-title">Ruler / Location</span>
-                <ng-container *ngIf="currentStep.task.type == 'transactCredits'">
-                  {{ getNpcInfoByRulerName(currentStep.task.rulerName) }}
-                </ng-container>
-                <ng-container *ngIf="currentStep.task.type == 'dialogue'">
-                  {{ getNpcInfoByCoordinates(currentStep.task.coordinates) }} ({{ coordinatesNormalisedPipe.transform(currentStep.task.coordinates) }})
-                </ng-container>
-              </td>
-              <td>
-                <span class="p-column-title">Action</span>
-                <button class="btn btn-outline-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  ...
-                </button>
-                <ul class="dropdown-menu">
-                  <li><button class="dropdown-item" (click)="updateStep(selectedQuest, currentStep)">Update</button></li>
-                  <li><button class="dropdown-item" (click)="moveStepUp(currentStep)">Move Up</button></li>
-                  <li><button class="dropdown-item" (click)="moveStepDown(currentStep)">Move Down</button></li>
-                  <li><button class="dropdown-item" (click)="deleteStep(currentStep)">Delete</button></li>
-                </ul>
-              </td>
-          </tr>
-      </ng-template>
-    </p-table>
-    <div class="d-flex justify-content-center pt-2">
-      <button class="btn btn-outline-light" (click)="updateStep(selectedQuest, null)">Add Step</button>
-    </div>
-  </ng-template>
-</p-panel>
-
 <!-- Steps with Details -->
-<ng-container *ngIf="selectedQuest != undefined">
-  <p-panel *ngFor="let currentStep of (selectedQuest.steps | questStepsArray)" toggleable="true" collapsed="true">
+<ng-container *ngIf="selectedQuestStep != undefined">
+  <p-panel toggleable="true" collapsed="true">
     <ng-template pTemplate="header">
       <div class="flex align-items-center p-2">
-        <i class="bi bi-person-walking"></i> Step - {{ currentStep.id }} -
-        <ng-container *ngIf="currentStep.task.type == 'transactCredits'">
-          credits to <b>{{ getNpcInfoByRulerName(currentStep.task.rulerName) }}</b>
+        <i class="bi bi-person-walking"></i> Step - {{ selectedQuestStep.id }} -
+        <ng-container *ngIf="selectedQuestStep.task.type == 'transactCredits'">
+          credits to <b>{{ getNpcInfoByRulerName(selectedQuestStep.task.rulerName) }}</b>
         </ng-container>
-        <ng-container *ngIf="currentStep.task.type == 'dialogue'">
-          dialogue at <b>{{ getNpcInfoByCoordinates(currentStep.task.coordinates) }} ({{ coordinatesNormalisedPipe.transform(currentStep.task.coordinates) }})</b>
+        <ng-container *ngIf="selectedQuestStep.task.type == 'dialogue'">
+          dialogue at <b>{{ getNpcInfoByCoordinates(selectedQuestStep.task.coordinates) }} ({{ coordinatesNormalisedPipe.transform(selectedQuestStep.task.coordinates) }})</b>
         </ng-container>
       </div>
     </ng-template>
@@ -81,48 +25,48 @@
         </div>
 
         <!-- Transaction -->
-        <ng-container *ngIf="currentStep.task.type == 'transactCredits'">
+        <ng-container *ngIf="selectedQuestStep.task.type == 'transactCredits'">
           <div class="d-flex justify-content-center pt-2">
             Transfer to Ruler
           </div>
           <div class="d-flex justify-content-center">
-           <b>{{ currentStep.task.rulerName }}</b>
+           <b>{{ selectedQuestStep.task.rulerName }}</b>
           </div>
           <div class="d-flex justify-content-center pt-2">
             Amount of Credits
           </div>
           <div class="d-flex justify-content-center">
-            <b>{{ currentStep.task.amount | universeDawnNumberFormat }}</b>
+            <b>{{ selectedQuestStep.task.amount | universeDawnNumberFormat }}</b>
           </div>
 
           <div class="d-flex justify-content-center pt-2">
-            <button class="btn btn-outline-light" (click)="updateStep(selectedQuest, currentStep)">Update Step</button>
+            <button class="btn btn-outline-light" (click)="updateStep(selectedQuest, selectedQuestStep)">Update Step</button>
           </div>
         </ng-container>
 
         <!-- Dialog -->
-        <ng-container *ngIf="currentStep.task.type == 'dialogue'">
+        <ng-container *ngIf="selectedQuestStep.task.type == 'dialogue'">
           <div class="d-flex justify-content-center pt-2">
             Coordinates
           </div>
           <div class="d-flex justify-content-center">
-            <b>{{ currentStep.task.coordinates | coordinatesNormalised }}</b>
+            <b>{{ selectedQuestStep.task.coordinates | coordinatesNormalised }}</b>
           </div>
           <div class="d-flex justify-content-center pt-2" *ngIf="selectedLanguage == 'DE'">
             Solution Keyword (DE)
           </div>
           <div class="d-flex justify-content-center" *ngIf="selectedLanguage == 'DE'">
-            <b>{{ currentStep.task.correctDialogueWord['de'] }}</b>
+            <b>{{ selectedQuestStep.task.correctDialogueWord['de'] }}</b>
           </div>
           <div class="d-flex justify-content-center pt-2" *ngIf="selectedLanguage == 'EN'">
             Solution Keyword (EN)
           </div>
           <div class="d-flex justify-content-center" *ngIf="selectedLanguage == 'EN'">
-            <b>{{ currentStep.task.correctDialogueWord['en'] }}</b>
+            <b>{{ selectedQuestStep.task.correctDialogueWord['en'] }}</b>
           </div>
 
           <div class="d-flex justify-content-center pt-2">
-            <button class="btn btn-outline-light" (click)="updateStep(selectedQuest, currentStep)">Update Step</button>
+            <button class="btn btn-outline-light" (click)="updateStep(selectedQuest, selectedQuestStep)">Update Step</button>
           </div>
 
           <p-divider />
@@ -131,7 +75,7 @@
             <b>Dialog Options</b> <i class="bi bi-question-circle-fill mx-1 h5" ngbTooltip="The List of dialog options is considered as 'dictionary' what means the order does not influence the quest and order cannot be guaranteed."></i>
           </div>
           <!--Dialog Options -->
-          <p-table [value]="getStepDialogOptions(currentStep.task)" styleClass="p-datatable-striped p-datatable-sm" responsiveLayout="stack">
+          <p-table [value]="getStepDialogOptions(selectedQuestStep.task)" styleClass="p-datatable-striped p-datatable-sm" responsiveLayout="stack">
             <ng-template pTemplate="header">
               <tr>
                   <th>Keyword</th>
@@ -156,8 +100,8 @@
                     ...
                   </button>
                   <ul class="dropdown-menu">
-                    <li><button class="dropdown-item" (click)="updateStepDialog(currentDialogOption[0], currentDialogOption[1], currentStep.task)">Update</button></li>
-                    <li><button class="dropdown-item" (click)="deleteStepDialog(currentDialogOption[0], currentStep.task)">Delete</button></li>
+                    <li><button class="dropdown-item" (click)="updateStepDialog(currentDialogOption[0], currentDialogOption[1], selectedQuestStep.task, selectedQuestStep)">Update</button></li>
+                    <li><button class="dropdown-item" (click)="deleteStepDialog(currentDialogOption[0], selectedQuestStep.task, selectedQuestStep)">Delete</button></li>
                   </ul>
                 </td>
               </tr>
@@ -165,7 +109,7 @@
           </p-table>
 
           <div class="d-flex justify-content-center pt-2">
-            <button class="btn btn-outline-light" (click)="updateStepDialog(null, null, currentStep.task)">Add Dialog Option</button>
+            <button class="btn btn-outline-light" (click)="updateStepDialog(null, null, selectedQuestStep.task, selectedQuestStep)">Add Dialog Option</button>
           </div>
         </ng-container>
       </div>
@@ -179,7 +123,7 @@
         </div>
         <div class="d-flex justify-content-center pt-2">
           <markdown ngPreserveWhitespaces class="sr-markdown" translate="no"
-              [data]="(selectedLanguage == 'DE' ? currentStep.notification.de.customText : currentStep.notification.en?.customText)">
+              [data]="(selectedLanguage == 'DE' ? selectedQuestStep.notification.de.customText : selectedQuestStep.notification.en?.customText)">
             </markdown>
         </div>
       </div>
@@ -192,8 +136,8 @@
           <b>Rewards for Step Completion</b>
         </div>
 
-        <div class="alert alert-success" *ngIf="currentStep.rewards!.length > 0">
-          <p-table [value]="currentStep.rewards!" styleClass="p-datatable-striped p-datatable-sm"
+        <div class="alert alert-success" *ngIf="selectedQuestStep.rewards!.length > 0">
+          <p-table [value]="selectedQuestStep.rewards!" styleClass="p-datatable-striped p-datatable-sm udq-reward-table"
           responsiveLayout="stack" [responsive]="true" [breakpoint]="'600px'">
           <ng-template pTemplate="header">
             <tr class="tablerow-success">
@@ -224,30 +168,18 @@
                   ...
                 </button>
                 <ul class="dropdown-menu">
-                  <li><button class="dropdown-item" (click)="updateStepReward(currentReward, currentStep)">Update</button></li>
-                  <li><button class="dropdown-item" (click)="deleteStepReward(currentReward, currentStep)">Delete</button></li>
+                  <li><button class="dropdown-item" (click)="updateStepReward(currentReward, selectedQuestStep)">Update</button></li>
+                  <li><button class="dropdown-item" (click)="deleteStepReward(currentReward, selectedQuestStep)">Delete</button></li>
                 </ul>
-              </td>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="rowexpansion" let-currentReward>
-            <tr>
-              <td colspan="3">
-                test
               </td>
             </tr>
           </ng-template>
           </p-table>
         </div>
         <div class="d-flex justify-content-center pt-2">
-          <button [id]="currentStep.id + '-add-reward-button'" class="btn btn-outline-light" (click)="updateStepReward(null, currentStep)">Add Reward</button>
+          <button [id]="selectedQuestStep.id + '-add-reward-button'" class="btn btn-outline-light" (click)="updateStepReward(null, selectedQuestStep)">Add Reward</button>
         </div>
       </div>
     </ng-template>
   </p-panel>
-
-  <!-- Update Dialogs -->
-  <app-quest-generator-step-update #questGeneratorStepUpdateDialog (afterUpdateFunction)="afterUpdateStep($event)"/>
-  <app-quest-generator-step-dialog-update #questGeneratorStepDialogUpdateDialog (afterUpdateFunction)="afterChangeFunction.emit()" />
-  <app-quest-generator-step-reward-update #questGeneratorStepRewardUpdateComponent (afterUpdateFunction)="afterChangeFunction.emit()" />
 </ng-container>

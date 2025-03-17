@@ -7,7 +7,6 @@ import { PlotlyModule } from 'angular-plotly.js';
 import { DialogModule } from 'primeng/dialog';
 
 import { GalaxyViewComponent } from "../../../shared/galaxy-view/galaxy-view.component";
-import { LoadingActionComponent } from '../../../shared/loading-action/loading-action.component';
 
 import { IQuestPrepareNpcs } from './../../quest-ud.model';
 import { LoadingActionService } from '../../../shared/loading-action/loading-action.service';
@@ -18,7 +17,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
 @Component({
   selector: 'app-quest-generator-npc-galaxy-view',
   standalone: true,
-  imports: [CommonModule, DialogModule, PlotlyModule, LoadingActionComponent, GalaxyViewComponent],
+  imports: [CommonModule, DialogModule, PlotlyModule, GalaxyViewComponent],
   templateUrl: './quest-generator-npc-galaxy-view.component.html',
   styleUrl: './quest-generator-npc-galaxy-view.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush

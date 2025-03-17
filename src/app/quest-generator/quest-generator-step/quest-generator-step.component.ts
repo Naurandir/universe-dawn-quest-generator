@@ -10,7 +10,6 @@ import { ConfirmationService } from 'primeng/api';
 
 import { scrollIntoView } from '../../shared/scroll-into-view.function';
 import { ToasterService } from '../../shared/toaster/toaster.service';
-import { QuestStepsArrayPipe } from "../quest-steps-array.pipe";
 import { QuestGeneratorService } from '../quest-generator.service';
 import { UniverseDawnNumberFormatPipe } from "../../shared/universe-dawn-number-format.pipe";
 import { QuestGeneratorStepUpdateComponent } from './quest-generator-step-update/quest-generator-step-update.component';
@@ -25,8 +24,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
   selector: 'app-quest-generator-step',
   standalone: true,
   imports: [CommonModule, PanelModule, TableModule, DividerModule, ConfirmDialogModule,
-    MarkdownModule, NgbModule,
-    QuestStepsArrayPipe, UniverseDawnNumberFormatPipe, QuestGeneratorStepUpdateComponent, QuestGeneratorStepDialogUpdateComponent, QuestGeneratorStepRewardUpdateComponent, CoordinatesNormalisedPipe],
+    MarkdownModule, NgbModule, UniverseDawnNumberFormatPipe, CoordinatesNormalisedPipe],
   templateUrl: './quest-generator-step.component.html',
   styleUrl: './quest-generator-step.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -34,15 +32,16 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 export class QuestGeneratorStepComponent {
 
   @Input() selectedQuest!: IQuest;
+  @Input() selectedQuestStep!: IQuestStep;
 
   @Input() selectedLanguage!: 'DE' | 'EN';
   @Output() selectedLanguageChange: EventEmitter<'DE' | 'EN'> = new EventEmitter<'DE' | 'EN'>();
 
   @Output("afterChangeFunction") afterChangeFunction: EventEmitter<VoidFunction> = new EventEmitter();
 
-  @ViewChild('questGeneratorStepUpdateDialog') questGeneratorStepUpdateDialog?: QuestGeneratorStepUpdateComponent;
-  @ViewChild('questGeneratorStepDialogUpdateDialog') questGeneratorStepDialogUpdateDialog?: QuestGeneratorStepDialogUpdateComponent;
-  @ViewChild('questGeneratorStepRewardUpdateComponent') questGeneratorStepRewardUpdateComponent?: QuestGeneratorStepRewardUpdateComponent
+  @Input() questGeneratorStepUpdateDialog?: QuestGeneratorStepUpdateComponent;
+  @Input() questGeneratorStepDialogUpdateDialog?: QuestGeneratorStepDialogUpdateComponent;
+  @Input() questGeneratorStepRewardUpdateComponent?: QuestGeneratorStepRewardUpdateComponent;
 
   chassis = EChassisId;
   modules = EModuleId;
@@ -55,26 +54,6 @@ export class QuestGeneratorStepComponent {
     this.questGeneratorStepUpdateDialog!.setStep(quest, step);
     this.questGeneratorStepUpdateDialog!.showUpdateDialog();
     this.changeDedector.detectChanges();
-  }
-
-  afterUpdateStep(step: IQuestStep) {
-    let steps: IQuestStep[] = Object.values(this.selectedQuest!.steps);
-    let isNewStep = steps.filter(s => s == step).length == 0;
-
-    if (isNewStep) {
-      let isIdAlreadyExisting = steps.filter(s => s.id == step.id).length > 0;
-      if (isIdAlreadyExisting) {
-        this.toasterService.error("Step exists", `Step with id '${step.id} already exists, please update corresponding step instead of add.'`);
-        throw new Error("Step already exists");
-      }
-    }
-
-    if (isNewStep) {
-      this.questGeneratorService.addStep(step, this.selectedQuest!);
-    }
-
-    this.changeDedector.detectChanges();
-    this.afterChangeFunction.emit();
   }
 
   deleteStep(step: IQuestStep) {
@@ -113,19 +92,19 @@ export class QuestGeneratorStepComponent {
   }
 
   // Dialog
-  updateStepDialog(key: string | null, answer: string | null, task: IQuestTaskDialogue) {
-    this.questGeneratorStepDialogUpdateDialog!.setStepDialog(key, answer, this.selectedLanguage, task);
+  updateStepDialog(key: string | null, answer: string | null, task: IQuestTaskDialogue, step: IQuestStep) {
+    this.questGeneratorStepDialogUpdateDialog!.setStepDialog(key, answer, this.selectedLanguage, task, step);
     this.questGeneratorStepDialogUpdateDialog!.showUpdateStepDialog();
     this.changeDedector.detectChanges();
   }
 
-  deleteStepDialog(key: string, questTask: IQuestTaskDialogue) {
+  deleteStepDialog(key: string, questTask: IQuestTaskDialogue, step: IQuestStep) {
     this.confirmationService.confirm({
-      message: `Are you sure that you want to delete dialog option '${key}' from your quest?`,
+      message: `Are you sure that you want to delete dialog option '${key}' from your quest step ${step.id}?`,
       header: 'Delete Dialog Option',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.deleteStepDialogConfirm(key, questTask);
+        this.deleteStepDialogConfirm(key, questTask, step);
       },
       reject: () => {
         console.debug("rejected delete");
@@ -133,7 +112,7 @@ export class QuestGeneratorStepComponent {
     });
   }
 
-  deleteStepDialogConfirm(key: string, questTask: IQuestTaskDialogue) {
+  deleteStepDialogConfirm(key: string, questTask: IQuestTaskDialogue, step: IQuestStep) {
     this.questGeneratorService.deleteQuestDialog(key, this.selectedLanguage, questTask);
     this.changeDedector.detectChanges();
 
@@ -240,5 +219,9 @@ export class QuestGeneratorStepComponent {
 
     this.changeDedector.detectChanges();
     this.selectedLanguageChange.emit(language);
+  }
+
+  refresh() {
+    this.changeDedector.detectChanges();
   }
 }

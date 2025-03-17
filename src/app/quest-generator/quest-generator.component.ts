@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ELocalisation, IQuest } from './quest-ud.model';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ELocalisation, IQuest, IQuestStep } from './quest-ud.model';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -20,13 +20,15 @@ import { QuestGeneratorGeneralUpdateComponent } from "./quest-generator-general-
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { MarkdownModule } from 'ngx-markdown';
 
-import { EuropeanNumberFormatPipe } from "../shared/european-number-format.pipe";
 import { QuestGeneratorStepUpdateComponent } from './quest-generator-step/quest-generator-step-update/quest-generator-step-update.component';
-import { QuestStepsArrayPipe } from "./quest-steps-array.pipe";
-import { UniverseDawnNumberFormatPipe } from "../shared/universe-dawn-number-format.pipe";
 import { QuestGeneratorStepComponent } from "./quest-generator-step/quest-generator-step.component";
 import { QuestGeneratorConditionComponent } from "./quest-generator-condition/quest-generator-condition.component";
 import { QuestGeneratorNpcComponent } from "./quest-generator-npc/quest-generator-npc.component";
+import { QuestGeneratorStepDialogUpdateComponent } from "./quest-generator-step/quest-generator-step-dialog-update/quest-generator-step-dialog-update.component";
+import { QuestGeneratorStepRewardUpdateComponent } from "./quest-generator-step/quest-generator-step-reward-update/quest-generator-step-reward-update.component";
+import { QuestGeneratorStepOverviewComponent } from "./quest-generator-step-overview/quest-generator-step-overview.component";
+import { QuestStepsArrayPipe } from "./quest-steps-array.pipe";
+import { QuestGeneratorSimulatorComponent } from './quest-generator-simulator/quest-generator-simulator.component';
 
 @Component({
   selector: 'app-quest-generator',
@@ -34,10 +36,14 @@ import { QuestGeneratorNpcComponent } from "./quest-generator-npc/quest-generato
   imports: [
     CommonModule, TableModule, PanelModule, TabViewModule, ConfirmDialogModule, DropdownModule, DividerModule,
     FormsModule, ReactiveFormsModule, MarkdownModule, QuestGeneratorGeneralUpdateComponent, QuestGeneratorStepUpdateComponent,
-    EuropeanNumberFormatPipe, QuestStepsArrayPipe, UniverseDawnNumberFormatPipe,
     QuestGeneratorStepComponent,
     QuestGeneratorConditionComponent,
-    QuestGeneratorNpcComponent
+    QuestGeneratorNpcComponent,
+    QuestGeneratorStepDialogUpdateComponent,
+    QuestGeneratorStepRewardUpdateComponent,
+    QuestGeneratorStepOverviewComponent,
+    QuestStepsArrayPipe,
+    QuestGeneratorSimulatorComponent
 ],
   providers: [ ConfirmationService ],
   templateUrl: './quest-generator.component.html',
@@ -50,7 +56,14 @@ export class QuestGeneratorComponent implements OnInit {
   @ViewChild('downloadQuestLink') downloadQuestLink?: ElementRef;
   @ViewChild('questImportInput') questImportInput?: ElementRef;
 
-  @ViewChild('questGeneratorGeneralUpdateDialog') questGeneratorgeneralUpdateDialog?: QuestGeneratorGeneralUpdateComponent;
+  @ViewChild('questGeneratorGeneralUpdateDialog') questGeneratorGeneralUpdateDialog?: QuestGeneratorGeneralUpdateComponent;
+  @ViewChild('questGeneratorSimulatorComponent') questGeneratorSimulatorComponent?: QuestGeneratorSimulatorComponent;
+
+  @ViewChild('questGeneratorStepUpdateDialog') questGeneratorStepUpdateDialog?: QuestGeneratorStepUpdateComponent;
+  @ViewChild('questGeneratorStepDialogUpdateDialog') questGeneratorStepDialogUpdateDialog?: QuestGeneratorStepDialogUpdateComponent;
+  @ViewChild('questGeneratorStepRewardUpdateComponent') questGeneratorStepRewardUpdateComponent?: QuestGeneratorStepRewardUpdateComponent
+
+  @ViewChildren(QuestGeneratorStepComponent) questGeneratorStepComponentList?: QueryList<QuestGeneratorStepComponent>;
 
   headerCollapsed: boolean = false;
 
@@ -82,13 +95,13 @@ export class QuestGeneratorComponent implements OnInit {
 
   updateQuest(quest: IQuest | null) {
     if (quest != null) {
-      this.questGeneratorgeneralUpdateDialog!.setQuest(quest, false);
+      this.questGeneratorGeneralUpdateDialog!.setQuest(quest, false);
     } else {
       let newQuest: IQuest = this.questGeneratorService.createNewQuest();
-      this.questGeneratorgeneralUpdateDialog!.setQuest(newQuest, true);
+      this.questGeneratorGeneralUpdateDialog!.setQuest(newQuest, true);
     }
 
-    this.questGeneratorgeneralUpdateDialog!.showUpdateDialog();
+    this.questGeneratorGeneralUpdateDialog!.showUpdateDialog();
   }
 
   afterUpdateQuest(quest: IQuest) {
@@ -197,6 +210,11 @@ export class QuestGeneratorComponent implements OnInit {
     }, 50);
   }
 
+  simulateQuest(quest: IQuest) {
+    this.questGeneratorSimulatorComponent!.setQuest(quest);
+    this.questGeneratorSimulatorComponent!.showSimulator();
+  }
+
   importQuest(event: any) {
     let selectedFile: File = event.target.files[0];
     this.confirmationService.confirm({
@@ -252,6 +270,58 @@ export class QuestGeneratorComponent implements OnInit {
 
   switchLanguage(language: 'DE' | 'EN') {
     this.selectedLanguage = language;
+    this.changeDedector.detectChanges();
+  }
+
+  // Steps
+  afterUpdateStep(step: IQuestStep) {
+    let steps: IQuestStep[] = Object.values(this.selectedQuest!.steps);
+    let isNewStep = steps.filter(s => s == step).length == 0;
+
+    if (isNewStep) {
+      let isIdAlreadyExisting = steps.filter(s => s.id == step.id).length > 0;
+      if (isIdAlreadyExisting) {
+        this.toasterService.error("Step exists", `Step with id '${step.id} already exists, please update corresponding step instead of add.'`);
+        throw new Error("Step already exists");
+      }
+    }
+
+    if (isNewStep) {
+      this.questGeneratorService.addStep(step, this.selectedQuest!);
+    } else {
+      let stepComponent: QuestGeneratorStepComponent =
+      this.questGeneratorStepComponentList!.filter(stepC => stepC.selectedQuestStep.id == step.id)[0];
+      stepComponent.refresh();
+    }
+
+    this.saveQuests();
+    this.changeDedector.detectChanges();
+  }
+
+  afterDialogUpdate(step: IQuestStep) {
+    let stepComponent: QuestGeneratorStepComponent =
+      this.questGeneratorStepComponentList!.filter(stepC => stepC.selectedQuestStep.id == step.id)[0];
+    stepComponent.refresh();
+
+    this.saveQuests();
+    this.changeDedector.detectChanges();
+  }
+
+  afterRewardUpdate(step: IQuestStep) {
+    let stepComponent: QuestGeneratorStepComponent =
+      this.questGeneratorStepComponentList!.filter(stepC => stepC.selectedQuestStep.id == step.id)[0];
+    stepComponent.refresh();
+
+    this.saveQuests();
+    this.changeDedector.detectChanges();
+  }
+
+  afterChangeStep() {
+    for (let stepComponent of this.questGeneratorStepComponentList!) {
+      stepComponent.refresh();
+    }
+
+    this.saveQuests();
     this.changeDedector.detectChanges();
   }
 }

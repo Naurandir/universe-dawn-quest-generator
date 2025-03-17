@@ -29,8 +29,8 @@ export class GalaxyViewComponent implements OnInit {
 
   public layout: Partial<Plotly.Layout> = {
     showlegend: false,
-    plot_bgcolor: '#1f2937',
-    paper_bgcolor: "#1f2937",
+    plot_bgcolor: '#1f3337',
+    paper_bgcolor: "#1f3337",
     font: {
       family: 'var(--font-family)',
       color: 'white'

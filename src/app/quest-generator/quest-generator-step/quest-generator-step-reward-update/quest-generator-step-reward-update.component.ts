@@ -22,7 +22,7 @@ import { ToasterService } from '../../../shared/toaster/toaster.service';
 })
 export class QuestGeneratorStepRewardUpdateComponent {
 
-  @Output("afterUpdateFunction") afterUpdateFunction: EventEmitter<VoidFunction> = new EventEmitter();
+  @Output("afterUpdateFunction") afterUpdateFunction: EventEmitter<IQuestStep> = new EventEmitter();
 
   currentReward?: TReturnReward | null;
   currentQuestStep!: IQuestStep;
@@ -111,7 +111,7 @@ export class QuestGeneratorStepRewardUpdateComponent {
 
     this.rewardForm.reset();
     this.toasterService.success("Reward Update","Reward succesfully updated");
-    this.afterUpdateFunction.emit();
+    this.afterUpdateFunction.emit(this.currentQuestStep);
   }
 
   private updateRewardResrouces() {
@@ -159,17 +159,5 @@ export class QuestGeneratorStepRewardUpdateComponent {
       let position: number = this.currentQuestStep.rewards!.indexOf(this.currentReward);
       this.currentQuestStep.rewards![position] = rewardLicense;
     }
-  }
-
-  /** Workaround for Dialog Options with Markdown
-   * They add weird scroll behavior after dialog is shown or closed
-   * For this we scroll into view of the Add button back
-   */
-  scrollIntoViewOfAddButton() {
-    document.getElementById(this.currentQuestStep.id + "-add-reward-button")?.scrollIntoView({
-      behavior: "instant",
-      block: "start",
-      inline: "nearest"
-    });
   }
 }

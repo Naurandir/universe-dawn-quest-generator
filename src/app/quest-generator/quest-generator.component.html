@@ -79,6 +79,9 @@
   </ng-template>
   <ng-template pTemplate="content">
     <div class="d-flex justify-content-center pt-2">
+      <button class="btn btn-outline-success udq-big-button" (click)="simulateQuest(selectedQuest)">Simulate Quest</button>
+    </div>
+    <div class="d-flex justify-content-center pt-2">
       <button class="btn btn-outline-light udq-big-button" (click)="downloadQuest(selectedQuest)">Download Quest</button>
       <a #downloadQuestLink [href]="jsonDownloadUrl" [download]="jsonDownloadFilename" type="button" class="btn btn-outline-light ms-2 d-none">Hidden Download Quest</a>
     </div>
@@ -132,11 +135,35 @@
 
 <p-divider *ngIf="selectedQuest != undefined" />
 
+<!-- Steps Overview -->
+ <app-quest-generator-step-overview *ngIf="selectedQuest != undefined"
+ (afterChangeFunction)="afterChangeStep()"
+ [questGeneratorStepUpdateDialog]="questGeneratorStepUpdateDialog"
+ [(selectedLanguage)]="selectedLanguage"
+ [selectedQuest]="selectedQuest"
+ />
+
 <!-- Steps -->
-<app-quest-generator-step *ngIf="selectedQuest != undefined"
-  (afterChangeFunction)="saveQuests()" [(selectedLanguage)]="selectedLanguage" [selectedQuest]="selectedQuest">
-</app-quest-generator-step>
+<ng-container *ngIf="selectedQuest != undefined">
+  <ng-container *ngFor="let currentStep of (selectedQuest.steps | questStepsArray)">
+    <app-quest-generator-step *ngIf="selectedQuest != undefined"
+    (afterChangeFunction)="afterChangeStep()"
+    [questGeneratorStepDialogUpdateDialog]="questGeneratorStepDialogUpdateDialog"
+    [questGeneratorStepRewardUpdateComponent]="questGeneratorStepRewardUpdateComponent"
+    [questGeneratorStepUpdateDialog]="questGeneratorStepUpdateDialog"
+    [(selectedLanguage)]="selectedLanguage"
+    [selectedQuest]="selectedQuest"
+    [selectedQuestStep]="currentStep">
+    </app-quest-generator-step>
+  </ng-container>
+</ng-container>
 
 <!-- Dialogs -->
 <app-quest-generator-general-update #questGeneratorGeneralUpdateDialog (afterUpdateFunction)="afterUpdateQuest($event)"/>
+<app-quest-generator-simulator #questGeneratorSimulatorComponent />
+
+<app-quest-generator-step-update #questGeneratorStepUpdateDialog (afterUpdateFunction)="afterUpdateStep($event)"/>
+<app-quest-generator-step-dialog-update #questGeneratorStepDialogUpdateDialog (afterUpdateFunction)="afterDialogUpdate($event)" />
+<app-quest-generator-step-reward-update #questGeneratorStepRewardUpdateComponent (afterUpdateFunction)="afterRewardUpdate($event)" />
+
 <p-confirmDialog />

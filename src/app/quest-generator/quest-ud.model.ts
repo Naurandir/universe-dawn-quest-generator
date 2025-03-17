@@ -30,6 +30,10 @@ export type TQuestCondition = IQuestConditionPoints
   | IQuestConditionChassisResearched
   | IQuestConditionChassisBuilt
   | IQuestConditionBuilding
+  | IQuestConditionHasQuest
+  | IQuestConditionFinishedQuest
+  | IQuestConditionNotAfter
+  | IQuestConditionNotBefore
 
 export interface IQuestConditionPoints {
   type: EQuestCondition.points
@@ -61,6 +65,26 @@ export interface IQuestConditionJob {
   type: EQuestCondition.job
   value: EAllowedJobs
 }
+
+export interface IQuestConditionHasQuest {
+  hasNot?: boolean
+  type: EQuestCondition.hasQuest
+  value: string
+}
+export interface IQuestConditionFinishedQuest {
+  hasNot?: boolean
+  type: EQuestCondition.finishedQuest
+  value: string
+}
+export interface IQuestConditionNotAfter {
+  type: EQuestCondition.notAfter
+  value: Date
+}
+export interface IQuestConditionNotBefore {
+  type: EQuestCondition.notBefore
+  value: Date
+}
+
 export interface IQuestSteps {
   [key: string]: IQuestStep
 }
@@ -105,7 +129,11 @@ export type TQuestTask = IQuestTaskDialogue
   chassisResearched = "chassisResearched",
   job = "job",
   moduleResearched = "moduleResearched",
-  points = "points"
+  points = "points",
+  hasQuest = "hasQuest",
+  finishedQuest = "finishedQuest",
+  notAfter = "notAfter",
+  notBefore = "notBefore"
 }
 
 export enum ETaskType {
