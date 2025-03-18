@@ -6,7 +6,6 @@ import { ReduceTextPipe } from "../reduce-text.pipe";
 
 @Component({
     selector: 'public-id-with-url-copy',
-    standalone: true,
     providers: [Clipboard],
     templateUrl: './public-id-with-url-copy.component.html',
     styleUrl: './public-id-with-url-copy.component.css',

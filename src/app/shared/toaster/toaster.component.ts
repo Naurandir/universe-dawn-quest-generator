@@ -4,12 +4,11 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 
 @Component({
-  selector: 'app-toaster',
-  standalone: true,
-  imports: [ToastModule],
-  providers: [MessageService],
-  templateUrl: './toaster.component.html',
-  styleUrl: './toaster.component.css',
+    selector: 'app-toaster',
+    imports: [ToastModule],
+    providers: [MessageService],
+    templateUrl: './toaster.component.html',
+    styleUrl: './toaster.component.css'
 })
 export class ToasterComponent {
   constructor(private messageService: MessageService) {}

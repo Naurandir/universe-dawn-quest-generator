@@ -7,13 +7,12 @@ import { ToasterService } from '../toaster/toaster.service';
 import { Datum } from 'plotly.js-dist-min';
 
 @Component({
-  selector: 'app-galaxy-view',
-  standalone: true,
-  imports: [
-    PlotlyModule
-  ],
-  templateUrl: './galaxy-view.component.html',
-  styleUrl: './galaxy-view.component.css'
+    selector: 'app-galaxy-view',
+    imports: [
+        PlotlyModule
+    ],
+    templateUrl: './galaxy-view.component.html',
+    styleUrl: './galaxy-view.component.css'
 })
 export class GalaxyViewComponent implements OnInit {
 

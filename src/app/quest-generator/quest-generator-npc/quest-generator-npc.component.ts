@@ -13,13 +13,12 @@ import { LoadingActionService } from '../../shared/loading-action/loading-action
 import { QuestGeneratorService } from '../quest-generator.service';
 
 @Component({
-  selector: 'app-quest-generator-npc',
-  standalone: true,
-  imports: [ CommonModule, PanelModule, TableModule, DividerModule,
-             CoordinatesWithCopyComponent, QuestGeneratorNpcUpdateComponent],
-  templateUrl: './quest-generator-npc.component.html',
-  styleUrl: './quest-generator-npc.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-quest-generator-npc',
+    imports: [CommonModule, PanelModule, TableModule, DividerModule,
+        CoordinatesWithCopyComponent, QuestGeneratorNpcUpdateComponent],
+    templateUrl: './quest-generator-npc.component.html',
+    styleUrl: './quest-generator-npc.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuestGeneratorNpcComponent {
 

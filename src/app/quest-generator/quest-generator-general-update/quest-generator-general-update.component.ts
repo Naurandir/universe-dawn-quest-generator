@@ -19,12 +19,11 @@ import { LoadingActionService } from '../../shared/loading-action/loading-action
 import { forkJoin } from 'rxjs';
 
 @Component({
-  selector: 'app-quest-generator-general-update',
-  standalone: true,
-  imports: [ CommonModule, NgbModule, MarkdownModule, FormsModule, ReactiveFormsModule, DialogModule, DropdownModule, InputTextareaModule, DividerModule ],
-  templateUrl: './quest-generator-general-update.component.html',
-  styleUrl: './quest-generator-general-update.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-quest-generator-general-update',
+    imports: [CommonModule, NgbModule, MarkdownModule, FormsModule, ReactiveFormsModule, DialogModule, DropdownModule, InputTextareaModule, DividerModule],
+    templateUrl: './quest-generator-general-update.component.html',
+    styleUrl: './quest-generator-general-update.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuestGeneratorGeneralUpdateComponent {
 

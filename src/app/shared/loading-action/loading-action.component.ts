@@ -2,11 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-loading-action',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './loading-action.component.html',
-  styleUrl: './loading-action.component.css'
+    selector: 'app-loading-action',
+    imports: [CommonModule],
+    templateUrl: './loading-action.component.html',
+    styleUrl: './loading-action.component.css'
 })
 export class LoadingActionComponent {
 

@@ -10,7 +10,6 @@ import { EuropeanNumberFormatPipe } from "../../european-number-format.pipe";
 
 @Component({
     selector: 'app-table-header-element-range',
-    standalone: true,
     templateUrl: './table-header-element-range.component.html',
     styleUrl: './table-header-element-range.component.css',
     imports: [CommonModule, FormsModule, TableModule, SliderModule, EuropeanNumberFormatPipe]

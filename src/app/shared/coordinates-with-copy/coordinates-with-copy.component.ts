@@ -7,7 +7,6 @@ import { ICoordinates } from '../../quest-generator/quest-ud.model';
 
 @Component({
     selector: 'app-coordinates-with-copy',
-    standalone: true,
     providers: [Clipboard],
     templateUrl: './coordinates-with-copy.component.html',
     styleUrl: './coordinates-with-copy.component.css',

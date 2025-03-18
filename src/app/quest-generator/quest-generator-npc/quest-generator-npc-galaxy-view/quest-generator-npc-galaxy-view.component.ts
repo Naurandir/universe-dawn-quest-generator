@@ -15,12 +15,11 @@ import { ToasterService } from '../../../shared/toaster/toaster.service';
 PlotlyModule.plotlyjs = PlotlyJS;
 
 @Component({
-  selector: 'app-quest-generator-npc-galaxy-view',
-  standalone: true,
-  imports: [CommonModule, DialogModule, PlotlyModule, GalaxyViewComponent],
-  templateUrl: './quest-generator-npc-galaxy-view.component.html',
-  styleUrl: './quest-generator-npc-galaxy-view.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-quest-generator-npc-galaxy-view',
+    imports: [CommonModule, DialogModule, PlotlyModule, GalaxyViewComponent],
+    templateUrl: './quest-generator-npc-galaxy-view.component.html',
+    styleUrl: './quest-generator-npc-galaxy-view.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuestGeneratorNpcGalaxyViewComponent {
 

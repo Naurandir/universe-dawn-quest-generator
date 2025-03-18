@@ -13,11 +13,10 @@ import { ToasterService } from '../../../shared/toaster/toaster.service';
 import { EnumToArrayPipe } from '../../../shared/enum-to-array.pipe';
 
 @Component({
-  selector: 'app-quest-generator-condition-update',
-  standalone: true,
-  imports: [CommonModule, DialogModule, DropdownModule, InputNumberModule, FormsModule, ReactiveFormsModule, EnumToArrayPipe],
-  templateUrl: './quest-generator-condition-update.component.html',
-  styleUrl: './quest-generator-condition-update.component.css'
+    selector: 'app-quest-generator-condition-update',
+    imports: [CommonModule, DialogModule, DropdownModule, InputNumberModule, FormsModule, ReactiveFormsModule, EnumToArrayPipe],
+    templateUrl: './quest-generator-condition-update.component.html',
+    styleUrl: './quest-generator-condition-update.component.css'
 })
 export class QuestGeneratorConditionUpdateComponent {
   @Output("afterUpdateFunction") afterUpdateFunction: EventEmitter<TQuestCondition> = new EventEmitter();

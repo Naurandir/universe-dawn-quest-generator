@@ -11,11 +11,10 @@ import { QuestGeneratorConditionUpdateComponent } from './quest-generator-condit
 import { QuestGeneratorService } from '../quest-generator.service';
 
 @Component({
-  selector: 'app-quest-generator-condition',
-  standalone: true,
-  imports: [CommonModule, PanelModule, TableModule, EuropeanNumberFormatPipe, QuestGeneratorConditionUpdateComponent],
-  templateUrl: './quest-generator-condition.component.html',
-  styleUrl: './quest-generator-condition.component.css'
+    selector: 'app-quest-generator-condition',
+    imports: [CommonModule, PanelModule, TableModule, EuropeanNumberFormatPipe, QuestGeneratorConditionUpdateComponent],
+    templateUrl: './quest-generator-condition.component.html',
+    styleUrl: './quest-generator-condition.component.css'
 })
 export class QuestGeneratorConditionComponent {
 

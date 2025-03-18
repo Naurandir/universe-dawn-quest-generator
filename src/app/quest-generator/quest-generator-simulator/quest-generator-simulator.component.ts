@@ -8,11 +8,10 @@ import { DropdownModule } from 'primeng/dropdown';
 import { DividerModule } from 'primeng/divider';
 
 @Component({
-  selector: 'app-quest-generator-simulator',
-  standalone: true,
-  imports: [CommonModule, NgbModule, MarkdownModule, DialogModule, DropdownModule, DividerModule ],
-  templateUrl: './quest-generator-simulator.component.html',
-  styleUrl: './quest-generator-simulator.component.css'
+    selector: 'app-quest-generator-simulator',
+    imports: [CommonModule, NgbModule, MarkdownModule, DialogModule, DropdownModule, DividerModule],
+    templateUrl: './quest-generator-simulator.component.html',
+    styleUrl: './quest-generator-simulator.component.css'
 })
 export class QuestGeneratorSimulatorComponent {
 

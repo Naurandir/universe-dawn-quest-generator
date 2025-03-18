@@ -5,11 +5,10 @@ import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-table-header-element-default',
-  standalone: true,
-  imports: [ CommonModule, TableModule ],
-  templateUrl: './table-header-element-default.component.html',
-  styleUrl: './table-header-element-default.component.css'
+    selector: 'app-table-header-element-default',
+    imports: [CommonModule, TableModule],
+    templateUrl: './table-header-element-default.component.html',
+    styleUrl: './table-header-element-default.component.css'
 })
 export class TableHeaderElementDefaultComponent {
 

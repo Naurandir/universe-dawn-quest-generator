@@ -8,11 +8,10 @@ import { TableHeaderElementRangeComponent } from "./table-header-element-range/t
 
 @Component({
     selector: '[app-table-header-element]',
-    standalone: true,
     templateUrl: './table-header-element.component.html',
     styleUrl: './table-header-element.component.css',
     imports: [CommonModule,
-      TableHeaderElementDefaultComponent, TableHeaderElementDropdownComponent, TableHeaderElementArrowComponent, TableHeaderElementRangeComponent]
+        TableHeaderElementDefaultComponent, TableHeaderElementDropdownComponent, TableHeaderElementArrowComponent, TableHeaderElementRangeComponent]
 })
 export class TableHeaderElementComponent {
 

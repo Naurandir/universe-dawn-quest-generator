@@ -12,11 +12,10 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { QuestStepsArrayPipe } from "../quest-steps-array.pipe";
 
 @Component({
-  selector: 'app-quest-generator-step-overview',
-  standalone: true,
-  imports: [CommonModule, PanelModule, TableModule, ConfirmDialogModule, QuestStepsArrayPipe],
-  templateUrl: './quest-generator-step-overview.component.html',
-  styleUrl: './quest-generator-step-overview.component.css'
+    selector: 'app-quest-generator-step-overview',
+    imports: [CommonModule, PanelModule, TableModule, ConfirmDialogModule, QuestStepsArrayPipe],
+    templateUrl: './quest-generator-step-overview.component.html',
+    styleUrl: './quest-generator-step-overview.component.css'
 })
 export class QuestGeneratorStepOverviewComponent {
 

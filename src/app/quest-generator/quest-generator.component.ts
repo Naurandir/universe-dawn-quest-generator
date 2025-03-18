@@ -31,24 +31,23 @@ import { QuestStepsArrayPipe } from "./quest-steps-array.pipe";
 import { QuestGeneratorSimulatorComponent } from './quest-generator-simulator/quest-generator-simulator.component';
 
 @Component({
-  selector: 'app-quest-generator',
-  standalone: true,
-  imports: [
-    CommonModule, TableModule, PanelModule, TabViewModule, ConfirmDialogModule, DropdownModule, DividerModule,
-    FormsModule, ReactiveFormsModule, MarkdownModule, QuestGeneratorGeneralUpdateComponent, QuestGeneratorStepUpdateComponent,
-    QuestGeneratorStepComponent,
-    QuestGeneratorConditionComponent,
-    QuestGeneratorNpcComponent,
-    QuestGeneratorStepDialogUpdateComponent,
-    QuestGeneratorStepRewardUpdateComponent,
-    QuestGeneratorStepOverviewComponent,
-    QuestStepsArrayPipe,
-    QuestGeneratorSimulatorComponent
-],
-  providers: [ ConfirmationService ],
-  templateUrl: './quest-generator.component.html',
-  styleUrl: './quest-generator.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-quest-generator',
+    imports: [
+        CommonModule, TableModule, PanelModule, TabViewModule, ConfirmDialogModule, DropdownModule, DividerModule,
+        FormsModule, ReactiveFormsModule, MarkdownModule, QuestGeneratorGeneralUpdateComponent, QuestGeneratorStepUpdateComponent,
+        QuestGeneratorStepComponent,
+        QuestGeneratorConditionComponent,
+        QuestGeneratorNpcComponent,
+        QuestGeneratorStepDialogUpdateComponent,
+        QuestGeneratorStepRewardUpdateComponent,
+        QuestGeneratorStepOverviewComponent,
+        QuestStepsArrayPipe,
+        QuestGeneratorSimulatorComponent
+    ],
+    providers: [ConfirmationService],
+    templateUrl: './quest-generator.component.html',
+    styleUrl: './quest-generator.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuestGeneratorComponent implements OnInit {
 

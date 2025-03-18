@@ -21,13 +21,12 @@ import { CoordinatesNormalisedPipe } from "../../shared/coordinates-normalised.p
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-quest-generator-step',
-  standalone: true,
-  imports: [CommonModule, PanelModule, TableModule, DividerModule, ConfirmDialogModule,
-    MarkdownModule, NgbModule, UniverseDawnNumberFormatPipe, CoordinatesNormalisedPipe],
-  templateUrl: './quest-generator-step.component.html',
-  styleUrl: './quest-generator-step.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-quest-generator-step',
+    imports: [CommonModule, PanelModule, TableModule, DividerModule, ConfirmDialogModule,
+        MarkdownModule, NgbModule, UniverseDawnNumberFormatPipe, CoordinatesNormalisedPipe],
+    templateUrl: './quest-generator-step.component.html',
+    styleUrl: './quest-generator-step.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuestGeneratorStepComponent {
 

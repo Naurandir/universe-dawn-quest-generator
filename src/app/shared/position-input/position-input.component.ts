@@ -8,11 +8,10 @@ import { CoordinatesNormalisedPipe } from '../coordinates-normalised.pipe';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-position-input',
-  standalone: true,
-  imports: [ CommonModule, InputNumberModule, InputMaskModule, FormsModule, ReactiveFormsModule ],
-  templateUrl: './position-input.component.html',
-  styleUrl: './position-input.component.css'
+    selector: 'app-position-input',
+    imports: [CommonModule, InputNumberModule, InputMaskModule, FormsModule, ReactiveFormsModule],
+    templateUrl: './position-input.component.html',
+    styleUrl: './position-input.component.css'
 })
 export class PositionInputComponent {
 

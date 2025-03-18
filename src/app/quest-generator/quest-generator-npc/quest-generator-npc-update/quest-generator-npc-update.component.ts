@@ -17,12 +17,11 @@ import { testCoordinates } from '../../../shared//coordinates-validator.directiv
 import { DividerModule } from 'primeng/divider';
 
 @Component({
-  selector: 'app-quest-generator-npc-update',
-  standalone: true,
-  imports: [ CommonModule, FormsModule, ReactiveFormsModule, DialogModule, DropdownModule, DividerModule, PositionInputComponent, EnumToArrayPipe ],
-  templateUrl: './quest-generator-npc-update.component.html',
-  styleUrl: './quest-generator-npc-update.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-quest-generator-npc-update',
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, DialogModule, DropdownModule, DividerModule, PositionInputComponent, EnumToArrayPipe],
+    templateUrl: './quest-generator-npc-update.component.html',
+    styleUrl: './quest-generator-npc-update.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuestGeneratorNpcUpdateComponent {
 

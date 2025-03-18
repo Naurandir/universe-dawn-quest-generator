@@ -6,11 +6,10 @@ import { TagModule } from 'primeng/tag';
 import { TableHeaderElementModel } from '../table-header-element-model';
 
 @Component({
-  selector: 'app-table-header-element-dropdown',
-  standalone: true,
-  imports: [ CommonModule, TableModule, DropdownModule, TagModule ],
-  templateUrl: './table-header-element-dropdown.component.html',
-  styleUrl: './table-header-element-dropdown.component.css'
+    selector: 'app-table-header-element-dropdown',
+    imports: [CommonModule, TableModule, DropdownModule, TagModule],
+    templateUrl: './table-header-element-dropdown.component.html',
+    styleUrl: './table-header-element-dropdown.component.css'
 })
 export class TableHeaderElementDropdownComponent {
 

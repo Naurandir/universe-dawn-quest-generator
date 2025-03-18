@@ -13,12 +13,11 @@ import { QuestGeneratorService } from '../../quest-generator.service';
 import { ToasterService } from '../../../shared/toaster/toaster.service';
 
 @Component({
-  selector: 'app-quest-generator-step-reward-update',
-  standalone: true,
-  imports: [ CommonModule, DialogModule, DropdownModule, InputNumberModule, FormsModule, ReactiveFormsModule, EnumToArrayPipe ],
-  providers: [ EnumToArrayPipe ],
-  templateUrl: './quest-generator-step-reward-update.component.html',
-  styleUrl: './quest-generator-step-reward-update.component.css'
+    selector: 'app-quest-generator-step-reward-update',
+    imports: [CommonModule, DialogModule, DropdownModule, InputNumberModule, FormsModule, ReactiveFormsModule, EnumToArrayPipe],
+    providers: [EnumToArrayPipe],
+    templateUrl: './quest-generator-step-reward-update.component.html',
+    styleUrl: './quest-generator-step-reward-update.component.css'
 })
 export class QuestGeneratorStepRewardUpdateComponent {
 

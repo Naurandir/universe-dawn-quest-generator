@@ -18,12 +18,11 @@ import { LoadingActionService } from '../../../shared/loading-action/loading-act
 import { forkJoin } from 'rxjs';
 
 @Component({
-  selector: 'app-quest-generator-step-dialog-update',
-  standalone: true,
-  imports: [CommonModule, NgbModule, MarkdownModule, FormsModule, ReactiveFormsModule, DialogModule, DividerModule ],
-  templateUrl: './quest-generator-step-dialog-update.component.html',
-  styleUrl: './quest-generator-step-dialog-update.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-quest-generator-step-dialog-update',
+    imports: [CommonModule, NgbModule, MarkdownModule, FormsModule, ReactiveFormsModule, DialogModule, DividerModule],
+    templateUrl: './quest-generator-step-dialog-update.component.html',
+    styleUrl: './quest-generator-step-dialog-update.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuestGeneratorStepDialogUpdateComponent {
 

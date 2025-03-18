@@ -15,7 +15,6 @@ import { TableHeaderElementArrowComponent } from "../table-header-element/table-
 
 @Component({
     selector: 'app-mobile-table-header',
-    standalone: true,
     templateUrl: './mobile-table-header.component.html',
     styleUrl: './mobile-table-header.component.css',
     imports: [CommonModule, FormsModule, PanelModule, TableModule, DropdownModule, TagModule, SliderModule, EuropeanNumberFormatPipe, TableHeaderElementDefaultComponent, TableHeaderElementDropdownComponent, TableHeaderElementRangeComponent, TableHeaderElementArrowComponent]

@@ -12,7 +12,6 @@ import { QuestGeneratorComponent } from "./quest-generator/quest-generator.compo
 
 @Component({
     selector: 'app-root',
-    standalone: true,
     templateUrl: './app.component.html',
     styleUrl: './app.component.css',
     providers: [CoordinatesNormalisedPipe],
