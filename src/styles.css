@@ -24,11 +24,11 @@ body {
   height: 100vh;
 
   background:
-    linear-gradient(rgba(31,51,55, 1), rgba(31,51,55, 1)), /* Transparent overlay */
+    linear-gradient(rgba(31,51,55, 1), rgb(164, 206, 214)), /* Transparent overlay */
     url('assets/background.jpg'); /* Background image */
   background-repeat: repeat; /* Repeats the image both horizontally and vertically */
   background-size: auto; /* Keeps the original size */
-  background-blend-mode: darken;
+  background-blend-mode: soft-light;
   background-attachment: fixed;
 }
 

@@ -10,7 +10,6 @@ import { DialogModule } from 'primeng/dialog';
 import { SelectModule } from 'primeng/select';
 
 import { ToasterService } from '../../../shared//toaster/toaster.service';
-import { EnumToArrayPipe } from '../../../shared//enum-to-array.pipe';
 import { CoordinatesNormalisedPipe } from '../../../shared//coordinates-normalised.pipe';
 import { PositionInputComponent } from '../../../shared//position-input/position-input.component';
 import { testCoordinates } from '../../../shared//coordinates-validator.directive';
@@ -18,7 +17,7 @@ import { DividerModule } from 'primeng/divider';
 
 @Component({
     selector: 'app-quest-generator-npc-update',
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, DialogModule, SelectModule, DividerModule, PositionInputComponent, EnumToArrayPipe],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, DialogModule, SelectModule, DividerModule, PositionInputComponent],
     templateUrl: './quest-generator-npc-update.component.html',
     styleUrl: './quest-generator-npc-update.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush
