@@ -6,7 +6,7 @@ import { EAllowedJobs, EBuildingType, EChassisId, EModuleId, EQuestCondition, IQ
 
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ToasterService } from '../../../shared/toaster/toaster.service';
@@ -14,7 +14,7 @@ import { EnumToArrayPipe } from '../../../shared/enum-to-array.pipe';
 
 @Component({
     selector: 'app-quest-generator-condition-update',
-    imports: [CommonModule, DialogModule, DropdownModule, InputNumberModule, FormsModule, ReactiveFormsModule, EnumToArrayPipe],
+    imports: [CommonModule, DialogModule, SelectModule, InputNumberModule, FormsModule, ReactiveFormsModule, EnumToArrayPipe],
     templateUrl: './quest-generator-condition-update.component.html',
     styleUrl: './quest-generator-condition-update.component.css'
 })

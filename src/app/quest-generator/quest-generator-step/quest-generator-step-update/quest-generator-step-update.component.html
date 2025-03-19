@@ -24,7 +24,7 @@
     <div class="d-flex justify-content-center pt-2">
       <div class="form-group pb-3">
         <label class="form-label"><i class="bi bi-clipboard2-check"></i> Type</label><br>
-        <p-dropdown appendTo="body" [options]="stepTypes" formControlName="stepType"
+        <p-select appendTo="body" [options]="stepTypes" formControlName="stepType"
         placeholder="Select a Step Type" [style]="{ 'min-width': '250px'}">
         <ng-template pTemplate="selectedItem" translate="no">
           <div class="flex align-items-center gap-2" *ngIf="stepForm.value.stepType" translate="no">
@@ -36,7 +36,7 @@
             {{ item }}
           </div>
         </ng-template>
-        </p-dropdown>
+        </p-select>
       </div>
     </div>
 
@@ -46,7 +46,7 @@
       <div class="d-flex justify-content-center pt-2" *ngIf="stepForm.value.stepType == 'dialogue'">
         <div class="form-group pb-3">
           <label class="form-label"><i class="bi bi-airplane-engines-fill"></i> NPC Type</label><br>
-          <p-dropdown appendTo="body" [options]="stepNpcTypes" formControlName="stepNpcType"
+          <p-select appendTo="body" [options]="stepNpcTypes" formControlName="stepNpcType"
           placeholder="Select NPC Type" [style]="{ 'min-width': '250px'}" />
         </div>
       </div>
@@ -55,7 +55,7 @@
       <div class="d-flex justify-content-center pt-2" *ngIf="stepForm.value.stepNpcType == 'fullNpc' || stepForm.value.stepType == 'transactCredits'">
         <div class="form-group pb-3">
           <label class="form-label"><i class="bi bi bi-person-circle"></i> NPC</label><br>
-          <p-dropdown appendTo="body" [options]="getNpcList(currentQuest!.prepareNpcs, stepForm.value.stepType)" optionLabel="rulerName" formControlName="stepChosendNpc"
+          <p-select appendTo="body" [options]="getNpcList(currentQuest!.prepareNpcs, stepForm.value.stepType)" optionLabel="rulerName" formControlName="stepChosendNpc"
           placeholder="Select NPC" [style]="{ 'min-width': '250px'}">
           <ng-template pTemplate="selectedItem" translate="no">
             <div class="flex align-items-center gap-2" *ngIf="stepForm.value.stepChosendNpc" translate="no">
@@ -67,7 +67,7 @@
               {{ item.rulerName }}
             </div>
           </ng-template>
-          </p-dropdown>
+          </p-select>
         </div>
       </div>
 

@@ -4,7 +4,7 @@
     <div class="d-flex justify-content-center pt-2">
       <div class="form-group pb-3">
         <label class="form-label"><i class="bi bi-clipboard2-check"></i> Type</label><br>
-        <p-dropdown appendTo="body" [options]="['resources', 'license']" formControlName="rewardType"
+        <p-select appendTo="body" [options]="['resources', 'license']" formControlName="rewardType"
         placeholder="Select a Reward Type" [style]="{ 'min-width': '250px'}">
         <ng-template pTemplate="selectedItem" translate="no">
           <div class="flex align-items-center gap-2" *ngIf="rewardForm.value.rewardType" translate="no">
@@ -16,7 +16,7 @@
             {{ item }}
           </div>
         </ng-template>
-        </p-dropdown>
+        </p-select>
       </div>
     </div>
 
@@ -95,7 +95,7 @@
       <div class="d-flex justify-content-center pt-2">
         <div class="form-group pb-3">
           <label class="form-label"><i class="bi bi-clipboard2-check"></i> Component Type</label><br>
-          <p-dropdown appendTo="body" [options]="['chassis', 'module']" formControlName="componentType"
+          <p-select appendTo="body" [options]="['chassis', 'module']" formControlName="componentType"
           placeholder="Select a Component Type" [style]="{ 'min-width': '250px'}">
           <ng-template pTemplate="selectedItem" translate="no">
             <div class="flex align-items-center gap-2" *ngIf="rewardForm.value.componentType" translate="no">
@@ -107,7 +107,7 @@
               {{ item }}
             </div>
           </ng-template>
-          </p-dropdown>
+          </p-select>
         </div>
       </div>
 
@@ -115,7 +115,7 @@
       <div class="d-flex justify-content-center pt-2" *ngIf="rewardForm.value.componentType == 'chassis'">
         <div class="form-group pb-3">
           <label class="form-label"><i class="bi bi-sim-fill"></i> Chassis</label><br>
-          <p-dropdown appendTo="body" [options]="chassis | enumToArray" optionLabel="value" formControlName="chassis"
+          <p-select appendTo="body" [options]="chassis | enumToArray" optionLabel="value" formControlName="chassis"
           placeholder="Select a Chassis" [style]="{ 'min-width': '250px'}">
           <ng-template pTemplate="selectedItem" translate="no">
             <div class="flex align-items-center gap-2" *ngIf="rewardForm.value.chassis" translate="no">
@@ -127,14 +127,14 @@
               <img [src]="questGeneratorService.getChassisImage(item.value)" class="udq-select-images"> {{ item.value }}
             </div>
           </ng-template>
-          </p-dropdown>
+          </p-select>
         </div>
       </div>
       <!-- Module -->
       <div class="d-flex justify-content-center pt-2" *ngIf="rewardForm.value.componentType == 'module'">
         <div class="form-group pb-3">
           <label class="form-label"><i class="bi bi-sim-fill"></i> Module</label><br>
-          <p-dropdown appendTo="body" [options]="modules | enumToArray" optionLabel="value" formControlName="module"
+          <p-select appendTo="body" [options]="modules | enumToArray" optionLabel="value" formControlName="module"
           placeholder="Select a Module" [style]="{ 'min-width': '250px'}">
           <ng-template pTemplate="selectedItem" translate="no">
             <div class="flex align-items-center gap-2" *ngIf="rewardForm.value.module" translate="no">
@@ -146,7 +146,7 @@
               <img [src]="questGeneratorService.getModuleImage(item.value)" class="udq-select-images"> {{ item.value }}
             </div>
           </ng-template>
-          </p-dropdown>
+          </p-select>
         </div>
       </div>
 

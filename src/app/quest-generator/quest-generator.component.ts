@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
 import { TabViewModule } from 'primeng/tabview';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { Dropdown, DropdownModule } from 'primeng/dropdown';
+import { Select, SelectModule } from 'primeng/select';
 import { DividerModule } from 'primeng/divider';
 import { TableModule } from 'primeng/table';
 
@@ -33,7 +33,7 @@ import { QuestGeneratorSimulatorComponent } from './quest-generator-simulator/qu
 @Component({
     selector: 'app-quest-generator',
     imports: [
-        CommonModule, TableModule, PanelModule, TabViewModule, ConfirmDialogModule, DropdownModule, DividerModule,
+        CommonModule, TableModule, PanelModule, TabViewModule, ConfirmDialogModule, SelectModule, DividerModule,
         FormsModule, ReactiveFormsModule, MarkdownModule, QuestGeneratorGeneralUpdateComponent, QuestGeneratorStepUpdateComponent,
         QuestGeneratorStepComponent,
         QuestGeneratorConditionComponent,
@@ -51,7 +51,7 @@ import { QuestGeneratorSimulatorComponent } from './quest-generator-simulator/qu
 })
 export class QuestGeneratorComponent implements OnInit {
 
-  @ViewChild('selectedQuestDropdown') selectedQuestDropDown?: Dropdown;
+  @ViewChild('selectedQuestDropdown') selectedQuestDropDown?: Select;
   @ViewChild('downloadQuestLink') downloadQuestLink?: ElementRef;
   @ViewChild('questImportInput') questImportInput?: ElementRef;
 

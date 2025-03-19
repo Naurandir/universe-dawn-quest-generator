@@ -1,6 +1,6 @@
 <!-- Steps with Details -->
 <ng-container *ngIf="selectedQuestStep != undefined">
-  <p-panel toggleable="true" collapsed="true">
+  <p-panel styleClass="sr-steps-distance" toggleable="true" collapsed="true">
     <ng-template pTemplate="header">
       <div class="flex align-items-center p-2">
         <i class="bi bi-person-walking"></i> Step - {{ selectedQuestStep.id }} -
@@ -75,7 +75,8 @@
             <b>Dialog Options</b> <i class="bi bi-question-circle-fill mx-1 h5" ngbTooltip="The List of dialog options is considered as 'dictionary' what means the order does not influence the quest and order cannot be guaranteed."></i>
           </div>
           <!--Dialog Options -->
-          <p-table [value]="getStepDialogOptions(selectedQuestStep.task)" styleClass="p-datatable-striped p-datatable-sm" responsiveLayout="stack">
+          <p-table [value]="getStepDialogOptions(selectedQuestStep.task)" styleClass="p-datatable-striped p-datatable-sm p-datatable-round-edge"
+          responsiveLayout="stack" breakpoint="600px">
             <ng-template pTemplate="header">
               <tr>
                   <th>Keyword</th>
@@ -86,16 +87,16 @@
             <ng-template pTemplate="body" let-currentDialogOption>
               <tr>
                 <td translate="no">
-                  <span class="p-column-title">Keyword</span> {{ currentDialogOption[0] }} ({{ selectedLanguage }})
+                  <span class="p-column-title-600">Keyword</span> {{ currentDialogOption[0] }} ({{ selectedLanguage }})
                 </td>
                 <td>
-                  <span class="p-column-title">Answer</span>
+                  <span class="p-column-title-600">Answer</span>
                   <div class="d-flex justify-content-center pt-1">
                     <markdown ngPreserveWhitespaces class="sr-markdown" [data]="currentDialogOption[1]" translate="no"></markdown>
                   </div>
                 </td>
                 <td>
-                  <span class="p-column-title">Action</span>
+                  <span class="p-column-title-600">Action</span>
                   <button class="btn btn-outline-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     ...
                   </button>
@@ -136,8 +137,8 @@
           <b>Rewards for Step Completion</b>
         </div>
 
-        <div class="alert alert-success" *ngIf="selectedQuestStep.rewards!.length > 0">
-          <p-table [value]="selectedQuestStep.rewards!" styleClass="p-datatable-striped p-datatable-sm udq-reward-table"
+        <div *ngIf="selectedQuestStep.rewards!.length > 0">
+          <p-table [value]="selectedQuestStep.rewards!" styleClass="p-datatable-sm" stripedRows
           responsiveLayout="stack" [responsive]="true" [breakpoint]="'600px'">
           <ng-template pTemplate="header">
             <tr class="tablerow-success">
@@ -149,7 +150,7 @@
           <ng-template pTemplate="body" let-currentReward let-rowIndex="rowIndex">
             <tr [class]="rowIndex % 2 == 0 ? 'tablerow-success' : 'tablerow-success-odd'">
               <td>
-                <span class="p-column-title">Type</span> {{ currentReward.rewardType }}
+                <span class="p-column-title-600">Type</span> {{ currentReward.rewardType }}
               </td>
               <td>
                 <ng-container *ngIf="currentReward.rewardType == 'giveResources'">
@@ -163,7 +164,7 @@
                 </ng-container>
               </td>
               <td>
-                <span class="p-column-title">Action</span>
+                <span class="p-column-title-600">Action</span>
                 <button class="btn btn-outline-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                   ...
                 </button>

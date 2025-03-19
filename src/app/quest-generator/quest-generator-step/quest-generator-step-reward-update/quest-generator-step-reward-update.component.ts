@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { EChassisId, EComponentType, EModuleId, EReturnReward, IQuestStep, TResources, TReturnReward } from '../../quest-ud.model';
 
 import { DialogModule } from 'primeng/dialog';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
 
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -14,7 +14,7 @@ import { ToasterService } from '../../../shared/toaster/toaster.service';
 
 @Component({
     selector: 'app-quest-generator-step-reward-update',
-    imports: [CommonModule, DialogModule, DropdownModule, InputNumberModule, FormsModule, ReactiveFormsModule, EnumToArrayPipe],
+    imports: [CommonModule, DialogModule, SelectModule, InputNumberModule, FormsModule, ReactiveFormsModule, EnumToArrayPipe],
     providers: [EnumToArrayPipe],
     templateUrl: './quest-generator-step-reward-update.component.html',
     styleUrl: './quest-generator-step-reward-update.component.css'

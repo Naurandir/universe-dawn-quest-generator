@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { TableModule } from 'primeng/table';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { TagModule } from 'primeng/tag';
 import { TableHeaderElementModel } from '../table-header-element-model';
 
 @Component({
     selector: 'app-table-header-element-dropdown',
-    imports: [CommonModule, TableModule, DropdownModule, TagModule],
+    imports: [CommonModule, TableModule, SelectModule, TagModule],
     templateUrl: './table-header-element-dropdown.component.html',
     styleUrl: './table-header-element-dropdown.component.css'
 })

@@ -3,7 +3,7 @@ import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { TagModule } from 'primeng/tag';
 import { SliderModule } from 'primeng/slider';
 import { EuropeanNumberFormatPipe } from "../european-number-format.pipe";
@@ -17,7 +17,7 @@ import { TableHeaderElementArrowComponent } from "../table-header-element/table-
     selector: 'app-mobile-table-header',
     templateUrl: './mobile-table-header.component.html',
     styleUrl: './mobile-table-header.component.css',
-    imports: [CommonModule, FormsModule, PanelModule, TableModule, DropdownModule, TagModule, SliderModule, EuropeanNumberFormatPipe, TableHeaderElementDefaultComponent, TableHeaderElementDropdownComponent, TableHeaderElementRangeComponent, TableHeaderElementArrowComponent]
+    imports: [CommonModule, FormsModule, PanelModule, TableModule, SelectModule, TagModule, SliderModule, EuropeanNumberFormatPipe, TableHeaderElementDefaultComponent, TableHeaderElementDropdownComponent, TableHeaderElementRangeComponent, TableHeaderElementArrowComponent]
 })
 export class MobileTableHeaderComponent implements OnInit {
 

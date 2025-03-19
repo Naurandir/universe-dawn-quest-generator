@@ -12,7 +12,7 @@
     <div class="d-flex justify-content-center pt-2">
       <div class="form-group pb-3">
         <label class="form-label"><i class="bi bi-android"></i> Race of NPC</label><br>
-        <p-dropdown appendTo="body" [options]="races | keyvalue" optionLabel="value" formControlName="npcRace"
+        <p-select appendTo="body" [options]="races | keyvalue" optionLabel="value" formControlName="npcRace"
         placeholder="Select race for NPC" [style]="{ 'min-width': '250px'}" translate="no">
           <ng-template pTemplate="selectedItem" translate="no">
             <div class="flex align-items-center gap-2" *ngIf="npcForm.value.npcRace" translate="no">
@@ -24,7 +24,7 @@
               <img [src]="questGeneratorService.getRaceImage(item.value)" class="udq-select-images"> {{ item.value }}
             </div>
           </ng-template>
-        </p-dropdown>
+        </p-select>
       </div>
     </div>
 

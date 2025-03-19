@@ -33,7 +33,7 @@ body {
 }
 
 body, .dropdown-menu, .btn, .p-component, .p-inputtext {
-  font-size: 14px;
+  font-size: 14px !important;
 }
 
 .container-1000 {
@@ -60,47 +60,65 @@ body, .dropdown-menu, .btn, .p-component, .p-inputtext {
   background-color: rgba(5, 27, 17, 0.8);
 }
 
+.p-panel {
+  border: 0px !important;
+  border-radius: 10px !important;
+  background: transparent !important;
+}
+
+.p-panel-header {
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+  border-top-left-radius: 10px !important;
+  border-top-right-radius: 10px !important;
+
+  border-bottom-left-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+
+  border: 1px solid #424b57 !important;
+}
+
 .p-panel-header, .p-panel-content {
-  background: rgba(31, 51, 55, 0.8);
+  background: rgba(31, 51, 55, 0.8) !important;
 }
 
 .p-dialog-header, .p-dialog-content, .p-dialog-footer {
-  background: rgba(31, 51, 55, 1.0);
+  background: rgba(31, 51, 55, 1.0) !important;
 }
 
-.p-inputtext, .p-tabview-nav-link, .p-tabview-nav-next, .p-tabview-nav-prev, .p-inputnumber-button-up, .p-inputnumber-button-down, .p-dropdown-trigger, .p-dropdown-panel {
+.p-inputtext, .p-tabview-nav-link, .p-tabview-nav-next, .p-tabview-nav-prev, .p-inputnumber-button-up, .p-inputnumber-button-down, .p-select-trigger, .p-select-panel {
   background: #112227;
   border-color: #112227;
 }
 
-.p-datatable-wrapper, .p-paginator, .p-datatable-table {
-  border-radius: 10px;
-  background: rgba(31, 51, 55, 0.8);
+.p-datatable-table-container {
+  border-radius: 10px !important;
 }
 
-.p-datatable-wrapper, .p-paginator {
-  border-radius: 10px;
+.p-paginator, .p-datatable-table {
+  border-radius: 10px !important;
+  background: rgba(31, 51, 55, 0.8);
 }
 
 .p-datatable-tbody td {
-  padding: 0.75rem;
-  padding-top: 0.5rem;
+  padding: 0.75rem !important;
+  padding-top: 0.5rem !important;
 }
 
 .p-datatable.p-datatable-sm .p-datatable-thead > tr > th {
-  background: rgba(31, 51, 55, 0.8);
+  background: rgba(31, 51, 55, 0.8) !important;
 }
 
 .p-datatable .p-datatable-thead > tr > th {
-  background: rgba(31, 51, 55, 0.8);
+  background: rgba(31, 51, 55, 0.8) !important;
 }
 
 .p-datatable.p-datatable-striped .p-datatable-tbody > tr:nth-child(odd) {
-  background: rgba(31, 51, 55, 0.8);
+  background: rgba(31, 51, 55, 0.8) !important;
 }
 
 .p-datatable.p-datatable-striped .p-datatable-tbody > tr:nth-child(even) {
-  background: rgba(28, 46, 49, 0.8);
+  background: rgba(28, 46, 49, 0.8) !important;
 }
 
 .p-toast-message-text {
@@ -116,16 +134,18 @@ body, .dropdown-menu, .btn, .p-component, .p-inputtext {
   background: #38e2f8;
 }
 
-.p-panel-header {
-  padding: 2px;
-}
-
-.p-panel-toggleable {
-  padding: 2px;
-}
-
-.p-dropdown-item.p-ripple {
+.p-select-item.p-ripple {
   white-space: normal;
+}
+
+.p-button-icon-only {
+  width: 20px !important;
+  height: 20px !important;
+  padding: 5px !important;
+}
+
+.p-button-icon-only.p-button-rounded {
+  border-radius: 25% !important;
 }
 
 .p-tag {
@@ -190,24 +210,12 @@ body, .dropdown-menu, .btn, .p-component, .p-inputtext {
   border-radius: 25%;
 }
 
-.udq-reward-table.p-datatable.p-datatable-sm .p-datatable-thead > tr > th {
-  background: rgba(0, 58, 10, 0.78);
-}
-
-.udq-reward-table.p-datatable .p-datatable-thead > tr > th {
-  background: rgba(0, 58, 10, 0.8);
-}
-
-.udq-reward-table.p-datatable.p-datatable-striped .p-datatable-tbody > tr:nth-child(odd) {
-  background: rgba(0, 58, 10, 0.8);
-}
-
-.udq-reward-table.p-datatable.p-datatable-striped .p-datatable-tbody > tr:nth-child(even) {
-  background: rgba(0, 44, 0, 0.8);
-}
-
 .sr-panel-distance {
-  margin-bottom: 15px;
+  margin-bottom: 15px !important;
+}
+
+.sr-steps-distance {
+  margin-bottom: 10px !important;
 }
 
 .sr-panel-tab-distance .p-tabview-panels {
@@ -288,4 +296,16 @@ body, .dropdown-menu, .btn, .p-component, .p-inputtext {
 
 @keyframes sr-tool-loading-animation {
   100%{transform: rotate(1turn)}
+}
+
+@media (min-width: 601px) {
+  .p-column-title-600 {
+    display: none;
+  }
+}
+
+@media (min-width: 901px) {
+  .p-column-title-900 {
+    display: none;
+  }
 }

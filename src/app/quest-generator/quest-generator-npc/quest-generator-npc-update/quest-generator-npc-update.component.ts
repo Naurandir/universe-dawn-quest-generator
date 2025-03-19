@@ -7,7 +7,7 @@ import { ERace, ETaskType, ICoordinates, IQuest, IQuestPrepareNpcs, IQuestStep, 
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { DialogModule } from 'primeng/dialog';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 
 import { ToasterService } from '../../../shared//toaster/toaster.service';
 import { EnumToArrayPipe } from '../../../shared//enum-to-array.pipe';
@@ -18,7 +18,7 @@ import { DividerModule } from 'primeng/divider';
 
 @Component({
     selector: 'app-quest-generator-npc-update',
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, DialogModule, DropdownModule, DividerModule, PositionInputComponent, EnumToArrayPipe],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, DialogModule, SelectModule, DividerModule, PositionInputComponent, EnumToArrayPipe],
     templateUrl: './quest-generator-npc-update.component.html',
     styleUrl: './quest-generator-npc-update.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush

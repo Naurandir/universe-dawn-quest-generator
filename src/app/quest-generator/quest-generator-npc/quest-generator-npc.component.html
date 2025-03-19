@@ -5,7 +5,7 @@
     </div>
   </ng-template>
   <ng-template pTemplate="content">
-    <p-table [value]="selectedQuest.prepareNpcs" styleClass="p-datatable-striped p-datatable-sm"
+    <p-table [value]="selectedQuest.prepareNpcs" styleClass="p-datatable-striped p-datatable-sm p-datatable-round-edge"
     responsiveLayout="stack" [responsive]="true" [breakpoint]="'900px'">
       <ng-template pTemplate="header">
         <tr>
@@ -17,17 +17,17 @@
       </ng-template>
       <ng-template pTemplate="body" let-npc>
         <tr>
-          <td><span class="p-column-title">Name</span>{{ npc.rulerName }}</td>
-          <td><span class="p-column-title">Race</span><img [src]="questGeneratorService.getRaceImage(npc.race)" class="udq-select-images"> {{ npc.race }}</td>
+          <td><span class="p-column-title-900">Name</span>{{ npc.rulerName }}</td>
+          <td><span class="p-column-title-900">Race</span><img [src]="questGeneratorService.getRaceImage(npc.race)" class="udq-select-images"> {{ npc.race }}</td>
           <td>
-            <span class="p-column-title">Planet</span>
+            <span class="p-column-title-900">Planet</span>
             <app-coordinates-with-copy *ngIf="npc.planet != null && npc.planet != undefined" [position]="getPosition(npc.planet.coordinates)" [planetName]="npc.planet.planetName" />
             <ng-container *ngIf="npc.planet == null || npc.planet == undefined">
               No Planet
             </ng-container>
           </td>
           <td>
-            <span class="p-column-title">Action</span>
+            <span class="p-column-title-900">Action</span>
             <button class="btn btn-outline-light mx-2" (click)="updateNpc(selectedQuest, npc)"><i class="bi bi-pencil"></i></button>
             <button class="btn btn-outline-light" (click)="deleteNpc(npc)"><i class="bi bi-trash-fill"></i></button>
           </td>

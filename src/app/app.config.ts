@@ -5,6 +5,9 @@ import { GlobalErrorHandler } from './shared/global-error.handler';
 
 import { provideMarkdown } from 'ngx-markdown';
 
+import { providePrimeNG } from 'primeng/config';
+import { laraPreset } from './app.theme';
+
 const GlobalErrorHandlerProvider: Provider = {
   provide: ErrorHandler,
   useClass: GlobalErrorHandler,
@@ -17,5 +20,13 @@ export const appConfig: ApplicationConfig = {
     GlobalErrorHandlerProvider, // custom global error handler
     MarkupProvider, // Markup Provider
     provideAnimations(), // bootstrap animations
+    providePrimeNG({
+      theme: {
+         preset: laraPreset,
+         options: {
+          darkModeSelector: '.app-dark-mode'
+         }
+      }
+    })
   ],
 };

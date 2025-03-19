@@ -8,9 +8,9 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MarkdownModule } from 'ngx-markdown';
 
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { DialogModule } from 'primeng/dialog';
-import { InputTextareaModule } from 'primeng/inputtextarea';
+import { TextareaModule } from 'primeng/textarea';
 import { DividerModule } from 'primeng/divider';
 
 import { ToasterService } from '../../shared//toaster/toaster.service';
@@ -20,7 +20,7 @@ import { forkJoin } from 'rxjs';
 
 @Component({
     selector: 'app-quest-generator-general-update',
-    imports: [CommonModule, NgbModule, MarkdownModule, FormsModule, ReactiveFormsModule, DialogModule, DropdownModule, InputTextareaModule, DividerModule],
+    imports: [CommonModule, NgbModule, MarkdownModule, FormsModule, ReactiveFormsModule, DialogModule, SelectModule, TextareaModule, DividerModule],
     templateUrl: './quest-generator-general-update.component.html',
     styleUrl: './quest-generator-general-update.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush

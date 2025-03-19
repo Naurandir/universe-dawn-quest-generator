@@ -3,7 +3,7 @@
     <div class="d-flex justify-content-center pt-2">
       <div class="form-group pb-3">
         <label class="form-label"><i class="bi bi-clipboard2-check"></i> Type</label><br>
-        <p-dropdown appendTo="body" [options]="conditionTypes | keyvalue" optionLabel="value" formControlName="questConditionType"
+        <p-select appendTo="body" [options]="conditionTypes | keyvalue" optionLabel="value" formControlName="questConditionType"
         placeholder="Select a Condition Type" [style]="{ 'min-width': '250px'}" >
           <ng-template pTemplate="selectedItem" translate="no">
             <div class="flex align-items-center gap-2" *ngIf="conditionForm.value.questConditionType" translate="no">
@@ -15,7 +15,7 @@
               {{ item.value }}
             </div>
           </ng-template>
-        </p-dropdown>
+        </p-select>
       </div>
     </div>
 
@@ -23,7 +23,7 @@
     <div class="d-flex justify-content-center pt-2" *ngIf="conditionForm.value.questConditionType.value == 'job'">
       <div class="form-group pb-3">
         <label class="form-label"><i class="bi bi-person-lines-fill"></i> Required Job</label><br>
-        <p-dropdown appendTo="body" [options]="allowedJobs | keyvalue" optionLabel="value" formControlName="questConditionJob"
+        <p-select appendTo="body" [options]="allowedJobs | keyvalue" optionLabel="value" formControlName="questConditionJob"
         placeholder="Select a Job" [style]="{ 'min-width': '250px'}">
         <ng-template pTemplate="selectedItem" translate="no">
           <div class="flex align-items-center gap-2" *ngIf="conditionForm.value.questConditionJob" translate="no">
@@ -35,7 +35,7 @@
             <img [src]="questGeneratorService.getJobImage(item.value)" class="udq-select-images"> {{ item.value }}
           </div>
         </ng-template>
-        </p-dropdown>
+        </p-select>
       </div>
     </div>
 
@@ -51,7 +51,7 @@
     <div class="d-flex justify-content-center pt-2" *ngIf="conditionForm.value.questConditionType.value == 'moduleResearched'">
       <div class="form-group pb-3">
         <label class="form-label"><i class="bi bi-sim-fill"></i> Module researched</label><br>
-        <p-dropdown appendTo="body" [options]="modules | enumToArray" optionLabel="value" formControlName="questConditionModuleResearched"
+        <p-select appendTo="body" [options]="modules | enumToArray" optionLabel="value" formControlName="questConditionModuleResearched"
         placeholder="Select a Module" [style]="{ 'min-width': '250px'}">
         <ng-template pTemplate="selectedItem" translate="no">
           <div class="flex align-items-center gap-2" *ngIf="conditionForm.value.questConditionModuleResearched" translate="no">
@@ -63,7 +63,7 @@
             <img [src]="questGeneratorService.getModuleImage(item.value)" class="udq-select-images"> {{ item.value }}
           </div>
         </ng-template>
-        </p-dropdown>
+        </p-select>
       </div>
     </div>
 
@@ -71,7 +71,7 @@
     <div class="d-flex justify-content-center pt-2" *ngIf="conditionForm.value.questConditionType.value == 'chassisResearched'">
       <div class="form-group pb-3">
         <label class="form-label"><i class="bi bi-airplane-engines-fill"></i> Chassis researched</label><br>
-        <p-dropdown appendTo="body" [options]="chassis | enumToArray" optionLabel="value" formControlName="questConditionChassisResearched"
+        <p-select appendTo="body" [options]="chassis | enumToArray" optionLabel="value" formControlName="questConditionChassisResearched"
         placeholder="Select a Chassis" [style]="{ 'min-width': '250px'}">
         <ng-template pTemplate="selectedItem" translate="no">
           <div class="flex align-items-center gap-2" *ngIf="conditionForm.value.questConditionChassisResearched" translate="no">
@@ -83,7 +83,7 @@
             <img [src]="questGeneratorService.getChassisImage(item.value)" class="udq-select-images"> {{ item.value }}
           </div>
         </ng-template>
-        </p-dropdown>
+        </p-select>
       </div>
     </div>
 
@@ -91,7 +91,7 @@
     <div class="d-flex justify-content-center pt-2" *ngIf="conditionForm.value.questConditionType.value == 'chassisBuilt'">
       <div class="form-group pb-3">
         <label class="form-label"><i class="bi bi-airplane-engines-fill"></i> Chassis built</label><br>
-        <p-dropdown appendTo="body" [options]="chassis | enumToArray" optionLabel="value" formControlName="questConditionChassisBuilt"
+        <p-select appendTo="body" [options]="chassis | enumToArray" optionLabel="value" formControlName="questConditionChassisBuilt"
         placeholder="Select a Chassis" [style]="{ 'min-width': '250px'}">
         <ng-template pTemplate="selectedItem" translate="no">
           <div class="flex align-items-center gap-2" *ngIf="conditionForm.value.questConditionChassisBuilt" translate="no">
@@ -103,7 +103,7 @@
             <img [src]="questGeneratorService.getChassisImage(item.value)" class="udq-select-images"> {{ item.value }}
           </div>
         </ng-template>
-        </p-dropdown>
+        </p-select>
       </div>
     </div>
 
@@ -111,7 +111,7 @@
     <div class="d-flex justify-content-center pt-2" *ngIf="conditionForm.value.questConditionType.value == 'building'">
       <div class="form-group pb-3">
         <label class="form-label"><i class="bi bi-building-fill"></i> Building</label><br>
-        <p-dropdown appendTo="body" [options]="buildings | keyvalue" optionLabel="value" formControlName="questConditionBuildingType"
+        <p-select appendTo="body" [options]="buildings | keyvalue" optionLabel="value" formControlName="questConditionBuildingType"
         placeholder="Select a Building" [style]="{ 'min-width': '250px'}">
         <ng-template pTemplate="selectedItem" translate="no">
           <div class="flex align-items-center gap-2" *ngIf="conditionForm.value.questConditionBuildingType" translate="no">
@@ -123,7 +123,7 @@
             <img [src]="questGeneratorService.getBuildingImage(item.value)" class="udq-select-images"> {{ item.value }}
           </div>
         </ng-template>
-        </p-dropdown>
+        </p-select>
       </div>
     </div>
     <div class="d-flex justify-content-center pt-1" *ngIf="conditionForm.value.questConditionType.value == 'building'">

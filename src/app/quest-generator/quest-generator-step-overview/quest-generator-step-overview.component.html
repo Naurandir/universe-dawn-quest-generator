@@ -6,8 +6,8 @@
     </div>
   </ng-template>
   <ng-template pTemplate="content">
-    <p-table [value]="selectedQuest.steps | questStepsArray" styleClass="p-datatable-striped p-datatable-sm"
-    responsiveLayout="stack" [responsive]="true" [breakpoint]="'600px'">
+    <p-table [value]="selectedQuest.steps | questStepsArray" styleClass="p-datatable-striped p-datatable-sm p-datatable-round-edge"
+    stripedRows responsiveLayout="stack" [breakpoint]="'600px'">
       <ng-template pTemplate="header">
           <tr>
               <th>Id</th>
@@ -18,14 +18,14 @@
       </ng-template>
       <ng-template pTemplate="body" let-currentStep>
           <tr>
-              <td><span class="p-column-title">Id</span> {{ currentStep.id }}</td>
-              <td><span class="p-column-title">Type</span>
+              <td><span class="p-column-title-600">Id</span> {{ currentStep.id }}</td>
+              <td><span class="p-column-title-600">Type</span>
                 <i class="bi bi-cash" *ngIf="currentStep.task.type == 'transactCredits'"></i>
                 <i class="bi bi-chat-dots" *ngIf="currentStep.task.type == 'dialogue'"></i>
                 {{ currentStep.task.type }}
               </td>
               <td>
-                <span class="p-column-title">Ruler / Location</span>
+                <span class="p-column-title-600">Ruler / Location</span>
                 <ng-container *ngIf="currentStep.task.type == 'transactCredits'">
                   {{ getNpcInfoByRulerName(currentStep.task.rulerName) }}
                 </ng-container>
@@ -34,7 +34,7 @@
                 </ng-container>
               </td>
               <td>
-                <span class="p-column-title">Action</span>
+                <span class="p-column-title-600">Action</span>
                 <button class="btn btn-outline-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                   ...
                 </button>

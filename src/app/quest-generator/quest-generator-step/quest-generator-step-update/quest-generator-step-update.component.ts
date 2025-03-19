@@ -10,7 +10,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { DialogModule } from 'primeng/dialog';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DividerModule } from 'primeng/divider';
 
@@ -22,7 +22,7 @@ import { LoadingActionService } from '../../../shared/loading-action/loading-act
 
 @Component({
     selector: 'app-quest-generator-step-update',
-    imports: [CommonModule, NgbModule, MarkdownModule, FormsModule, ReactiveFormsModule, DialogModule, DropdownModule,
+    imports: [CommonModule, NgbModule, MarkdownModule, FormsModule, ReactiveFormsModule, DialogModule, SelectModule,
         InputNumberModule, DividerModule, PositionInputComponent],
     templateUrl: './quest-generator-step-update.component.html',
     styleUrl: './quest-generator-step-update.component.css',
