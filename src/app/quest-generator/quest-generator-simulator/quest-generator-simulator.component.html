@@ -1,10 +1,108 @@
-<p-dialog header="Simulator" [modal]="true" [(visible)]="visible" [style]="{ 'max-width': '30rem' }">
-<!--Select Step
+<p-dialog header="Simulator" [modal]="true" [(visible)]="visible" [style]="{ 'max-width': '30rem' }" (onHide)="resetSimulator()">
+  <div class="d-flex justify-content-center">
+    <div class="form-group pb-3" *ngIf="currentSteps.length > 0">
+      <label class="form-label"><i class="bi bi-backpack-fill"></i> Step</label><br>
+      <p-select appendTo="body" [(ngModel)]="selectedStep" [options]="currentSteps"
+      (onChange)="selectedStepEvent()" placeholder="Select a Step" [style]="{ 'min-width': '250px'}">
+        <ng-template pTemplate="selectedItem" translate="no">
+          <div class="flex align-items-center gap-2" *ngIf="selectedStep" translate="no">
+            {{ selectedStep.id }}
+          </div>
+        </ng-template>
+        <ng-template pTemplate="item" let-item translate="no">
+          <div translate="no">
+            {{ item.id }}
+          </div>
+        </ng-template>
+      </p-select>
+    </div>
+  </div>
 
-Show Transaction Possibility (with last notification)
+  <p-divider *ngIf="selectedStep != undefined" />
 
-Show Dialog Possibility (With last notification) -->
+  <!-- Language Selection -->
+  <div class="d-flex justify-content-center pt-2">
+    <div class="form-group pb-3">
+      <input value="DE" [class]="'btn udq-language-button ' + (selectedLanguage == 'DE' ? 'disabled btn-outline-light' : 'btn-outline-secondary')" (click)="switchLanguage('DE')">
+      <input value="EN" [class]="'btn udq-language-button ' + (selectedLanguage == 'EN' ? 'disabled btn-outline-light' : 'btn-outline-secondary')" (click)="switchLanguage('EN')">
+    </div>
+  </div>
 
-Feature soon available!
+  <!-- Dialogue -->
+  <ng-container *ngIf="selectedStepType == 'dialogue'">
+    <div class="d-flex justify-content-center" translate="no">
+      <div class="form-group pb-3" >
+        <label class="form-label"><i class="bi bi-arrows-move"></i> Coordinates</label><br>
+        {{ selectedStepTaskDialogue?.coordinates?.x }}-{{ selectedStepTaskDialogue?.coordinates?.y }}-{{ selectedStepTaskDialogue?.coordinates?.z }}
+      </div>
+    </div>
 
+    <form [formGroup]="messageForm" (submit)="createMessageResponse()">
+      <div class="d-flex justify-content-center pt-2">
+        <div class="form-group">
+          <label class="form-label"><i class="bi bi bi-person-circle"></i> Chat Message </label><br>
+          <input type="text" name="chatMessage" class="form-control" formControlName="chatMessage" class="p-element p-inputwrapper p-inputtext" [style]="{ 'min-width': '250px'}" />
+        </div>
+      </div>
+      <div class="d-flex justify-content-center pt-2">
+        <div class="form-group">
+          <input type="submit" value="Send Message" class="btn btn-outline-light" [disabled]="!messageForm.valid">
+        </div>
+      </div>
+    </form>
+
+    <div class="d-flex justify-content-center pt-2" translate="no">
+      <label class="form-label"><i class="bi bi-chat-dots"></i> Current Conversation Outcome ({{ selectedLanguage }})</label><br>
+    </div>
+    <div class="d-flex justify-content-center pt-1">
+      <div class="form-group pb-3">
+        <input type="Submit" value="Reset Chat History" class="btn btn-outline-light" (click)="resetChatHistory()">
+      </div>
+    </div>
+    <div *ngIf="!messageCorrect" class="text-center pt-1 text-warning fst-italic">
+      No Answer exists for your message. Try another word.
+    </div>
+    <div *ngIf="foundKeyWord" class="text-center pt-1 text-success fst-italic h6">
+      Congratulations!<br>You finished this step! Proceed to the next one.
+    </div>
+
+    <div *ngFor="let chatEntry of chatHistory" class="d-flex justify-content-center pt-2">
+      <markdown class="sr-markdown" [data]="chatEntry" translate="no"></markdown>
+    </div>
+
+    <div class="d-flex justify-content-center pt-2" translate="no">
+      <label class="form-label"><i class="bi bi-chat-dots-fill"></i> Last Notification ({{ selectedLanguage }})</label><br>
+    </div>
+    <div class="d-flex justify-content-center pt-1">
+      <markdown *ngIf="selectedLanguage == 'DE'" class="sr-markdown" [data]="getLastNotificationDe()" translate="no"></markdown>
+      <markdown *ngIf="selectedLanguage == 'EN'" class="sr-markdown" [data]="getLastNotificationEn()" translate="no"></markdown>
+    </div>
+  </ng-container>
+
+  <!-- Transaction -->
+  <ng-container *ngIf="selectedStepType == 'transactCredits'">
+    <div class="d-flex justify-content-center pt-1">
+      <div class="form-group pb-3">
+        <p-inputnumber inputId="integeronly" placeholder="Amount" [(ngModel)]="creditsAmountInput" />
+      </div>
+    </div>
+    <div class="d-flex justify-content-center pt-1">
+      <div class="form-group pb-3">
+        <input type="Submit" value="Check Credits" class="btn btn-outline-light" (click)="checkTransactCredits()">
+      </div>
+    </div>
+    <div *ngIf="creditsCorrect != undefined && !creditsCorrect" class="text-center pt-1 text-warning fst-italic">
+      It seems the amount is not correct, please try another number.
+    </div>
+    <div *ngIf="creditsCorrect != undefined && creditsCorrect" class="text-center pt-1 text-success fst-italic h6">
+      Congratulations!<br>You finished this step! Proceed to the next one.
+    </div>
+    <div class="d-flex justify-content-center pt-2" translate="no">
+      <label class="form-label"><i class="bi bi-chat-dots-fill"></i> Last Notification ({{ selectedLanguage }})</label><br>
+    </div>
+    <div class="d-flex justify-content-center pt-1">
+      <markdown *ngIf="selectedLanguage == 'DE'" class="sr-markdown" [data]="getLastNotificationDe()" translate="no"></markdown>
+      <markdown *ngIf="selectedLanguage == 'EN'" class="sr-markdown" [data]="getLastNotificationEn()" translate="no"></markdown>
+    </div>
+  </ng-container>
 </p-dialog>

@@ -73,7 +73,7 @@ export class QuestGeneratorNpcComponent {
     let { QuestGeneratorNpcGalaxyViewComponent } = await import('./quest-generator-npc-galaxy-view/quest-generator-npc-galaxy-view.component');
     let componentRef = this.questGeneratorNpcGalacyViewContainer.createComponent(QuestGeneratorNpcGalaxyViewComponent);
 
-    componentRef.instance.setCurrentNpcs(quest.prepareNpcs);
+    componentRef.instance.setCurrentData(quest.prepareNpcs, quest.steps);
     componentRef.instance.showGalaxyView()
 
     setTimeout(() => {

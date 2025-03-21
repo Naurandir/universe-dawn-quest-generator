@@ -8,7 +8,7 @@ import { DialogModule } from 'primeng/dialog';
 
 import { GalaxyViewComponent } from "../../../shared/galaxy-view/galaxy-view.component";
 
-import { IQuestPrepareNpcs } from './../../quest-ud.model';
+import { ICoordinates, IQuestPrepareNpcs, IQuestSteps, IQuestTaskDialogue } from './../../quest-ud.model';
 import { LoadingActionService } from '../../../shared/loading-action/loading-action.service';
 import { ToasterService } from '../../../shared/toaster/toaster.service';
 
@@ -24,6 +24,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
 export class QuestGeneratorNpcGalaxyViewComponent {
 
   currentNpcs: IQuestPrepareNpcs[] = [];
+  unknownLocations: ICoordinates[] = []; // location without npc here
 
   visible: boolean = false;
 
@@ -79,6 +80,7 @@ export class QuestGeneratorNpcGalaxyViewComponent {
     let yNpc = new Array();
     let zNpc = new Array();
 
+    // NPC
     for (var i = 0; i < this.currentNpcs.length; i++) {
       if (this.currentNpcs[i].planet != undefined && this.currentNpcs[i].planet != null) {
         textNpc[i] = this.currentNpcs[i].planet?.planetName + " (" + this.currentNpcs[i].rulerName + ")";
@@ -88,13 +90,42 @@ export class QuestGeneratorNpcGalaxyViewComponent {
       }
     }
 
+    // Unknown Locations
+    for (var i = 0; i< this.unknownLocations.length; i++) {
+      if (this.isKnownNpcLocation(this.unknownLocations[i])) {
+        continue;
+      }
+
+      textNpc.push('Unknown');
+      xNpc.push(this.unknownLocations[i].x);
+      yNpc.push(this.unknownLocations[i].y);
+      zNpc.push(this.unknownLocations[i].z);
+    }
+
+    // Finalise
     this.data[0].text = textNpc;
     this.data[0].x = xNpc;
     this.data[0].y = yNpc;
     this.data[0].z = zNpc;
   }
 
-  setCurrentNpcs(npcs: IQuestPrepareNpcs[]) {
+  setCurrentData(npcs: IQuestPrepareNpcs[], steps: IQuestSteps) {
     this.currentNpcs = npcs;
+
+    let tasks: IQuestTaskDialogue[]= Object.entries(steps).map(([key, value]) => (value.task)).filter(t => t.type == 'dialogue');
+    this.unknownLocations= tasks.map(t => t.coordinates);
+  }
+
+  private isKnownNpcLocation(coordinates: ICoordinates): boolean {
+    for (var i = 0; i < this.currentNpcs.length; i++) {
+      if (this.currentNpcs[i].planet != undefined && this.currentNpcs[i].planet != null) {
+        let npcCoordiantes: ICoordinates = this.currentNpcs[i].planet!.coordinates
+
+        if (npcCoordiantes.x == coordinates.x && npcCoordiantes.y == coordinates.y && npcCoordiantes.z == coordinates.z) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }
