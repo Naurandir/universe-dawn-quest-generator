@@ -161,13 +161,15 @@
 </ng-container>
 
 <ng-container *ngIf="selectedQuest != undefined">
-  <!-- Dialogs -->
-  <app-quest-generator-general-update #questGeneratorGeneralUpdateDialog (afterUpdateFunction)="afterUpdateQuest($event)"/>
+  <!-- Step / Selected Quest Dialogs -->
+  <app-quest-generator-step-update #questGeneratorStepUpdateDialog (afterUpdateFunction)="afterUpdateStep($event)"/>
   <app-quest-generator-simulator #questGeneratorSimulatorComponent />
 
-  <app-quest-generator-step-update #questGeneratorStepUpdateDialog (afterUpdateFunction)="afterUpdateStep($event)"/>
   <app-quest-generator-step-dialog-update #questGeneratorStepDialogUpdateDialog (afterUpdateFunction)="afterDialogUpdate($event)" />
   <app-quest-generator-step-reward-update #questGeneratorStepRewardUpdateComponent (afterUpdateFunction)="afterRewardUpdate($event)" />
 
   <p-confirmDialog />
 </ng-container>
+
+<!--Always have create / update dialog -->
+<app-quest-generator-general-update #questGeneratorGeneralUpdateDialog (afterUpdateFunction)="afterUpdateQuest($event)"/>
