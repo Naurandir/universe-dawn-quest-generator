@@ -7,6 +7,7 @@ import { provideMarkdown } from 'ngx-markdown';
 
 import { providePrimeNG } from 'primeng/config';
 import { laraPreset } from './app.theme';
+import { provideHttpClient } from '@angular/common/http';
 
 const GlobalErrorHandlerProvider: Provider = {
   provide: ErrorHandler,
@@ -20,6 +21,7 @@ export const appConfig: ApplicationConfig = {
     GlobalErrorHandlerProvider, // custom global error handler
     MarkupProvider, // Markup Provider
     provideAnimations(), // bootstrap animations
+    provideHttpClient(), // http call for translation
     providePrimeNG({
       theme: {
          preset: laraPreset,

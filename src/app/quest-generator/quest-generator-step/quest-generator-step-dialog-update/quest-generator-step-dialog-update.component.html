@@ -5,6 +5,7 @@
       <div class="form-group pb-3">
         <input *ngIf="isAdd || selectedLanguage == 'DE'" value="DE" [class]="'btn udq-language-button ' + (selectedLanguage == 'DE' ? 'disabled btn-outline-light' : 'btn-outline-secondary')" (click)="switchLanguage('DE')">
         <input *ngIf="isAdd || selectedLanguage == 'EN'" value="EN" [class]="'btn udq-language-button ' + (selectedLanguage == 'EN' ? 'disabled btn-outline-light' : 'btn-outline-secondary')" (click)="switchLanguage('EN')">
+        <input *ngIf="isAdd || selectedLanguage == 'FR'" value="FR" [class]="'btn udq-language-button ' + (selectedLanguage == 'FR' ? 'disabled btn-outline-light' : 'btn-outline-secondary')" (click)="switchLanguage('FR')">
       </div>
     </div>
 
@@ -26,6 +27,7 @@
         <label class="form-label"><i class="bi bi-incognito"></i> Keyword ({{ selectedLanguage }})</label><br>
         <input type="text" name="key" formControlName="keyDe" [class]="'p-element p-inputwrapper p-inputtext ' + 'd-' + (selectedLanguage == 'DE' ? 'inline' : 'none')" [style]="{ 'min-width': '250px'}" />
         <input type="text" name="key" formControlName="keyEn" [class]="'p-element p-inputwrapper p-inputtext ' + 'd-' + (selectedLanguage == 'EN' ? 'inline' : 'none')" [style]="{ 'min-width': '250px'}" />
+        <input type="text" name="key" formControlName="keyFr" [class]="'p-element p-inputwrapper p-inputtext ' + 'd-' + (selectedLanguage == 'FR' ? 'inline' : 'none')" [style]="{ 'min-width': '250px'}" />
       </div>
     </div>
 
@@ -38,32 +40,18 @@
     class="alert alert-danger">
       Keyword (En) need to be one word.
     </div>
+    <div *ngIf="keywordFr != null && keywordFr.value != null && (keywordFr.dirty || keywordFr.touched) && keywordFr.value.includes(' ')"
+    class="alert alert-danger">
+      Keyword (Fr) need to be one word.
+    </div>
 
     <!-- Answer-->
-    <div class="d-flex justify-content-center pt-2">
-      <div class="form-group pb-3" translate="no">
-        <label class="form-label"><i class="bi bi-journal-plus"></i> Answer ({{ selectedLanguage }}) <i class="bi bi-question-circle-fill mx-1 h5" ngbTooltip="Markdown can be used for formatting."></i></label>
-      </div>
-    </div>
-    <div class="d-flex justify-content-center pt-2">
-      <div class="form-group pb-3" class="d-inline">
-        <textarea rows="8"cols="28" pInputTextarea name="answer" formControlName="answerDe"
-        [class]="'p-element p-inputwrapper p-inputtext ' + 'd-' + (selectedLanguage == 'DE' ? 'inline' : 'none')" maxlength="5000"></textarea>
-        <textarea rows="8"cols="28" pInputTextarea name="answer" formControlName="answerEn"
-        [class]="'p-element p-inputwrapper p-inputtext ' + 'd-' + (selectedLanguage == 'EN' ? 'inline' : 'none')" maxlength="5000"></textarea>
-      </div>
-    </div>
-    <p-divider />
-
-    <div class="d-flex justify-content-center pt-2" translate="no">
-      <label class="form-label"><i class="bi bi-camera-fill"></i> Preview ({{ selectedLanguage }}) <i class="bi bi-question-circle-fill mx-1 h5" ngbTooltip="Styles can be a bit different in Universe Dawn, be aware of that."></i></label><br>
-    </div>
-    <div class="d-flex justify-content-center pt-1" [class]="'d-' + (selectedLanguage == 'DE' ? 'inline' : 'none')">
-      <markdown class="sr-markdown" [data]="stepDialogForm.value.answerDe" translate="no"></markdown>
-    </div>
-    <div class="d-flex justify-content-center pt-1" [class]="'d-' + (selectedLanguage == 'EN' ? 'inline' : 'none')">
-      <markdown class="sr-markdown" [data]="stepDialogForm.value.answerEn" translate="no"></markdown>
-    </div>
+    <app-quest-markdown-editor
+      title="Dialog Answer"
+      [(selectedLanguage)]="selectedLanguage"
+      [(dataDe)]="answerDe"
+      [(dataEn)]="answerEn"
+      [(dataFr)]="answerFr"></app-quest-markdown-editor>
 
     <p-divider />
 

@@ -44,10 +44,10 @@ export class QuestGeneratorNpcGalaxyViewComponent {
       }
     },
     {
-      x: [441, 136, 251, 175, 428, 323],
-      y: [160, 459, 175, 359, 385, 375],
-      z: [410, 361, 298, 183, 182, 404],
-      text: ['Kashou Doori', 'Nucleus Prime', 'Shin-Yamar', 'Sol Nigra', 'Un Queran Linh', 'Wega II'],
+      x: [138, 138, 362, 362, 300],
+      y: [138, 418, 490, 110, 300],
+      z: [44, 53, 42, 53, 50],
+      text: ['Freuth', 'Golgatha IV', 'Kashou Doori', 'Merchant Sol', 'Trademania'],
       type: 'scatter3d',
       name: '',
       mode: 'text+markers',

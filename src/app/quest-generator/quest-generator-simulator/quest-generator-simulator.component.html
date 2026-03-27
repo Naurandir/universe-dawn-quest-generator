@@ -63,7 +63,8 @@
       No Answer exists for your message. Try another word.
     </div>
     <div *ngIf="foundKeyWord" class="text-center pt-1 text-success fst-italic h6">
-      Congratulations!<br>You finished this step! Proceed to the next one.
+      Congratulations!<br>You finished this step! Proceed to the next one.<br>
+      You receive {{ selectedStep!.rewards?.length }} reward(s) for this step. (Details see step)
     </div>
 
     <div *ngFor="let chatEntry of chatHistory" class="d-flex justify-content-center pt-2">
@@ -95,7 +96,8 @@
       It seems the amount is not correct, please try another number.
     </div>
     <div *ngIf="creditsCorrect != undefined && creditsCorrect" class="text-center pt-1 text-success fst-italic h6">
-      Congratulations!<br>You finished this step! Proceed to the next one.
+      Congratulations!<br>You finished this step! Proceed to the next one.<br>
+      You receive {{ selectedStep!.rewards?.length }} reward(s) for this step. (Details see step)
     </div>
     <div class="d-flex justify-content-center pt-2" translate="no">
       <label class="form-label"><i class="bi bi-chat-dots-fill"></i> Last Notification ({{ selectedLanguage }})</label><br>

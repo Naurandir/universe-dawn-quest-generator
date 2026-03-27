@@ -3,6 +3,12 @@
 
 :root {
 
+  font-family: "Inter var", sans-serif;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  font-variation-settings: normal;
+  --font-family: "Inter var", sans-serif;
+  --font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+
   --bs-body-font-family: var(--font-family);
 
   --bs-body-bg: #112227;
@@ -208,6 +214,11 @@ body, .dropdown-menu, .btn, .p-component, .p-inputtext {
   width: 35px;
   padding-right: 3px;
   border-radius: 25%;
+}
+
+.udq-version {
+  font-size: 12px;
+  color: #5b6777;
 }
 
 .sr-panel-distance {

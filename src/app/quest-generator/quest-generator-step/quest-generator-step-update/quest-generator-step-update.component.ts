@@ -1,5 +1,5 @@
 import { TranslationService } from './../../../shared/translation/translation.service';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, model, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ELocalisation, IQuest, IQuestPrepareNpcs, IQuestStep, IQuestSteps, IQuestTaskDialogue, IQuestTaskTransactCredits } from '../../quest-ud.model';
@@ -19,11 +19,13 @@ import { QuestGeneratorService } from '../../quest-generator.service';
 import { PositionInputComponent } from "../../../shared/position-input/position-input.component";
 import { forkJoin } from 'rxjs';
 import { LoadingActionService } from '../../../shared/loading-action/loading-action.service';
+import { CoordinatesNormalisedPipe } from '../../../shared/coordinates-normalised.pipe';
+import { QuestMarkdownEditorComponent } from "../../../shared/quest-markdown-editor/quest-markdown-editor.component";
 
 @Component({
     selector: 'app-quest-generator-step-update',
     imports: [CommonModule, NgbModule, MarkdownModule, FormsModule, ReactiveFormsModule, DialogModule, SelectModule,
-        InputNumberModule, DividerModule, PositionInputComponent],
+    InputNumberModule, DividerModule, PositionInputComponent, QuestMarkdownEditorComponent],
     templateUrl: './quest-generator-step-update.component.html',
     styleUrl: './quest-generator-step-update.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -37,15 +39,17 @@ export class QuestGeneratorStepUpdateComponent {
 
   visible: boolean = false;
   isAdd: boolean = false;
-  selectedLanguage: 'DE' | 'EN' = 'DE';
+  selectedLanguage: 'DE' | 'EN' | 'FR' = 'DE';
   stepTypes: string[] = ['transactCredits', 'dialogue'];
   stepNpcTypes: string[] = ['fullNpc', 'coordinatesOnly'];
+
+  stepNotificationDe = model<string>('');
+  stepNotificationEn = model<string>('');
+  stepNotificationFr = model<string>('');
 
   stepForm: FormGroup = new FormGroup({
     stepType: new FormControl("", [Validators.required]),
     stepNextPossibleSteps: new FormControl([]),
-    stepNotificationDe: new FormControl("", [Validators.required]),
-    stepNotificationEn: new FormControl(""),
 
     stepNpcType: new FormControl("fullNpc"),
     stepChosendNpc: new FormControl(""),
@@ -55,9 +59,10 @@ export class QuestGeneratorStepUpdateComponent {
 
     stepDialogCorrectWordDe: new FormControl(""),
     stepDialogCorrectWordEn: new FormControl(""),
+    stepDialogCorrectWordFr: new FormControl("")
   });
 
-  constructor(private questGeneratorService: QuestGeneratorService, private toasterService: ToasterService,
+  constructor(private questGeneratorService: QuestGeneratorService, private toasterService: ToasterService, private coordinatesNormalisedPipe: CoordinatesNormalisedPipe,
     private loadingActionService: LoadingActionService, private translationService: TranslationService, private changeDedector: ChangeDetectorRef) {
 
   }
@@ -73,23 +78,27 @@ export class QuestGeneratorStepUpdateComponent {
     if(step != null && step.task.type == "transactCredits") {
       this.stepForm.patchValue({
         stepType: "transactCredits",
-        stepNotificationDe: step.notification.de.customText,
-        stepNotificationEn: step.notification.en?.customText,
         stepChosendNpc: this.questGeneratorService.getNpcByRulerName(this.currentQuest.prepareNpcs, step.task.rulerName),
         stepTransactCreditsAmount: step.task.amount,
       });
+      this.stepNotificationDe.set(step.notification.de.customText);
+      this.stepNotificationEn.set(step.notification.en?.customText == undefined ? "" : step.notification.en.customText);
+      this.stepNotificationFr.set(step.notification.fr?.customText == undefined ? "" : step.notification.fr.customText);
+
     } else if (step != null && step.task.type == "dialogue") {
       let setpNpc = this.questGeneratorService.getNpcByCoordinates(this.currentQuest.prepareNpcs, step.task.coordinates);
       this.stepForm.patchValue({
         stepType: "dialogue",
-        stepNotificationDe: step.notification.de.customText,
-        stepNotificationEn: step.notification.en?.customText,
         stepNpcType: setpNpc != null ? "fullNpc" : "coordinatesOnly",
         stepChosendNpc: setpNpc,
-        stepCoordinates: step.task.coordinates.x + "-" + step.task.coordinates.y + "-" + step.task.coordinates.z,
+        stepCoordinates: this.coordinatesNormalisedPipe.transform(step.task.coordinates),
         stepDialogCorrectWordDe: step.task.correctDialogueWord[ELocalisation.de],
-        stepDialogCorrectWordEn: step.task.correctDialogueWord[ELocalisation.en]
+        stepDialogCorrectWordEn: step.task.correctDialogueWord[ELocalisation.en],
+        stepDialogCorrectWordFr: step.task.correctDialogueWord[ELocalisation.fr]
       });
+      this.stepNotificationDe.set(step.notification.de.customText);
+      this.stepNotificationEn.set(step.notification.en?.customText == undefined ? "" : step.notification.en.customText);
+      this.stepNotificationFr.set(step.notification.fr?.customText == undefined ? "" : step.notification.fr.customText);
 
       if(this.stepForm.value.stepChosendNpc != null) {
         this.stepForm.patchValue({
@@ -159,10 +168,12 @@ export class QuestGeneratorStepUpdateComponent {
       newStep = this.questGeneratorService.createStep(
         normalizedStepId,
         this.stepForm.value.stepType,
-        this.stepForm.value.stepNotificationDe,
-        this.stepForm.value.stepNotificationEn,
+        this.stepNotificationDe(),
+        this.stepNotificationEn(),
+        this.stepNotificationFr(),
         this.stepForm.value.stepTransactCreditsAmount as number,
         this.stepForm.value.stepChosendNpc.rulerName,
+        null,
         null,
         null,
         null
@@ -170,18 +181,19 @@ export class QuestGeneratorStepUpdateComponent {
       this.currentQuestStep = newStep;
     } else {
       let coordinates: string = this.stepForm.value.stepChosendNpc != null && this.stepForm.value.stepNpcType == 'fullNpc' ?
-        this.stepForm.value.stepChosendNpc.planet.coordinates.x + "-" + this.stepForm.value.stepChosendNpc.planet.coordinates.y + "-" + this.stepForm.value.stepChosendNpc.planet.coordinates.z :
-        this.stepForm.value.stepCoordinates;
+        (this.coordinatesNormalisedPipe.transform(this.stepForm.value.stepChosendNpc.planet.coordinates)) : this.stepForm.value.stepCoordinates;
       newStep = this.questGeneratorService.createStep(
         normalizedStepId,
         this.stepForm.value.stepType,
-        this.stepForm.value.stepNotificationDe,
-        this.stepForm.value.stepNotificationEn,
+        this.stepNotificationDe(),
+        this.stepNotificationEn(),
+        this.stepNotificationFr(),
         null,
         null,
         coordinates,
         this.stepForm.value.stepDialogCorrectWordDe.toLowerCase(),
-        this.stepForm.value.stepDialogCorrectWordEn.toLowerCase()
+        this.stepForm.value.stepDialogCorrectWordEn.toLowerCase(),
+        this.stepForm.value.stepDialogCorrectWordFr.toLowerCase()
       );
     }
 
@@ -192,13 +204,19 @@ export class QuestGeneratorStepUpdateComponent {
     // general data
     questStep.notification = {
       de: {
-        customText: this.stepForm.value.stepNotificationDe,
+        customText: this.stepNotificationDe(),
         variables: {}
       }
     };
-    if (this.stepForm.value.stepNotificationEn != null) {
+    if (this.stepNotificationEn() != null) {
       questStep.notification.en = {
-        customText: this.stepForm.value.stepNotificationEn,
+        customText: this.stepNotificationEn(),
+        variables: {}
+      };
+    }
+    if (this.stepNotificationFr() != null) {
+      questStep.notification.fr = {
+        customText: this.stepNotificationFr(),
         variables: {}
       };
     }
@@ -212,9 +230,10 @@ export class QuestGeneratorStepUpdateComponent {
       return;
     } else if (questType == "dialogue" && questStep.task.type != "dialogue") {
       questStep.task = this.questGeneratorService.createQuestTaskDialog(
-        this.stepForm.value.stepChosendNpc.planet.coordinates.x + "-" + this.stepForm.value.stepChosendNpc.planet.coordinates.y + "-" + this.stepForm.value.stepChosendNpc.planet.coordinates.z,
+        this.coordinatesNormalisedPipe.transform(this.stepForm.value.stepChosendNpc.planet.coordinates),
         this.stepForm.value.stepDialogCorrectWordDe.toLowerCase(),
-        this.stepForm.value.stepDialogCorrectWordEn.toLowerCase()
+        this.stepForm.value.stepDialogCorrectWordEn.toLowerCase(),
+        this.stepForm.value.stepDialogCorrectWordFr.toLowerCase()
       );
       return;
     }
@@ -230,7 +249,8 @@ export class QuestGeneratorStepUpdateComponent {
 
       task.correctDialogueWord = {
         [ELocalisation.de]: this.stepForm.value.stepDialogCorrectWordDe.toLowerCase(),
-        [ELocalisation.en]: this.stepForm.value.stepDialogCorrectWordEn.toLowerCase()
+        [ELocalisation.en]: this.stepForm.value.stepDialogCorrectWordEn.toLowerCase(),
+        [ELocalisation.fr]: this.stepForm.value.stepDialogCorrectWordFr.toLowerCase()
       };
 
       if (this.stepForm.value.stepNpcType == "fullNpc") {
@@ -277,7 +297,7 @@ export class QuestGeneratorStepUpdateComponent {
     return this.stepForm.get('stepDialogCorrectWordEn');
   }
 
-  switchLanguage(language: 'DE' | 'EN') {
+  switchLanguage(language: 'DE' | 'EN' | 'FR') {
     this.selectedLanguage = language;
   }
 
@@ -285,9 +305,9 @@ export class QuestGeneratorStepUpdateComponent {
     let currentLanguage = this.selectedLanguage;
     let type = this.stepForm.value.stepType;
     let keywordText = currentLanguage == 'DE' ? this.stepForm.value.stepDialogCorrectWordEn : this.stepForm.value.stepDialogCorrectWordDe;
-    let notificationText = currentLanguage == 'DE' ? this.stepForm.value.stepNotificationEn : this.stepForm.value.stepNotificationDe;
+    let notificationText = currentLanguage == 'DE' ? this.stepNotificationEn() : this.stepNotificationDe();
     let languageFrom: 'de' | 'en' = currentLanguage == 'DE' ? 'en' : 'de';
-    let languageTo: 'de' | 'en' = currentLanguage == 'DE' ? 'de' : 'en'
+    let languageTo: string = currentLanguage.toLocaleLowerCase();
 
     if (notificationText == null || notificationText == "" || type == "dialogue" && (keywordText == null || keywordText == "")) {
       this.toasterService.warn("Translation","Translation requires non empty input for title and notification.");
@@ -295,24 +315,22 @@ export class QuestGeneratorStepUpdateComponent {
     }
 
     let calls = [
-      this.translationService.translate(languageFrom, languageTo, notificationText)
+      this.translationService.translateServerCall(languageFrom, languageTo, notificationText)
     ];
 
     if (type == "dialogue") {
-      calls.push(this.translationService.translate(languageFrom, languageTo, keywordText));
+      calls.push(this.translationService.translateServerCall(languageFrom, languageTo, keywordText));
     }
 
     this.loadingActionService.showLoadingActionWithMessage("translation ongoing...");
     forkJoin(calls).subscribe({
       next: (response) => {
         if (currentLanguage == 'DE') {
-          this.stepForm.patchValue({
-            stepNotificationDe: response[0]
-          });
+          this.stepNotificationDe.set(response[0]);
+        }else if (currentLanguage == 'EN') {
+          this.stepNotificationEn.set(response[0]);
         } else {
-          this.stepForm.patchValue({
-            stepNotificationEn: response[0]
-          });
+          this.stepNotificationFr.set(response[0]);
         }
 
         if (type == "dialogue" && currentLanguage == 'DE') {
@@ -322,6 +340,10 @@ export class QuestGeneratorStepUpdateComponent {
         } else if (type == "dialogue" && currentLanguage == 'EN') {
           this.stepForm.patchValue({
             stepDialogCorrectWordEn: response[1]
+          });
+        } else if (type == "dialogue" && currentLanguage == 'FR') {
+          this.stepForm.patchValue({
+            stepDialogCorrectWordFr: response[1]
           });
         }
         this.toasterService.success("Translation",`Translation to ${languageTo.toUpperCase()} worked.`);
@@ -346,7 +368,8 @@ export class QuestGeneratorStepUpdateComponent {
       stepChosendNpc: null,
       stepCoordinates: "",
       stepDialogCorrectWordDe: "",
-      stepDialogCorrectWordEn: ""
+      stepDialogCorrectWordEn: "",
+      stepDialogCorrectWordFr: ""
     });
   }
 }

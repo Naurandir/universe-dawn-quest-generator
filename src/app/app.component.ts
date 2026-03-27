@@ -9,6 +9,7 @@ import { ToasterComponent } from "./shared/toaster/toaster.component";
 import { CoordinatesNormalisedPipe } from './shared/coordinates-normalised.pipe';
 import { LoadingActionComponent } from "./shared/loading-action/loading-action.component";
 import { QuestGeneratorComponent } from "./quest-generator/quest-generator.component";
+import { environment } from '../environments/environment';
 
 @Component({
     selector: 'app-root',
@@ -23,10 +24,11 @@ export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild(LoadingActionComponent) loadingAction!: LoadingActionComponent;
   @ViewChild('navbarTogglerButton') navbarToggler!: ElementRef;
 
+  public buildVersion: string = '';
   public isFinished: boolean = false;
 
   constructor(public toasterService: ToasterService, public loadingActionService: LoadingActionService) {
-
+    this.buildVersion = environment.version;
   }
 
   public async ngOnInit() {

@@ -99,6 +99,7 @@ export interface IQuestStep {
 export interface IQuestNotificationAllLang {
   de: IQuestNotification
   en?: IQuestNotification
+  fr?: IQuestNotification
 }
 
 export interface IQuestNotification {
@@ -396,11 +397,13 @@ export type TResources = [
 export interface ILocalizedData<T> {
 	[ELocalisation.en]: T
 	[ELocalisation.de]: T
+  [ELocalisation.fr]: T
 }
 
 export enum ELocalisation {
   en = "en",
-  de = "de"
+  de = "de",
+  fr = "fr"
 }
 
 export interface ILocaleStringMap extends ILocalizedData<string> {}

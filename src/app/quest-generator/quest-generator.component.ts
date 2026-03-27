@@ -3,7 +3,7 @@ import { ELocalisation, IQuest, IQuestStep } from './quest-ud.model';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { LocalStorageServiceService } from '../shared/local-storage-service.service';
+import { LocalStorageService } from '../shared/local-storage-service.service';
 import { ConfirmationService } from 'primeng/api';
 import { LoadingActionService } from '../shared/loading-action/loading-action.service';
 import { ToasterService } from '../shared/toaster/toaster.service';
@@ -30,20 +30,24 @@ import { QuestGeneratorStepOverviewComponent } from "./quest-generator-step-over
 import { QuestStepsArrayPipe } from "./quest-steps-array.pipe";
 import { QuestGeneratorSimulatorComponent } from './quest-generator-simulator/quest-generator-simulator.component';
 
+import demoQuestData from '../../assets/demo-quest.json';
+import { TranslationConfigComponent } from "../shared/translation/translation-config/translation-config.component";
+
 @Component({
     selector: 'app-quest-generator',
     imports: [
-        CommonModule, TableModule, PanelModule, TabViewModule, ConfirmDialogModule, SelectModule, DividerModule,
-        FormsModule, ReactiveFormsModule, MarkdownModule, QuestGeneratorGeneralUpdateComponent, QuestGeneratorStepUpdateComponent,
-        QuestGeneratorStepComponent,
-        QuestGeneratorConditionComponent,
-        QuestGeneratorNpcComponent,
-        QuestGeneratorStepDialogUpdateComponent,
-        QuestGeneratorStepRewardUpdateComponent,
-        QuestGeneratorStepOverviewComponent,
-        QuestStepsArrayPipe,
-        QuestGeneratorSimulatorComponent
-    ],
+    CommonModule, TableModule, PanelModule, TabViewModule, ConfirmDialogModule, SelectModule, DividerModule,
+    FormsModule, ReactiveFormsModule, MarkdownModule, QuestGeneratorGeneralUpdateComponent, QuestGeneratorStepUpdateComponent,
+    QuestGeneratorStepComponent,
+    QuestGeneratorConditionComponent,
+    QuestGeneratorNpcComponent,
+    QuestGeneratorStepDialogUpdateComponent,
+    QuestGeneratorStepRewardUpdateComponent,
+    QuestGeneratorStepOverviewComponent,
+    QuestStepsArrayPipe,
+    QuestGeneratorSimulatorComponent,
+    TranslationConfigComponent
+],
     providers: [ConfirmationService],
     templateUrl: './quest-generator.component.html',
     styleUrl: './quest-generator.component.css',
@@ -62,13 +66,18 @@ export class QuestGeneratorComponent implements OnInit {
   @ViewChild('questGeneratorStepDialogUpdateDialog') questGeneratorStepDialogUpdateDialog?: QuestGeneratorStepDialogUpdateComponent;
   @ViewChild('questGeneratorStepRewardUpdateComponent') questGeneratorStepRewardUpdateComponent?: QuestGeneratorStepRewardUpdateComponent
 
+  @ViewChild('translationConfigComponent') translationConfigComponent?: TranslationConfigComponent;
+
   @ViewChildren(QuestGeneratorStepComponent) questGeneratorStepComponentList?: QueryList<QuestGeneratorStepComponent>;
+
+  demoQuestData = demoQuestData;
+  demoQuest: IQuest;
 
   headerCollapsed: boolean = false;
 
   quests: IQuest[] = [];
   selectedQuest: IQuest | undefined;
-  selectedLanguage: 'DE' | 'EN' = 'DE';
+  selectedLanguage: 'DE' | 'EN' | 'FR' = 'DE';
 
   jsonDownloadUrl: SafeUrl = "";
   jsonDownloadFilename: string = "";
@@ -76,9 +85,9 @@ export class QuestGeneratorComponent implements OnInit {
   de = ELocalisation.de;
   en = ELocalisation.en;
 
-  constructor(private questGeneratorService: QuestGeneratorService, private confirmationService: ConfirmationService, private localStorageServiceService: LocalStorageServiceService,
+  constructor(private questGeneratorService: QuestGeneratorService, private confirmationService: ConfirmationService, private localStorageService: LocalStorageService,
     private loadingActionService: LoadingActionService, private toasterService: ToasterService, private changeDedector: ChangeDetectorRef, private sanitizer: DomSanitizer) {
-
+      this.demoQuest = JSON.parse(JSON.stringify(this.demoQuestData));
   }
 
   ngOnInit(): void {
@@ -153,13 +162,13 @@ export class QuestGeneratorComponent implements OnInit {
   // Data Methods for loading and saving and clear
   saveQuests() {
     let questsString = JSON.stringify(this.quests);
-    this.localStorageServiceService.setItem("quest-generator", "quests", questsString);
+    this.localStorageService.setItem("quest-generator", "quests", questsString);
     this.changeDedector.detectChanges();
   }
 
   loadQuests() {
     try {
-      let questsString: string | null = this.localStorageServiceService.getItem("quest-generator", "quests");
+      let questsString: string | null = this.localStorageService.getItem("quest-generator", "quests");
 
       if (questsString != null) {
         this.quests = JSON.parse(questsString);
@@ -189,7 +198,7 @@ export class QuestGeneratorComponent implements OnInit {
   }
 
   clearQuestsConfirmation() {
-    this.localStorageServiceService.removeItem("quest-generator", "quests");
+    this.localStorageService.removeItem("quest-generator", "quests");
     this.quests = [];
     this.selectedQuest = undefined;
     this.changeDedector.detectChanges();
@@ -238,7 +247,7 @@ export class QuestGeneratorComponent implements OnInit {
       () => {
         // this will then display a text file
         fileText = fileReader.result as string;
-        this.importQuestFromFile(fileText);
+        this.importQuestFromFile(JSON.parse(fileText));
         this.questImportInput!.nativeElement.value = null;
       },
       false
@@ -247,8 +256,11 @@ export class QuestGeneratorComponent implements OnInit {
     fileReader.readAsText(selectedFile);
   }
 
-  importQuestFromFile(fileText: string) {
-    let importQuest: IQuest = JSON.parse(fileText);
+  createDemoQuest() {
+    this.importQuestFromFile(this.demoQuest);
+  }
+
+  importQuestFromFile(importQuest: IQuest) {
     importQuest._id = 'quest-' + (1000000 + Math.floor(Math.random() * 1000000));
 
     let titleExists: number = this.quests.filter(q => q.name.de.includes(importQuest.name.de)).length;
@@ -267,7 +279,7 @@ export class QuestGeneratorComponent implements OnInit {
     this.toasterService.success("Import Quest", "Quest Imported");
   }
 
-  switchLanguage(language: 'DE' | 'EN') {
+  switchLanguage(language: 'DE' | 'EN' | 'FR') {
     this.selectedLanguage = language;
     this.changeDedector.detectChanges();
   }
@@ -322,5 +334,10 @@ export class QuestGeneratorComponent implements OnInit {
 
     this.saveQuests();
     this.changeDedector.detectChanges();
+  }
+
+  // API Key
+  setTranslationKey() {
+    this.translationConfigComponent?.showConfigDialog();
   }
 }

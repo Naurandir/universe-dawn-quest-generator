@@ -13,8 +13,10 @@ export class QuestGeneratorService {
       _id: 'quest-' + (1000000 + Math.floor(Math.random() * 1000000)),
       conditions: [],
       name: {
-        [ELocalisation.de]: 'New Quest',
-        [ELocalisation.en]: 'New Quest'
+        [ELocalisation.de]: 'Neue Quest',
+        [ELocalisation.en]: 'New Quest',
+        [ELocalisation.fr]: 'Nouvelle quête'
+
       },
       createdAt: new Date(),
       notification: {
@@ -35,9 +37,9 @@ export class QuestGeneratorService {
     return newQuest;
   }
 
-  createStep(stepId: string, stepType: 'transactCredits' | 'dialogue', stepNotificationDe: string, stepNotificationEn: string | null,
-    transactCreditsAmount: number | null, transactCreditsRuler: string | null,
-    coordinates: string | null, dialogCorrectWordDe: string | null, dialogCorrectWordEn: string | null): IQuestStep {
+  createStep(stepId: string, stepType: 'transactCredits' | 'dialogue', stepNotificationDe: string, stepNotificationEn: string | null, stepNotificationFr: string | null,
+    transactCreditsAmount: number | null, transactCreditsRuler: string | null, coordinates: string | null,
+    dialogCorrectWordDe: string | null, dialogCorrectWordEn: string | null, dialogCorrectWordFr: string | null): IQuestStep {
       let questStep: IQuestStep = {
         id: stepId,
         nextPossibleSteps: [],
@@ -47,13 +49,20 @@ export class QuestGeneratorService {
             variables: {}
           }
         },
-        task: this.createQuestTask(stepType, transactCreditsAmount, transactCreditsRuler, coordinates, dialogCorrectWordDe, dialogCorrectWordEn),
+        task: this.createQuestTask(stepType, transactCreditsAmount, transactCreditsRuler, coordinates, dialogCorrectWordDe, dialogCorrectWordEn, dialogCorrectWordFr),
         rewards: []
       };
 
       if (stepNotificationEn != null) {
         questStep.notification.en = {
           customText: stepNotificationEn,
+          variables: {}
+        };
+      }
+
+      if (stepNotificationFr != null) {
+        questStep.notification.fr = {
+          customText: stepNotificationFr,
           variables: {}
         };
       }
@@ -164,12 +173,12 @@ export class QuestGeneratorService {
   }
 
   createQuestTask(stepType: 'transactCredits' | 'dialogue',
-    transactCreditsAmount: number | null, transactCreditsRuler: string | null,
-    coordinates: string | null, dialogCorrectWordDe: string | null, dialogCorrectWordEn: string | null): TQuestTask {
+    transactCreditsAmount: number | null, transactCreditsRuler: string | null, coordinates: string | null,
+    dialogCorrectWordDe: string | null, dialogCorrectWordEn: string | null, dialogCorrectWordFr: string | null): TQuestTask {
       if (stepType == 'transactCredits') {
         return this.createQuestTaskTransactCredits(transactCreditsAmount!, transactCreditsRuler!);
       } else {
-        return this.createQuestTaskDialog(coordinates!, dialogCorrectWordDe!, dialogCorrectWordEn!);
+        return this.createQuestTaskDialog(coordinates!, dialogCorrectWordDe!, dialogCorrectWordEn!, dialogCorrectWordFr!);
       }
   }
 
@@ -183,7 +192,7 @@ export class QuestGeneratorService {
     return questTask;
   }
 
-  createQuestTaskDialog(coordinates: string, dialogCorrectWordDe: string, dialogCorrectWordEn: string): IQuestTaskDialogue {
+  createQuestTaskDialog(coordinates: string, dialogCorrectWordDe: string, dialogCorrectWordEn: string, dialogCorrectWordFr: string): IQuestTaskDialogue {
     let coordinatesSplit: string[] = coordinates.split("-");
     let questTask: IQuestTaskDialogue = {
       coordinates: {
@@ -193,11 +202,13 @@ export class QuestGeneratorService {
       },
       correctDialogueWord: {
         [ELocalisation.de]: dialogCorrectWordDe,
-        [ELocalisation.en]: dialogCorrectWordEn
+        [ELocalisation.en]: dialogCorrectWordEn,
+        [ELocalisation.fr]: dialogCorrectWordFr,
       },
       dialogues: {
         [ELocalisation.de]: {},
-        [ELocalisation.en]: {}
+        [ELocalisation.en]: {},
+        [ELocalisation.fr]: {}
       },
       type: ETaskType.dialogue
     };
@@ -205,30 +216,57 @@ export class QuestGeneratorService {
     return questTask;
   }
 
-  addQuestDialog(keyDe: string, keyEn: string, valueDe: string, valueEn: string, questTask: IQuestTaskDialogue) {
+  addQuestDialog(keyDe: string, keyEn: string, keyFr: string, valueDe: string, valueEn: string, valueFr: string, questTask: IQuestTaskDialogue) {
     questTask.dialogues[ELocalisation.de][keyDe] = valueDe;
     questTask.dialogues[ELocalisation.en][keyEn] = valueEn;
+    questTask.dialogues[ELocalisation.fr][keyFr] = valueFr;
   }
 
-  updateQuestDialog(originalKey: string, newKey: string, newValue: string, selectedLanguage: 'DE' | 'EN',
+  updateQuestDialog(originalKey: string, newKey: string, newValue: string, selectedLanguage: 'DE' | 'EN' | 'FR',
       questTask: IQuestTaskDialogue) {
 
     let localisation: ELocalisation = ELocalisation.de;
     if (selectedLanguage == 'EN') {
       localisation = ELocalisation.en;
+    } else if (selectedLanguage == 'FR') {
+      localisation = ELocalisation.fr;
     }
-
 
     if (originalKey != newKey) {
-      delete questTask.dialogues[localisation][originalKey];
+      try {
+        delete questTask.dialogues[localisation][originalKey];
+      } catch(e) {
+        console.warn(e);
+        console.warn("cannot delete specific dialogue option, maybe localisation or key is already gone");
+      }
     }
 
-    questTask.dialogues[localisation][newKey] = newValue;
+    try {
+      questTask.dialogues[localisation][newKey] = newValue;
+    } catch(e) {
+      console.warn(e);
+      console.warn("cannot update specific dialogue as maybe localisation or key already gone, try adding");
+      if (questTask.dialogues[localisation] == undefined) {
+        questTask.dialogues[localisation] = {};
+      }
+      questTask.dialogues[localisation][newKey] = newValue;
+    }
   }
 
-  deleteQuestDialog(key: string, selectedLanguage: 'DE' | 'EN', questTask: IQuestTaskDialogue) {
-    let localisation: ELocalisation = selectedLanguage == 'DE' ? ELocalisation.de : ELocalisation.en;
-    delete questTask.dialogues[localisation][key];
+  deleteQuestDialog(key: string, selectedLanguage: 'DE' | 'EN' | 'FR', questTask: IQuestTaskDialogue) {
+    let localisation: ELocalisation = ELocalisation.de;
+    if (selectedLanguage == 'EN') {
+      localisation = ELocalisation.en;
+    } else if (selectedLanguage == 'FR') {
+      localisation = ELocalisation.fr;
+    }
+
+    try {
+      delete questTask.dialogues[localisation][key];
+    } catch(e) {
+      console.warn(e);
+      console.warn("cannot delete dialogue option with given key, ignoring", key);
+    }
   }
 
   createQuestStepRewardLicense(componentType: EComponentType, componentId: string, numberOfLicenses: number): IReturnRewardGiveLicense {

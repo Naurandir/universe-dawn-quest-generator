@@ -1,0 +1,63 @@
+<!-- Editor Box  -->
+<div class="d-flex justify-content-center pt-2">
+  <div class="form-group">
+    <label class="form-label"><i class="bi bi-journal-plus"></i> {{ title }} ({{ selectedLanguage() }}) <i
+        class="bi bi-question-circle-fill mx-1 h5" ngbTooltip="Markdown can be used for formatting."></i></label>
+  </div>
+</div>
+<div class="d-flex justify-content-center pt-2">
+  <div class="mb-2">
+    <button type="button" class="btn btn-sm btn-outline-secondary btn-outline-light me-1"
+        (click)="applyMarkdown('bold')" ngbTooltip="Bold Font">
+      <i class="bi bi-type-bold"></i>
+    </button>
+    <button type="button" class="btn btn-sm btn-outline-secondary btn-outline-light me-1"
+        (click)="applyMarkdown('italic')" ngbTooltip="Italic Font">
+      <i class="bi bi-type-italic"></i>
+    </button>
+    <button type="button" class="btn btn-sm btn-outline-secondary btn-outline-light me-1"
+        (click)="applyMarkdown('image')" ngbTooltip="Add Image">
+      <i class="bi bi-image"></i>
+    </button>
+    <button type="button" class="btn btn-sm btn-outline-secondary btn-outline-light me-1"
+        (click)="applyMarkdown('list')" ngbTooltip="Start List">
+      <i class="bi bi-list-ul"></i>
+    </button>
+    <button type="button" class="btn btn-sm btn-outline-secondary btn-outline-light me-1"
+        (click)="applyMarkdown('link')" ngbTooltip="Add Link">
+      <i class="bi bi-link-45deg"></i>
+    </button>
+    <button type="button" class="btn btn-sm btn-outline-secondary btn-outline-light"
+        (click)="applyMarkdown('newline')" ngbTooltip="Add New Line">
+      <i class="bi bi-arrow-return-left"></i>
+    </button>
+  </div>
+</div>
+<div class="d-flex justify-content-center pt-2">
+  <div class="form-group pb-3" [class]="'d-' + (selectedLanguage() == 'DE' ? 'inline' : 'none')">
+    <textarea #inputTextareaDe rows="8" cols="28" pInputTextarea name="dataDe" [value]="dataDe()"
+      (input)="dataDe.set(inputTextareaDe.value)" class="p-element p-inputwrapper p-inputtext"
+      maxlength="5000"></textarea>
+  </div>
+  <div class="form-group pb-3" [class]="'d-' + (selectedLanguage() == 'EN' ? 'inline' : 'none')">
+    <textarea #inputTextareaEn rows="8" cols="28" pInputTextarea name="dataEn" [value]="dataEn()"
+      (input)="dataEn.set(inputTextareaEn.value)" class="p-element p-inputwrapper p-inputtext"
+      maxlength="5000"></textarea>
+  </div>
+  <div class="form-group pb-3" [class]="'d-' + (selectedLanguage() == 'FR' ? 'inline' : 'none')">
+    <textarea #inputTextareaFr rows="8" cols="28" pInputTextarea name="dataFr" [value]="dataFr()"
+      (input)="dataFr.set(inputTextareaFr.value)" class="p-element p-inputwrapper p-inputtext"
+      maxlength="5000"></textarea>
+  </div>
+</div>
+
+<!-- Preview -->
+<div class="d-flex justify-content-center pt-2">
+  <label class="form-label"><i class="bi bi-camera-fill"></i> Preview ({{ selectedLanguage() }}) <i
+      class="bi bi-question-circle-fill mx-1 h5"
+      ngbTooltip="Styles can be a bit different in Universe Dawn, be aware of that."></i></label><br>
+</div>
+<div class="d-flex justify-content-center pt-1">
+  <markdown ngPreserveWhitespaces class="sr-markdown" translate="no" [data]="getSelectedData()">
+  </markdown>
+</div>

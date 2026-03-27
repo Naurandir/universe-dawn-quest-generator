@@ -21,20 +21,20 @@ import { CoordinatesNormalisedPipe } from "../../shared/coordinates-normalised.p
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-    selector: 'app-quest-generator-step',
-    imports: [CommonModule, PanelModule, TableModule, DividerModule, ConfirmDialogModule,
-        MarkdownModule, NgbModule, UniverseDawnNumberFormatPipe, CoordinatesNormalisedPipe],
-    templateUrl: './quest-generator-step.component.html',
-    styleUrl: './quest-generator-step.component.css',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-quest-generator-step',
+  imports: [CommonModule, PanelModule, TableModule, DividerModule, ConfirmDialogModule,
+    MarkdownModule, NgbModule, UniverseDawnNumberFormatPipe, CoordinatesNormalisedPipe],
+  templateUrl: './quest-generator-step.component.html',
+  styleUrl: './quest-generator-step.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuestGeneratorStepComponent {
 
   @Input() selectedQuest!: IQuest;
   @Input() selectedQuestStep!: IQuestStep;
 
-  @Input() selectedLanguage!: 'DE' | 'EN';
-  @Output() selectedLanguageChange: EventEmitter<'DE' | 'EN'> = new EventEmitter<'DE' | 'EN'>();
+  @Input() selectedLanguage!: 'DE' | 'EN' | 'FR';
+  @Output() selectedLanguageChange: EventEmitter<'DE' | 'EN' | 'FR'> = new EventEmitter<'DE' | 'EN' | 'FR'>();
 
   @Output("afterChangeFunction") afterChangeFunction: EventEmitter<VoidFunction> = new EventEmitter();
 
@@ -121,10 +121,28 @@ export class QuestGeneratorStepComponent {
   getStepDialogOptions(task: IQuestTaskDialogue): [string, string][] {
     let entries: [string, string][] = [];
 
-    if (this.selectedLanguage == 'DE') {
-      entries = Object.entries(task.dialogues.de);
-    } else {
-      entries = Object.entries(task.dialogues.en);
+    entries = Object.entries(task.dialogues.de);
+
+    try {
+      if (this.selectedLanguage == 'DE') {
+        entries = Object.entries(task.dialogues.de);
+      } else if (this.selectedLanguage == 'EN') {
+        entries = Object.entries(task.dialogues.en);
+      } else {
+        entries = Object.entries(task.dialogues.fr);
+      }
+    } catch (e) {
+      console.warn("options could not be loaded it seems, try adding empty options for", this.selectedLanguage);
+      if (this.selectedLanguage == 'DE') {
+         task.dialogues.de = { 'Keyword eingeben': 'Antwort eingeben' };
+         entries = Object.entries(task.dialogues.de);
+      } else if (this.selectedLanguage == 'EN') {
+         task.dialogues.en = { 'add keyword': 'add answer' };
+         entries = Object.entries(task.dialogues.en);
+      } else {
+        task.dialogues.fr = { 'Ajouter un mot-clé': 'Ajouter une réponse' };
+        entries = Object.entries(task.dialogues.fr);
+      }
     }
 
     return entries;
@@ -192,7 +210,7 @@ export class QuestGeneratorStepComponent {
 
   getNpcInfoByCoordinates(coordinates: ICoordinates) {
     let foundNpc: IQuestPrepareNpcs[] = this.selectedQuest!.prepareNpcs.filter(npc => npc.planet != undefined &&
-        npc.planet.coordinates.x == coordinates.x && npc.planet.coordinates.y == coordinates.y && npc.planet.coordinates.z == coordinates.z);
+      npc.planet.coordinates.x == coordinates.x && npc.planet.coordinates.y == coordinates.y && npc.planet.coordinates.z == coordinates.z);
     return this.getNpcInfo(foundNpc);
   }
 
@@ -202,18 +220,18 @@ export class QuestGeneratorStepComponent {
   }
 
   private getNpcInfo(foundNpc: IQuestPrepareNpcs[]) {
-    if(foundNpc.length == 0) {
+    if (foundNpc.length == 0) {
       return "Unknown";
     }
 
-    if(foundNpc[0].planet == undefined) {
+    if (foundNpc[0].planet == undefined) {
       return `${foundNpc[0].rulerName} (No Planet)`;
     }
 
     return `${foundNpc[0].rulerName} - ${foundNpc[0].planet.planetName}`;
   }
 
-  switchLanguage(language: 'DE' | 'EN') {
+  switchLanguage(language: 'DE' | 'EN' | 'FR') {
     this.selectedLanguage = language;
 
     this.changeDedector.detectChanges();

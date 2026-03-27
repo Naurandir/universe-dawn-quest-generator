@@ -1,0 +1,21 @@
+<p-dialog header="General Information" [modal]="true" [(visible)]="visible" [style]="{ 'max-width': '30rem' }">
+  <form [formGroup]="translationForm" (submit)="savePersonalKey()">
+
+    <!-- Name -->
+    <div class="d-flex justify-content-center pt-2">
+      <div class="form-group pb-3" translate="no">
+        <label class="form-label"><i class="bi bi-text-paragraph"></i> DeepL API Key</label><br>
+        <input type="text" name="key" class="form-control" formControlName="key" [class]="'p-element p-inputwrapper p-inputtext'" [style]="{ 'min-width': '250px'}" />
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="d-flex justify-content-center pt-2">
+      <input type="submit" [value]="'Save API Key'" class="btn btn-outline-light" [disabled]="!translationForm.valid">
+    </div>
+  </form>
+
+  <div class="d-flex justify-content-center pt-4">
+    <input type="submit" [value]="'Remove API Key'" class="btn btn-outline-light" (click)="removePersonalKey()">
+  </div>
+</p-dialog>

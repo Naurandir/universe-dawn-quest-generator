@@ -120,16 +120,16 @@ export class QuestGeneratorSimulatorComponent {
     let currentLocalisation: ELocalisation = this.selectedLanguage == 'DE' ? ELocalisation.de : ELocalisation.en;
 
     // process
-    let chatMessage: string = this.messageForm.value.chatMessage;
+    let chatMessage: string = this.messageForm.value.chatMessage.toLocaleLowerCase();
     this.messageForm.reset();
 
     // check on solution keyword
-    if (chatMessage == this.selectedStepTaskDialogue?.correctDialogueWord[currentLocalisation]) {
+    if (chatMessage == this.selectedStepTaskDialogue?.correctDialogueWord[currentLocalisation].toLocaleLowerCase()) {
       this.foundKeyWord = true;
       if (this.selectedLanguage == 'DE') {
-        this.chatHistory.push(this.selectedStep!.notification.de.customText);
+        this.chatHistory.unshift(this.selectedStep!.notification.de.customText);
       } else {
-        this.chatHistory.push(this.selectedStep!.notification.en!.customText);
+        this.chatHistory.unshift(this.selectedStep!.notification.en!.customText);
       }
       this.changeDedector.detectChanges();
       return;
@@ -140,7 +140,7 @@ export class QuestGeneratorSimulatorComponent {
 
     if (answer != undefined && answer != '') {
       this.messageCorrect = true;
-      this.chatHistory.push(answer);
+      this.chatHistory.unshift(answer);
       this.changeDedector.detectChanges();
       return;
     }

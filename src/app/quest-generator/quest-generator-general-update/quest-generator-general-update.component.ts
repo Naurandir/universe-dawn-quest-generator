@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, model, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ELocalisation, IQuest, IQuestNotification, IQuestNotificationAllLang } from '../quest-ud.model';
@@ -17,10 +17,11 @@ import { ToasterService } from '../../shared//toaster/toaster.service';
 import { TranslationService } from '../../shared/translation/translation.service';
 import { LoadingActionService } from '../../shared/loading-action/loading-action.service';
 import { forkJoin } from 'rxjs';
+import { QuestMarkdownEditorComponent } from "../../shared/quest-markdown-editor/quest-markdown-editor.component";
 
 @Component({
     selector: 'app-quest-generator-general-update',
-    imports: [CommonModule, NgbModule, MarkdownModule, FormsModule, ReactiveFormsModule, DialogModule, SelectModule, TextareaModule, DividerModule],
+    imports: [CommonModule, NgbModule, MarkdownModule, FormsModule, ReactiveFormsModule, DialogModule, SelectModule, TextareaModule, DividerModule, QuestMarkdownEditorComponent],
     templateUrl: './quest-generator-general-update.component.html',
     styleUrl: './quest-generator-general-update.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -31,16 +32,17 @@ export class QuestGeneratorGeneralUpdateComponent {
 
   visible: boolean = false;
   isAdd: boolean = false;
-  selectedLanguage: 'DE' | 'EN' = 'DE';
 
   currentQuest?: IQuest;
 
-  generalUpdateForm: FormGroup = new FormGroup({
-    nameDe: new FormControl("", [Validators.required]),
-    nameEn: new FormControl("", [Validators.required]),
-    notificationDe: new FormControl("", [Validators.required]),
-    notificationEn: new FormControl("", [Validators.required])
-  });
+  selectedLanguage = model<'DE' | 'EN' | 'FR'>('DE');
+  notificationDe = model<string>('');
+  notificationEn = model<string>('');
+  notificationFr = model<string>('');
+
+  nameDe: string = '';
+  nameEn: string = '';
+  nameFr: string = '';
 
   generalUpdateConditionForm: FormGroup = new FormGroup({
     questConditionType: new FormControl("", [Validators.required]),
@@ -61,42 +63,50 @@ export class QuestGeneratorGeneralUpdateComponent {
     this.isAdd = isAdd;
     this.currentQuest = quest;
 
-    this.generalUpdateForm.setValue({
-      nameDe: quest.name[ELocalisation.de],
-      nameEn: quest.name[ELocalisation.en],
-      notificationDe: quest.notification.de.customText,
-      notificationEn: quest.notification.en?.customText
-    });
+    this.nameDe = quest.name[ELocalisation.de];
+    this.nameEn = quest.name[ELocalisation.en];
+    this.nameFr = quest.name[ELocalisation.fr];
+    this.notificationDe.set(quest.notification.de.customText);
+    this.notificationEn.set(quest.notification.en == undefined ? '' : quest.notification.en.customText);
+    this.notificationFr.set(quest.notification.fr == undefined ? '' : quest.notification.fr.customText);
+
     this.changeDedector.detectChanges();
   }
 
   showUpdateDialog() {
     this.visible = true;
-    this.selectedLanguage = 'DE';
+    this.selectedLanguage.set('DE');
     this.changeDedector.detectChanges();
   }
 
-  switchLanguage(language: 'DE' | 'EN') {
-    this.selectedLanguage = language;
+  switchLanguage(language: 'DE' | 'EN' | 'FR') {
+    this.selectedLanguage.set(language);
     this.changeDedector.detectChanges();
   }
 
   updateQuest() {
     let notificationDe: IQuestNotification = {
-      customText: this.generalUpdateForm.value.notificationDe,
+      customText: this.notificationDe(),
       variables: {}
     };
 
     let notificationEn: IQuestNotification = {
-      customText: this.generalUpdateForm.value.notificationEn,
+      customText: this.notificationEn(),
       variables: {}
     };
 
-    this.currentQuest!.name[ELocalisation.de] = this.generalUpdateForm.value.nameDe;
-    this.currentQuest!.name[ELocalisation.en] = this.generalUpdateForm.value.nameEn;
+    let notificationFr: IQuestNotification = {
+      customText: this.notificationFr(),
+      variables: {}
+    };
+
+    this.currentQuest!.name[ELocalisation.de] = this.nameDe;
+    this.currentQuest!.name[ELocalisation.en] = this.nameEn;
+    this.currentQuest!.name[ELocalisation.fr] = this.nameFr;
     let notification: IQuestNotificationAllLang = {
       de: notificationDe,
-      en: notificationEn
+      en: notificationEn,
+      fr: notificationFr
     };
     this.currentQuest!.notification = notification;
 
@@ -104,16 +114,15 @@ export class QuestGeneratorGeneralUpdateComponent {
     this.afterUpdateFunction.emit(this.currentQuest);
     this.toasterService.success("Update Quest", `General Information of Quest '${this.currentQuest?.name}' was successfully updated.`);
 
-    this.generalUpdateForm.reset();
     this.changeDedector.detectChanges();
   }
 
   translateToCurrentLanguage() {
-    let currentLanguage = this.selectedLanguage;
-    let titleText = currentLanguage == 'DE' ? this.generalUpdateForm.value.nameEn : this.generalUpdateForm.value.nameDe;
-    let notificationText = currentLanguage == 'DE' ? this.generalUpdateForm.value.notificationEn : this.generalUpdateForm.value.notificationDe;
-    let languageFrom: 'de' | 'en' = currentLanguage == 'DE' ? 'en' : 'de';
-    let languageTo: 'de' | 'en' = currentLanguage == 'DE' ? 'de' : 'en'
+    let currentLanguage = this.selectedLanguage();
+    let titleText = (currentLanguage == 'DE' ? this.nameEn : this.nameDe);
+    let notificationText = (currentLanguage == 'DE' ? this.notificationEn() : this.notificationDe());
+    let languageFrom: 'de' | 'en' = (currentLanguage == 'DE' ? 'en' : 'de');
+    let languageTo: string = this.selectedLanguage().toLocaleLowerCase()
 
     if (notificationText == null || notificationText == "" || titleText == null || titleText == "") {
       this.toasterService.warn("Translation","Translation requires non empty input for title and notification.");
@@ -122,22 +131,21 @@ export class QuestGeneratorGeneralUpdateComponent {
 
     this.loadingActionService.showLoadingActionWithMessage("translation ongoing...");
     let calls = [
-      this.translationService.translate(languageFrom, languageTo, titleText),
-      this.translationService.translate(languageFrom, languageTo, notificationText)
+      this.translationService.translateServerCall(languageFrom, languageTo, titleText),
+      this.translationService.translateServerCall(languageFrom, languageTo, notificationText)
     ];
 
     forkJoin(calls).subscribe({
       next: (response) => {
         if (currentLanguage == 'DE') {
-          this.generalUpdateForm.patchValue({
-            nameDe: response[0],
-            notificationDe: response[1]
-          });
-        } else {
-          this.generalUpdateForm.patchValue({
-            nameEn: response[0],
-            notificationEn: response[1]
-          });
+          this.nameDe = response[0];
+          this.notificationDe.set(response[1]);
+        } else if (currentLanguage == 'EN') {
+          this.nameEn = response[0];
+          this.notificationEn.set(response[1]);
+        } else if (currentLanguage == 'FR') {
+          this.nameFr = response[0];
+          this.notificationFr.set(response[1]);
         }
         this.toasterService.success("Translation",`Translation to ${languageTo.toUpperCase()} worked.`);
         this.loadingActionService.hideLoadingAction();
@@ -149,5 +157,17 @@ export class QuestGeneratorGeneralUpdateComponent {
         this.changeDedector.detectChanges();
       }
     });
+  }
+
+  isGeneralQuestDataFilledOut(): boolean {
+    if (this.nameDe == '' || this.nameEn == '') {
+      return false;
+    }
+
+    if (this.notificationDe() == '' || this.notificationEn() == '') {
+      return false;
+    }
+
+    return true;
   }
 }

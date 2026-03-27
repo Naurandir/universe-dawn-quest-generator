@@ -6,6 +6,8 @@
       <div class="form-group pb-3">
         <input value="DE" [class]="'btn udq-language-button ' + (selectedLanguage == 'DE' ? 'disabled btn-outline-light' : 'btn-outline-secondary')" (click)="switchLanguage('DE')">
         <input value="EN" [class]="'btn udq-language-button ' + (selectedLanguage == 'EN' ? 'disabled btn-outline-light' : 'btn-outline-secondary')" (click)="switchLanguage('EN')">
+        <input value="FR" [class]="'btn udq-language-button ' + (selectedLanguage == 'FR' ? 'disabled btn-outline-light' : 'btn-outline-secondary')" (click)="switchLanguage('FR')">
+
       </div>
     </div>
 
@@ -59,12 +61,12 @@
           placeholder="Select NPC" [style]="{ 'min-width': '250px'}">
           <ng-template pTemplate="selectedItem" translate="no">
             <div class="flex align-items-center gap-2" *ngIf="stepForm.value.stepChosendNpc" translate="no">
-              {{ stepForm.value.stepChosendNpc.rulerName }}
+              {{ stepForm.value.stepChosendNpc.rulerName }} ({{ stepForm.value.stepChosendNpc.planet?.planetName }})
             </div>
           </ng-template>
           <ng-template pTemplate="item" let-item translate="no">
             <div translate="no">
-              {{ item.rulerName }}
+              {{ item.rulerName }} ({{ item.planet?.planetName }})
             </div>
           </ng-template>
           </p-select>
@@ -95,6 +97,7 @@
         <label class="form-label"><i class="bi bi-key-fill"></i> Correct Solution Word ({{ selectedLanguage }})</label><br>
         <input type="text" name="stepDialogCorrectWordDe" formControlName="stepDialogCorrectWordDe" [class]="'p-element p-inputwrapper p-inputtext ' + 'd-' + (selectedLanguage == 'DE' ? 'inline' : 'none')" [style]="{ 'min-width': '250px'}" />
         <input type="text" name="stepDialogCorrectWordEn" formControlName="stepDialogCorrectWordEn" [class]="'p-element p-inputwrapper p-inputtext ' + 'd-' + (selectedLanguage == 'EN' ? 'inline' : 'none')" [style]="{ 'min-width': '250px'}" />
+        <input type="text" name="stepDialogCorrectWordFr" formControlName="stepDialogCorrectWordFr" [class]="'p-element p-inputwrapper p-inputtext ' + 'd-' + (selectedLanguage == 'FR' ? 'inline' : 'none')" [style]="{ 'min-width': '250px'}" />
       </div>
     </div>
 
@@ -109,30 +112,12 @@
     </div>
 
     <!-- Notification -->
-    <div class="d-flex justify-content-center pt-2">
-      <div class="form-group pb-3" translate="no">
-        <label class="form-label"><i class="bi bi-journal-plus"></i> Completion Notification ({{ selectedLanguage }}) <i class="bi bi-question-circle-fill mx-1 h5" ngbTooltip="Markdown can be used for formatting."></i></label>
-      </div>
-    </div>
-    <div class="d-flex justify-content-center pt-2">
-      <div class="form-group pb-3" [class]="'d-' + (selectedLanguage == 'DE' ? 'inline' : 'none')">
-        <textarea rows="8"cols="28" pInputTextarea name="stepNotificationDe" formControlName="stepNotificationDe"
-        class="p-element p-inputwrapper p-inputtext" maxlength="5000"></textarea>
-      </div>
-      <div class="form-group pb-3" [class]="'d-' + (selectedLanguage == 'EN' ? 'inline' : 'none')">
-        <textarea rows="8"cols="28" pInputTextarea name="stepNotificationEn" formControlName="stepNotificationEn"
-        class="p-element p-inputwrapper p-inputtext" maxlength="5000"></textarea>
-      </div>
-    </div>
-
-    <div class="d-flex justify-content-center pt-2" translate="no">
-      <label class="form-label"><i class="bi bi-camera-fill"></i> Preview ({{ selectedLanguage }}) <i class="bi bi-question-circle-fill mx-1 h5" ngbTooltip="Styles can be a bit different in Universe Dawn, be aware of that."></i></label><br>
-    </div>
-    <div class="d-flex justify-content-center pt-1">
-      <markdown ngPreserveWhitespaces class="sr-markdown" translate="no"
-      [data]="selectedLanguage == 'DE' ? stepForm.value.stepNotificationDe : stepForm.value.stepNotificationEn">
-    </markdown>
-    </div>
+    <app-quest-markdown-editor
+      title="Step Finished Notification"
+      [(selectedLanguage)]="selectedLanguage"
+      [(dataDe)]="stepNotificationDe"
+      [(dataEn)]="stepNotificationEn"
+      [(dataFr)]="stepNotificationFr"></app-quest-markdown-editor>
 
     <p-divider />
 

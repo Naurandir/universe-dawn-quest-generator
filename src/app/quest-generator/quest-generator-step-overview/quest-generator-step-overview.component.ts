@@ -21,8 +21,8 @@ export class QuestGeneratorStepOverviewComponent {
 
   @Input() selectedQuest!: IQuest;
 
-  @Input() selectedLanguage!: 'DE' | 'EN';
-  @Output() selectedLanguageChange: EventEmitter<'DE' | 'EN'> = new EventEmitter<'DE' | 'EN'>();
+  @Input() selectedLanguage!: 'DE' | 'EN' | 'FR';
+  @Output() selectedLanguageChange: EventEmitter<'DE' | 'EN' | 'FR'> = new EventEmitter<'DE' | 'EN' | 'FR'>();
 
   @Output("afterChangeFunction") afterChangeFunction: EventEmitter<VoidFunction> = new EventEmitter();
 
