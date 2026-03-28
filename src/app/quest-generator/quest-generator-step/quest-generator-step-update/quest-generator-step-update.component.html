@@ -4,9 +4,15 @@
     <!-- Language Selection -->
     <div class="d-flex justify-content-center pt-2">
       <div class="form-group pb-3">
-        <input value="DE" [class]="'btn udq-language-button ' + (selectedLanguage == 'DE' ? 'disabled btn-outline-light' : 'btn-outline-secondary')" (click)="switchLanguage('DE')">
-        <input value="EN" [class]="'btn udq-language-button ' + (selectedLanguage == 'EN' ? 'disabled btn-outline-light' : 'btn-outline-secondary')" (click)="switchLanguage('EN')">
-        <input value="FR" [class]="'btn udq-language-button ' + (selectedLanguage == 'FR' ? 'disabled btn-outline-light' : 'btn-outline-secondary')" (click)="switchLanguage('FR')">
+        <input value="DE"
+          [class]="'btn udq-language-button ' + (selectedLanguage == 'DE' ? 'disabled btn-outline-light' : 'btn-outline-secondary')"
+          (click)="switchLanguage('DE')">
+        <input value="EN"
+          [class]="'btn udq-language-button ' + (selectedLanguage == 'EN' ? 'disabled btn-outline-light' : 'btn-outline-secondary')"
+          (click)="switchLanguage('EN')">
+        <input value="FR"
+          [class]="'btn udq-language-button ' + (selectedLanguage == 'FR' ? 'disabled btn-outline-light' : 'btn-outline-secondary')"
+          (click)="switchLanguage('FR')">
 
       </div>
     </div>
@@ -16,28 +22,35 @@
       Current language is not well known to you?
     </div>
     <div class="d-flex justify-content-center ">
-      Use our free Translation! <i class="bi bi-exclamation-circle-fill mx-1 h5" ngbTooltip="Note as a free service it can happen that we run out of free calls. if thats the case try again later or in some days or feel free to use google translate :)"></i>
+      Use our free Translation! <i class="bi bi-exclamation-circle-fill mx-1 h5"
+        ngbTooltip="Note as a free service it can happen that we run out of free calls. if thats the case try again later or in some days or feel free to use google translate :)"></i>
     </div>
-    <div class="d-flex justify-content-center pt-2">
-      <input [value]="selectedLanguage == 'DE' ? 'Translate from English' : 'Translate from German'" class="btn btn-outline-light"
-        (click)="translateToCurrentLanguage()">
+    <div class="d-flex flex-column justify-content-center pt-2">
+      <div class="d-flex justify-content-center">
+        <input [value]="selectedLanguage == 'DE' ? 'Translate from English' : 'Translate from German'" class="btn btn-outline-light"
+        (click)="translateToCurrentLanguage()" style="max-width: 15rem;">
+      </div>
+      <div class="d-flex justify-content-center">
+        <input value="Create AI Prompt for me" class="btn btn-outline-light" ngbTooltip="Autogenerate an AI Prompt to easily use in any chat window for ai."
+        (click)="prepareAiPrompt()" style="max-width: 15rem;">
+      </div>
     </div>
 
     <div class="d-flex justify-content-center pt-2">
       <div class="form-group pb-3">
         <label class="form-label"><i class="bi bi-clipboard2-check"></i> Type</label><br>
-        <p-select appendTo="body" [options]="stepTypes" formControlName="stepType"
-        placeholder="Select a Step Type" [style]="{ 'min-width': '250px'}">
-        <ng-template pTemplate="selectedItem" translate="no">
-          <div class="flex align-items-center gap-2" *ngIf="stepForm.value.stepType" translate="no">
-            {{ stepForm.value.stepType }}
-          </div>
-        </ng-template>
-        <ng-template pTemplate="item" let-item translate="no">
-          <div translate="no">
-            {{ item }}
-          </div>
-        </ng-template>
+        <p-select appendTo="body" [options]="stepTypes" formControlName="stepType" placeholder="Select a Step Type"
+          [style]="{ 'min-width': '250px'}">
+          <ng-template pTemplate="selectedItem" translate="no">
+            <div class="flex align-items-center gap-2" *ngIf="stepForm.value.stepType" translate="no">
+              {{ stepForm.value.stepType }}
+            </div>
+          </ng-template>
+          <ng-template pTemplate="item" let-item translate="no">
+            <div translate="no">
+              {{ item }}
+            </div>
+          </ng-template>
         </p-select>
       </div>
     </div>
@@ -48,27 +61,29 @@
       <div class="d-flex justify-content-center pt-2" *ngIf="stepForm.value.stepType == 'dialogue'">
         <div class="form-group pb-3">
           <label class="form-label"><i class="bi bi-airplane-engines-fill"></i> NPC Type</label><br>
-          <p-select appendTo="body" [options]="stepNpcTypes" formControlName="stepNpcType"
-          placeholder="Select NPC Type" [style]="{ 'min-width': '250px'}" />
+          <p-select appendTo="body" [options]="stepNpcTypes" formControlName="stepNpcType" placeholder="Select NPC Type"
+            [style]="{ 'min-width': '250px'}" />
         </div>
       </div>
 
       <!--NPC with Coordinates -->
-      <div class="d-flex justify-content-center pt-2" *ngIf="stepForm.value.stepNpcType == 'fullNpc' || stepForm.value.stepType == 'transactCredits'">
+      <div class="d-flex justify-content-center pt-2"
+        *ngIf="stepForm.value.stepNpcType == 'fullNpc' || stepForm.value.stepType == 'transactCredits'">
         <div class="form-group pb-3">
           <label class="form-label"><i class="bi bi bi-person-circle"></i> NPC</label><br>
-          <p-select appendTo="body" [options]="getNpcList(currentQuest!.prepareNpcs, stepForm.value.stepType)" optionLabel="rulerName" formControlName="stepChosendNpc"
-          placeholder="Select NPC" [style]="{ 'min-width': '250px'}">
-          <ng-template pTemplate="selectedItem" translate="no">
-            <div class="flex align-items-center gap-2" *ngIf="stepForm.value.stepChosendNpc" translate="no">
-              {{ stepForm.value.stepChosendNpc.rulerName }} ({{ stepForm.value.stepChosendNpc.planet?.planetName }})
-            </div>
-          </ng-template>
-          <ng-template pTemplate="item" let-item translate="no">
-            <div translate="no">
-              {{ item.rulerName }} ({{ item.planet?.planetName }})
-            </div>
-          </ng-template>
+          <p-select appendTo="body" [options]="getNpcList(currentQuest!.prepareNpcs, stepForm.value.stepType)"
+            optionLabel="rulerName" formControlName="stepChosendNpc" placeholder="Select NPC"
+            [style]="{ 'min-width': '250px'}">
+            <ng-template pTemplate="selectedItem" translate="no">
+              <div class="flex align-items-center gap-2" *ngIf="stepForm.value.stepChosendNpc" translate="no">
+                {{ stepForm.value.stepChosendNpc.rulerName }} ({{ stepForm.value.stepChosendNpc.planet?.planetName }})
+              </div>
+            </ng-template>
+            <ng-template pTemplate="item" let-item translate="no">
+              <div translate="no">
+                {{ item.rulerName }} ({{ item.planet?.planetName }})
+              </div>
+            </ng-template>
           </p-select>
         </div>
       </div>
@@ -77,7 +92,8 @@
       <div class="d-flex justify-content-center pt-2" *ngIf="stepForm.value.stepNpcType == 'coordinatesOnly'">
         <div class="form-group pb-3">
           <label class="form-label"><i class="bi bi-airplane-engines-fill"></i> Coordinates</label><br>
-          <app-position-input inputControlName="stepCoordinates" [inputForm]="stepForm" [style]="{ 'min-width': '250px'}"/>
+          <app-position-input inputControlName="stepCoordinates" [inputForm]="stepForm"
+            [style]="{ 'min-width': '250px'}" />
         </div>
       </div>
     </ng-container>
@@ -87,43 +103,49 @@
     <div class="d-flex justify-content-center pt-1" *ngIf="stepForm.value.stepType == 'transactCredits'">
       <div class="form-group pb-3">
         <label class="form-label"><i class="bi bi-box-arrow-up"></i> Credits Amount</label><br>
-        <p-inputNumber inputId="buildingLevel" placeholder="0" min="0"formControlName="stepTransactCreditsAmount" [style]="{ 'min-width': '250px'}"/>
+        <p-inputNumber inputId="buildingLevel" placeholder="0" min="0" formControlName="stepTransactCreditsAmount"
+          [style]="{ 'min-width': '250px'}" />
       </div>
     </div>
 
-    <!-- Dialog Type -->
-    <div class="d-flex justify-content-center pt-2" *ngIf="stepForm.value.stepType == 'dialogue'">
-      <div class="form-group pb-3">
-        <label class="form-label"><i class="bi bi-key-fill"></i> Correct Solution Word ({{ selectedLanguage }})</label><br>
-        <input type="text" name="stepDialogCorrectWordDe" formControlName="stepDialogCorrectWordDe" [class]="'p-element p-inputwrapper p-inputtext ' + 'd-' + (selectedLanguage == 'DE' ? 'inline' : 'none')" [style]="{ 'min-width': '250px'}" />
-        <input type="text" name="stepDialogCorrectWordEn" formControlName="stepDialogCorrectWordEn" [class]="'p-element p-inputwrapper p-inputtext ' + 'd-' + (selectedLanguage == 'EN' ? 'inline' : 'none')" [style]="{ 'min-width': '250px'}" />
-        <input type="text" name="stepDialogCorrectWordFr" formControlName="stepDialogCorrectWordFr" [class]="'p-element p-inputwrapper p-inputtext ' + 'd-' + (selectedLanguage == 'FR' ? 'inline' : 'none')" [style]="{ 'min-width': '250px'}" />
+      <!-- Dialog Type -->
+      <div class="d-flex justify-content-center pt-2" *ngIf="stepForm.value.stepType == 'dialogue'">
+        <div class="form-group pb-3">
+          <label class="form-label"><i class="bi bi-key-fill"></i> Correct Solution Word ({{ selectedLanguage
+            }})</label><br>
+          <input type="text" name="stepDialogCorrectWordDe" formControlName="stepDialogCorrectWordDe"
+            [class]="'p-element p-inputwrapper p-inputtext ' + 'd-' + (selectedLanguage == 'DE' ? 'inline' : 'none')"
+            [style]="{ 'min-width': '250px'}" />
+          <input type="text" name="stepDialogCorrectWordEn" formControlName="stepDialogCorrectWordEn"
+            [class]="'p-element p-inputwrapper p-inputtext ' + 'd-' + (selectedLanguage == 'EN' ? 'inline' : 'none')"
+            [style]="{ 'min-width': '250px'}" />
+          <input type="text" name="stepDialogCorrectWordFr" formControlName="stepDialogCorrectWordFr"
+            [class]="'p-element p-inputwrapper p-inputtext ' + 'd-' + (selectedLanguage == 'FR' ? 'inline' : 'none')"
+            [style]="{ 'min-width': '250px'}" />
+        </div>
       </div>
-    </div>
 
-    <!-- Error Information -->
-    <div *ngIf="keywordDe != null && (keywordDe.dirty || keywordDe.touched) && keywordDe.value.includes(' ')"
-    class="alert alert-danger">
-      Correct Solution Word (De) need to be one word.
-    </div>
-    <div *ngIf="keywordEn != null && (keywordEn.dirty || keywordEn.touched) && keywordEn.value.includes(' ')"
-    class="alert alert-danger">
-      Correct Solution Word (En) need to be one word.
-    </div>
+      <!-- Error Information -->
+      <div *ngIf="keywordDe != null && (keywordDe.dirty || keywordDe.touched) && keywordDe.value.includes(' ')"
+        class="alert alert-danger">
+        Correct Solution Word (De) need to be one word.
+      </div>
+      <div *ngIf="keywordEn != null && (keywordEn.dirty || keywordEn.touched) && keywordEn.value.includes(' ')"
+        class="alert alert-danger">
+        Correct Solution Word (En) need to be one word.
+      </div>
 
-    <!-- Notification -->
-    <app-quest-markdown-editor
-      title="Step Finished Notification"
-      [(selectedLanguage)]="selectedLanguage"
-      [(dataDe)]="stepNotificationDe"
-      [(dataEn)]="stepNotificationEn"
-      [(dataFr)]="stepNotificationFr"></app-quest-markdown-editor>
+      <!-- Notification -->
+      <app-quest-markdown-editor title="Step Finished Notification" [(selectedLanguage)]="selectedLanguage"
+        [(dataDe)]="stepNotificationDe" [(dataEn)]="stepNotificationEn"
+        [(dataFr)]="stepNotificationFr"></app-quest-markdown-editor>
 
     <p-divider />
 
     <!-- Submit -->
     <div class="d-flex justify-content-center pt-2">
-      <input type="submit" [value]="isAdd ? 'Add Step' : 'Update Step'" class="btn btn-outline-light" [disabled]="!stepForm.valid || !isFormCombinationAllowed()">
+      <input type="submit" [value]="isAdd ? 'Add Step' : 'Update Step'" class="btn btn-outline-light"
+        [disabled]="!stepForm.valid || !isFormCombinationAllowed()">
     </div>
   </form>
 </p-dialog>

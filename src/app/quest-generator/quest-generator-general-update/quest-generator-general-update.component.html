@@ -16,9 +16,15 @@
     <div class="d-flex justify-content-center ">
       Use our free Translation! <i class="bi bi-exclamation-circle-fill mx-1 h5" ngbTooltip="Note as a free service it can happen that we run out of free calls. if thats the case try again later or in some days or feel free to use google translate :)"></i>
     </div>
-    <div class="d-flex justify-content-center pt-2">
-      <input [value]="selectedLanguage() == 'DE' ? 'Translate from English' : 'Translate from German'" class="btn btn-outline-light"
-        (click)="translateToCurrentLanguage()">
+    <div class="d-flex flex-column justify-content-center pt-2">
+      <div class="d-flex justify-content-center">
+        <input [value]="selectedLanguage() == 'DE' ? 'Translate from English' : 'Translate from German'" class="btn btn-outline-light"
+        (click)="translateToCurrentLanguage()" style="max-width: 15rem;">
+      </div>
+      <div class="d-flex justify-content-center">
+        <input value="Create AI Prompt for me" class="btn btn-outline-light" ngbTooltip="Autogenerate an AI Prompt to easily use in any chat window for ai."
+        (click)="prepareAiPrompt()" style="max-width: 15rem;">
+      </div>
     </div>
 
     <!-- Name -->

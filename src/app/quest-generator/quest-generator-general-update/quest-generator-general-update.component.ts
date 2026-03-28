@@ -18,10 +18,12 @@ import { TranslationService } from '../../shared/translation/translation.service
 import { LoadingActionService } from '../../shared/loading-action/loading-action.service';
 import { forkJoin } from 'rxjs';
 import { QuestMarkdownEditorComponent } from "../../shared/quest-markdown-editor/quest-markdown-editor.component";
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
     selector: 'app-quest-generator-general-update',
     imports: [CommonModule, NgbModule, MarkdownModule, FormsModule, ReactiveFormsModule, DialogModule, SelectModule, TextareaModule, DividerModule, QuestMarkdownEditorComponent],
+    providers: [Clipboard],
     templateUrl: './quest-generator-general-update.component.html',
     styleUrl: './quest-generator-general-update.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -157,6 +159,15 @@ export class QuestGeneratorGeneralUpdateComponent {
         this.changeDedector.detectChanges();
       }
     });
+  }
+
+  prepareAiPrompt() {
+    // only german will be translated by english, en + fr from german
+    let sourceLanguage = this.selectedLanguage() == 'DE' ?  "EN" : "DE";
+    let sourceTitle = this.selectedLanguage() == 'DE' ?  this.nameEn : this.nameDe;
+    let sourceText = this.selectedLanguage() == 'DE' ?  this.notificationEn() : this.notificationDe();
+
+    this.translationService.copyAiPrompt(sourceLanguage, this.selectedLanguage(), sourceTitle, sourceText);
   }
 
   isGeneralQuestDataFilledOut(): boolean {

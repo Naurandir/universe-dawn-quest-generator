@@ -21,7 +21,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 export class QuestGeneratorSimulatorComponent {
 
   visible: boolean = false;
-  selectedLanguage: 'DE' | 'EN' = 'DE';
+  selectedLanguage: 'DE' | 'EN' | 'FR' = 'DE';
 
   currentQuest?: IQuest;
   currentSteps: IQuestStep[] = [];
@@ -68,7 +68,7 @@ export class QuestGeneratorSimulatorComponent {
     this.changeDedector.detectChanges();
   }
 
-  switchLanguage(language: 'DE' | 'EN') {
+  switchLanguage(language: 'DE' | 'EN' | 'FR') {
     this.selectedLanguage = language;
     this.resetChatHistory();
     this.changeDedector.detectChanges();
@@ -94,6 +94,15 @@ export class QuestGeneratorSimulatorComponent {
     return stepBefore.notification.en!.customText!;
   }
 
+  getLastNotificationFr(): string {
+    if (this.selectedStep?.id == '00') {
+      return this.currentQuest?.notification.fr!.customText!;
+    }
+
+    let stepBefore: IQuestStep = this.getQuestStepBeforeSelected();
+    return stepBefore.notification.fr!.customText!;
+  }
+
   getLastNotificationDe(): string {
     if (this.selectedStep?.id == '00') {
       return this.currentQuest?.notification.de.customText!;
@@ -117,7 +126,8 @@ export class QuestGeneratorSimulatorComponent {
     // init
     this.foundKeyWord = false;
     this.messageCorrect = true;
-    let currentLocalisation: ELocalisation = this.selectedLanguage == 'DE' ? ELocalisation.de : ELocalisation.en;
+    let currentLocalisation: ELocalisation = this.selectedLanguage == 'DE' ?
+        ELocalisation.de : (this.selectedLanguage == 'EN' ? ELocalisation.en : ELocalisation.fr);
 
     // process
     let chatMessage: string = this.messageForm.value.chatMessage.toLocaleLowerCase();
@@ -128,8 +138,10 @@ export class QuestGeneratorSimulatorComponent {
       this.foundKeyWord = true;
       if (this.selectedLanguage == 'DE') {
         this.chatHistory.unshift(this.selectedStep!.notification.de.customText);
-      } else {
+      } else if (this.selectedLanguage == 'EN') {
         this.chatHistory.unshift(this.selectedStep!.notification.en!.customText);
+      } else {
+        this.chatHistory.unshift(this.selectedStep!.notification.fr!.customText);
       }
       this.changeDedector.detectChanges();
       return;

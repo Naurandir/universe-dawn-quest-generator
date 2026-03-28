@@ -1,0 +1,188 @@
+{
+  "_id": "quest-1955091",
+  "conditions": [
+    {
+      "type": "building",
+      "value": "hq",
+      "amount": 10
+    }
+  ],
+  "name": {
+    "de": "Demo Quest",
+    "en": "Demo Quest"
+  },
+  "createdAt": "2025-03-26T07:17:35.015Z",
+  "notification": {
+    "de": {
+      "customText": "Das hier ist die initiale Benachrichtigung an den Benutzer sobald er die Quest angenommen hat.\n\nMit dieser Nachricht startet alles.\n\nAnfangs gehören Bedingungen eingestellt ab wann eine Quest spielbar ist, das kann am Beruf hängen oder an der Punkte Anzahl des Spielers bis hin zu bestimmte Gebäude  Level!\n\nAnschliessend können NPCs erstellt werden mit oder ohne Planeten und im weiteren Verlauf genutzt werden.\n\nSteps weiter unten sind die einzelnen Etappen der Quest die es zu absolvieren gilt.\n\nViel Spass!",
+      "variables": {}
+    },
+    "en": {
+      "customText": "This is the initial notification to the user as soon as he has accepted the quest.\n\nEverything starts with this message.\n\nInitially, conditions are set from when a quest is playable, this can depend on the profession or the number of points of the player up to certain building levels!\n\nSubsequently, NPCs can be created with or without planets and used in the further course.\n\nSteps below are the individual stages of the quest that need to be completed.\n\nHave fun!",
+      "variables": {}
+    }
+  },
+  "prepareNpcs": [
+    {
+      "rulerName": "Test  NPC1",
+      "race": "jamozoid",
+      "planet": {
+        "planetName": "Test1 Planet",
+        "coordinates": {
+          "x": 100,
+          "y": 100,
+          "z": 100
+        }
+      }
+    },
+    {
+      "rulerName": "Test NPC2",
+      "race": "magumer"
+    }
+  ],
+  "startStepId": "00",
+  "steps": {
+    "00": {
+      "id": "00",
+      "nextPossibleSteps": [
+        "01"
+      ],
+      "notification": {
+        "de": {
+          "customText": "Diese Notifizierung wird angezeigt sobald der Spieler den Schritt korrekt geschafft hat.\n\nDieser Step hier wird nur geschafft wenn er das richtige Lösungswort kennt da diese Etappe vom Typ Dialog ist.\n\nDer Test NPC1 hat einen Planeten der gefunden werden kann um zu diesem zu Reisen.\n\nIm nächsten Schritt sehen wir eine Dialog Etappe OHNE Planeten :)",
+          "variables": {}
+        },
+        "en": {
+          "customText": "This notification is displayed as soon as the player has completed the step correctly.\n\nThis step is only completed if the player knows the correct solution word, as this stage is of the dialog type.\n\nThe test NPC1 has a planet that can be found in order to travel to it.\n\nIn the next step we will see a dialog stage WITHOUT a planet :)",
+          "variables": {}
+        }
+      },
+      "task": {
+        "coordinates": {
+          "x": 100,
+          "y": 100,
+          "z": 100
+        },
+        "correctDialogueWord": {
+          "de": "test",
+          "en": "test"
+        },
+        "dialogues": {
+          "de": {
+            "hallo": "Hallo ist eines der wichtigsten Wörter.\n\nEs ist nicht Pflicht, sollte aber eingebaut werden da jeder Spieler ein Hallo als erstes nutzt zur Orientierung.\n\nAls nächstes gib gerne das wort markdown ein.",
+            "markdown": "Universe Dawn nutzt Markdown für Quest Dialoge und Notifizierungen zum anzeigen.\n\nDas kann ebenso hier genutzt werden!\n\nHier einige Beispiele:\n\n# This is a Heading h1\n## This is a Heading h2\n#### This is a Heading h4\n\n*This text will be italic*  \n_This will also be italic_\n\n**This text will be bold**  \n__This will also be bold__\n\n```Transmission```\n\n```\nlet message = 'Hello world';\nalert(message);\n```\n* Item 1\n* Item 2\n* Item 2a\n* Item 2b\n\n![](https://streamofconsciousness.co.uk/wp-content/uploads/2023/01/engine-and-power.jpg?w=1568)\n\n\n###### Markdown kann gerne hier nachgesehen werden:\nhttps://markdownlivepreview.com/"
+          },
+          "en": {
+            "hello": "Hello is one of the most important words.\n\nIt is not mandatory, but should be included as every player uses a hello first for orientation.\n\nNext, enter the word markdown.",
+            "markdown": "Universe Dawn uses Markdown to display quest dialogs and notifications.\n\nThis can also be used here!\n\nHere are some examples:\n\n# This is a Heading h1\n## This is a Heading h2\n#### This is a Heading h4\n\n*This text will be italic*\n_This will also be italic_\n\n**This text will be bold**\n__This will also be bold__\n\n```Transmission```\n\n```\nlet message = 'Hello world';\nalert(message);\n```\n* Item 1\n* Item 2\n* Item 2a\n* Item 2b\n\n![](https://streamofconsciousness.co.uk/wp-content/uploads/2023/01/engine-and-power.jpg?w=1568)\n\n\n###### Markdown can be looked up here:\nhttps://markdownlivepreview.com/"
+          }
+        },
+        "type": "dialogue"
+      },
+      "rewards": []
+    },
+    "01": {
+      "id": "01",
+      "nextPossibleSteps": [
+        "02"
+      ],
+      "notification": {
+        "de": {
+          "customText": "Dieser Schritt ist ebenso ein Dialog, allerdings nur mit Koordinaten ohne einem NPC mit Planeten.\n\nDas kann genutzt werden wenn die Spieler direkt auf eine Koordinate müssen ohne dabei den NPC sehen zu können.\n\nIn diesem Schritt ist auch eine Belohnung versteckt!\n\nGib next ein für den nächsten Schritt. Bei diesem müssen 1234 Credits überwiesen werden.",
+          "variables": {}
+        },
+        "en": {
+          "customText": "This step is also a dialog, but only with coordinates without an NPC with a planet.\n\nThis can be used if the players have to go directly to a coordinate without being able to see the NPC.\n\nThere is also a reward hidden in this step!\n\nEnter next for the next step. its a credits transaction step where you need to transer 1234 credits.",
+          "variables": {}
+        }
+      },
+      "task": {
+        "coordinates": {
+          "x": 200,
+          "y": 200,
+          "z": 200
+        },
+        "correctDialogueWord": {
+          "de": "next",
+          "en": "next"
+        },
+        "dialogues": {
+          "de": {},
+          "en": {}
+        },
+        "type": "dialogue"
+      },
+      "rewards": [
+        {
+          "cost": {
+            "currencies": [
+              125,
+              0
+            ],
+            "resources": [
+              100,
+              10000,
+              100000,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "rewardType": "giveResources"
+        },
+        {
+          "componentType": "chassis",
+          "licenseId": "39",
+          "licenses": 1,
+          "rewardType": "giveLicense"
+        }
+      ]
+    },
+    "02": {
+      "id": "02",
+      "nextPossibleSteps": [],
+      "notification": {
+        "de": {
+          "customText": "Gratulation!\n\nJetzt hast du hoffentlich alles wichtige gesehen und  gelernt fürs erstellen von Quests.\n\nViel Spass dabei!",
+          "variables": {}
+        },
+        "en": {
+          "customText": "Congratulations!\n\nHopefully you have now seen and learned everything important for creating quests.\n\nHave fun with it!",
+          "variables": {}
+        }
+      },
+      "task": {
+        "amount": 1234,
+        "rulerName": "Test NPC2",
+        "type": "transactCredits"
+      },
+      "rewards": [
+        {
+          "cost": {
+            "currencies": [
+              0,
+              0
+            ],
+            "resources": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              10000000
+            ]
+          },
+          "rewardType": "giveResources"
+        }
+      ]
+    }
+  }
+}

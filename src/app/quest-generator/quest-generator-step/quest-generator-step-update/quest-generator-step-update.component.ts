@@ -358,12 +358,19 @@ export class QuestGeneratorStepUpdateComponent {
     });
   }
 
+    prepareAiPrompt() {
+    // only german will be translated by english, en + fr from german
+    let sourceLanguage = this.selectedLanguage == 'DE' ?  "EN" : "DE";
+    let sourceTitle = this.selectedLanguage == 'DE' ?  this.stepForm.value.stepDialogCorrectWordEn : this.stepForm.value.stepDialogCorrectWordDe;
+    let sourceText = this.selectedLanguage == 'DE' ?  this.stepNotificationEn() : this.stepNotificationDe();
+
+    this.translationService.copyAiPrompt(sourceLanguage, this.selectedLanguage, sourceTitle, sourceText);
+  }
+
   resetForm() {
     this.stepForm.patchValue({
       stepType: "",
       stepNpcType: "fullNpc",
-      stepNotificationDe: "",
-      stepNotificationEn: "",
       stepTransactCreditsAmount: 0,
       stepChosendNpc: null,
       stepCoordinates: "",
